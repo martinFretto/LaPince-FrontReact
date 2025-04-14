@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/LandingPage";
 import RegisterPage from "./pages/RegisterPage";
 import Login from "./pages/Login";
+import Footer from "./components/Footer";
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 					<Route path={"/login"} element={<Login />} />
 					<Route path={"/dashboard"} element={<Dashboard />} />
 				</Routes>
+				<Footer />
 			</BrowserRouter>
 		</>
 	);
