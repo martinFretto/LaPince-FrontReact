@@ -23,29 +23,32 @@ export default function LandingPage() {
 					<strong>Que fait La Pince pour toi ?</strong>
 					<br />
 					<br />
-					<div className="flex">
-						<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
-						<p>
-							Suit tes dépenses sans te juger, (même si tu as craqué sur un
-							canard en plastique hors de prix !)
-						</p>
+					<div className=" place-self-center">
+						<div className="flex">
+							<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
+							<p>
+								Suit tes dépenses sans te juger, (même si tu as craqué sur un
+								canard en plastique hors de prix !)
+							</p>
+						</div>
+						<br />
+						<div className="flex">
+							<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
+							<p>
+								Te montre clairement ou passe ton argent, sans avoir besoin d'un
+								diplôme en compatibilité.
+							</p>
+						</div>
+						<br />
+						<div className="flex">
+							<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
+							<p>
+								T'envoie des rappels malins pour t'éviter de finir le mois a
+								sec.
+							</p>
+						</div>
+						<br />
 					</div>
-					<br />
-					<div className="flex">
-						<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
-						<p>
-							Te montre clairement ou passe ton argent, sans avoir besoin d'un
-							diplôme en compatibilité.
-						</p>
-					</div>
-					<br />
-					<div className="flex">
-						<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
-						<p>
-							T'envoie des rappels malins pour t'éviter de finir le mois a sec.
-						</p>
-					</div>
-					<br />
 					<strong>Pourquoi La pince ?</strong>
 					<br />
 					<br />
