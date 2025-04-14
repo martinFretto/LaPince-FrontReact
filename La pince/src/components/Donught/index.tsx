@@ -97,7 +97,17 @@ const DonutChart = () => {
 	};
 
 	return (
-		<div className="mt-4 justify-center flex ">
+		<div className="relative w-full max-w-md mx-auto mt-8">
+			{/* Overlay texte */}
+			<div className="absolute inset-0 flex flex-col items-center place-self-center mr-24 pointer-events-none">
+				<p className="text-lg font-bold text-gray-600">Budget restant</p>
+				<p
+					className={`text-xl font-semibold ${remaining < 0 ? "text-red-500" : "text-black"}`}
+				>
+					{remaining} €
+				</p>
+			</div>
+
 			<ReactApexChart
 				options={options}
 				series={series}
