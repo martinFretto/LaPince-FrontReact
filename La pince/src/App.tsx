@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/LandingPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
 	return (
@@ -10,8 +11,9 @@ function App() {
 			<BrowserRouter>
 				<Header />
 				<Routes>
-					<Route path={"/dashboard"} element={<Dashboard />} />
 					<Route path={"/"} element={<LandingPage />} />
+					<Route path={"/dashboard"} element={<Dashboard />} />
+					<Route path={"/register"} element={<RegisterPage />} />
 				</Routes>
 			</BrowserRouter>
 		</>
