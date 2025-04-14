@@ -46,7 +46,7 @@ export default function Header() {
 						</NavLink>
 
 						<NavLink
-							to="/disconnect"
+							to="/"
 							className={({ isActive }) =>
 								`${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
 							}
