@@ -78,10 +78,10 @@ export const expenditures = [
 	},
 	{
 		id: 8,
-		description: "Achat de tickets de loto par Martin",
+		description: "",
 		payment_method: "Espèces",
 		amount: 38.5,
-		date: "2025-04-11",
+		date: "",
 		user_id: 1,
 		budget_id: 1,
 		created_at: "2025-04-11T08:30:00Z",

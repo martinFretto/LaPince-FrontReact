@@ -8,7 +8,7 @@ export default function LastExpenses() {
 	);
 
 	// On ne garde que les 6 dernieres (0, 6)
-	const recentExpenses = sortedExpenses.slice(0, 6);
+	const recentExpenses = sortedExpenses.slice(0, 10);
 
 	return (
 		<div className="p-4 mt-4">
