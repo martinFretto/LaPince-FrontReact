@@ -80,11 +80,13 @@ export default function Footer() {
 				</div>
 
 				<div className='flex flex-col items-center'>
-					<img
-						src='/logo-treasure.svg'
-						alt='logo-coffre'
-						className='w-8 h-8'
-					/>
+					<Link to='/page-blanche'>
+						<img
+							src='/logo-treasure.svg'
+							alt='logo-coffre'
+							className='w-8 h-8'
+						/>
+					</Link>
 					<p className='text-black text-[0.6rem] mt-1'>
 						2025 © Copyright
 					</p>
@@ -174,11 +176,13 @@ export default function Footer() {
 
 				{/* Logo du coffre à droite */}
 				<div className='col-span-2 flex justify-end items-center mr-[15%]'>
-					<img
-						src='/logo-treasure.svg'
-						alt='logo-coffre'
-						className='w-12 h-12'
-					/>
+					<Link to='/page-blanche'>
+						<img
+							src='/logo-treasure.svg'
+							alt='logo-coffre'
+							className='w-12 h-12'
+						/>
+					</Link>
 				</div>
 			</div>
 
