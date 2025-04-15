@@ -29,7 +29,31 @@ const DonutChart = () => {
 		plotOptions: {
 			pie: {
 				donut: {
-					size: "65%",
+					labels: {
+						show: true,
+						name: {
+							show: true,
+							fontSize: "16px",
+							color: "#666",
+							offsetY: -10,
+						},
+						value: {
+							show: true,
+							fontSize: "20px",
+							color: remaining < 0 ? "#ef4444" : "#000", // rouge si dépassement
+							offsetY: 10,
+							formatter: () => `${remaining} €`,
+						},
+						total: {
+							show: true,
+							label: `Budget 
+							restant`,
+							fontSize: "14px",
+							fontWeight: "bold",
+							color: "#666",
+							formatter: () => `${remaining} €`,
+						},
+					},
 				},
 			},
 		},
@@ -62,7 +86,7 @@ const DonutChart = () => {
 				breakpoint: 480,
 				options: {
 					chart: {
-						width: 200,
+						width: 300,
 					},
 					legend: {
 						position: "bottom",
@@ -73,17 +97,7 @@ const DonutChart = () => {
 	};
 
 	return (
-		<div className="relative w-full max-w-md mx-auto mt-8">
-			{/* Overlay texte */}
-			<div className="absolute inset-0 flex flex-col items-center place-self-center mr-24 pointer-events-none">
-				<p className="text-lg font-bold text-gray-600">Budget restant</p>
-				<p
-					className={`text-xl font-semibold ${remaining < 0 ? "text-red-500" : "text-black"}`}
-				>
-					{remaining} €
-				</p>
-			</div>
-
+		<div className="mt-4 justify-center flex ">
 			<ReactApexChart
 				options={options}
 				series={series}
