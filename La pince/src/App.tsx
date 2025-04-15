@@ -12,6 +12,8 @@ import LegalNotices from "./pages/Footer/LegaleNotices";
 import UserStories from "./pages/Footer/UserStories";
 import NotFound from "./pages/NotFound";
 
+import PageBlanche from "./pages/PageBlanche.tsx";
+
 function App() {
 	return (
 		<>
@@ -29,6 +31,7 @@ function App() {
 					<Route path={"/security-data"} element={<SecurityData />} />
 					<Route path={"/legal-notices"} element={<LegalNotices />} />
 					<Route path={"/user-guide"} element={<UserStories />} />
+					<Route path={"/page-blanche"} element={<PageBlanche />} />
 					<Route path={"*"} element={<NotFound />} />
 				</Routes>
 				<Footer />
