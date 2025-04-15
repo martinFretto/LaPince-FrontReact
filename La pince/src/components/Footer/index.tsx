@@ -56,9 +56,12 @@ export default function Footer() {
 					<p className='text-black cursor-pointer font-bold hover:text-gray-600'>
 						Mode d'emploi
 					</p>
-					<p className='text-black cursor-pointer hover:text-gray-600'>
+					<Link
+						to='/legal-notices'
+						className='text-black hover:text-gray-600'
+					>
 						Mentions légales
-					</p>
+					</Link>
 					<Link
 						to='/security-data'
 						className='text-black hover:text-gray-600'
@@ -143,9 +146,12 @@ export default function Footer() {
 					<p className='text-black cursor-pointer hover:text-gray-600'>
 						Mode d'emploi
 					</p>
-					<p className='text-black cursor-pointer hover:text-gray-600'>
+					<Link
+						to='/legal-notices'
+						className='text-black hover:text-gray-600'
+					>
 						Mentions légales
-					</p>
+					</Link>
 					<Link
 						to='/security-data'
 						className='text-black hover:text-gray-600'

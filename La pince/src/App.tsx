@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import PrivacyPolicy from "./pages/Footer/PrivacyPolicy";
 import SecurityData from "./pages/Footer/SecurityData";
+import LegalNotices from "./pages/Footer/legale-notices";
 
 function App() {
 	return (
@@ -24,6 +25,7 @@ function App() {
 						element={<PrivacyPolicy />}
 					/>
 					<Route path={"/security-data"} element={<SecurityData />} />
+					<Route path={"/legal-notices"} element={<LegalNotices />} />
 				</Routes>
 				<Footer />
 			</BrowserRouter>
