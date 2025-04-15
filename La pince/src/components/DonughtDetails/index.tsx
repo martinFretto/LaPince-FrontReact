@@ -29,9 +29,7 @@ const DonutDetail = ({ budget }: { budget: Budget }) => {
 		chart: {
 			type: "donut",
 		},
-		labels: overBudget
-			? ["Budget alloué", "Dépassement"]
-			: ["Dépensé", "Restant"],
+		labels: overBudget ? ["Budget alloué", "Dépassement"] : ["", "Restant"],
 		colors: overBudget ? ["#00E396", "#FF4560"] : ["#fff", `${budget.color}`],
 		stroke: {
 			show: true,
@@ -40,6 +38,7 @@ const DonutDetail = ({ budget }: { budget: Budget }) => {
 		},
 		legend: {
 			position: "bottom",
+			offsetX: -50,
 		},
 		dataLabels: {
 			enabled: false,
@@ -78,7 +77,7 @@ const DonutDetail = ({ budget }: { budget: Budget }) => {
 
 	return (
 		<div>
-			<h2 className="text-xl font-semibold place-self-center -mt-2">
+			<h2 className="text-xl font-semibold flex justify-center -mt-2">
 				{budget.name}
 			</h2>
 			<ReactApexChart
