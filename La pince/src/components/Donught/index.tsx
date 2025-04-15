@@ -59,7 +59,7 @@ const DonutChart = () => {
 		},
 		dataLabels: {
 			enabled: true,
-			formatter: (val: number, opts) => {
+			formatter: (_val: number, opts) => {
 				const value = opts.w.config.series[opts.seriesIndex];
 				return `${value} €`;
 			},
