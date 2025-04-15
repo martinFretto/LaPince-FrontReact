@@ -24,10 +24,8 @@ function App() {
 					<Route path={"/register"} element={<RegisterPage />} />
 					<Route path={"/login"} element={<Login />} />
 					<Route path={"/dashboard"} element={<Dashboard />} />
-					<Route
-						path={"/privacy-policy"}
-						element={<PrivacyPolicy />}
-					/>
+					<Route path={"/budgets"} element={<Budgets />} />
+					<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 					<Route path={"/security-data"} element={<SecurityData />} />
 					<Route path={"/legal-notices"} element={<LegalNotices />} />
 					<Route path={"/user-guide"} element={<UserStories />} />
