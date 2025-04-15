@@ -67,7 +67,7 @@ export const expenditures = [
 	},
 	{
 		id: 7,
-		description: "Tournée générale des petites pinces !",
+		description: "Tournée générale des petites pinces par Bob !",
 		payment_method: "Prélèvement",
 		amount: 42.3,
 		date: "2025-08-26",
