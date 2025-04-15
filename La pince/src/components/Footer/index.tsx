@@ -53,9 +53,12 @@ export default function Footer() {
 				</div>
 
 				<div className='flex flex-col items-center space-y-1 text-[0.6rem]'>
-					<p className='text-black cursor-pointer font-bold hover:text-gray-600'>
+					<Link
+						to='/user-guide'
+						className='text-black font-bold hover:text-gray-600'
+					>
 						Mode d'emploi
-					</p>
+					</Link>
 					<Link
 						to='/legal-notices'
 						className='text-black hover:text-gray-600'
@@ -143,9 +146,12 @@ export default function Footer() {
 
 				{/* Liens au centre-droit */}
 				<div className='col-span-4 flex flex-col items-end space-y-1 text-sm'>
-					<p className='text-black cursor-pointer hover:text-gray-600'>
+					<Link
+						to='/user-guide'
+						className='text-black hover:text-gray-600'
+					>
 						Mode d'emploi
-					</p>
+					</Link>
 					<Link
 						to='/legal-notices'
 						className='text-black hover:text-gray-600'

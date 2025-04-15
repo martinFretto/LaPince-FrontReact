@@ -8,7 +8,8 @@ import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import PrivacyPolicy from "./pages/Footer/PrivacyPolicy";
 import SecurityData from "./pages/Footer/SecurityData";
-import LegalNotices from "./pages/Footer/legale-notices";
+import LegalNotices from "./pages/Footer/LegaleNotices";
+import UserStories from "./pages/Footer/UserStories";
 
 function App() {
 	return (
@@ -26,6 +27,7 @@ function App() {
 					/>
 					<Route path={"/security-data"} element={<SecurityData />} />
 					<Route path={"/legal-notices"} element={<LegalNotices />} />
+					<Route path={"/user-guide"} element={<UserStories />} />
 				</Routes>
 				<Footer />
 			</BrowserRouter>
