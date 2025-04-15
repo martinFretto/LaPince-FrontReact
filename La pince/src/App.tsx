@@ -11,6 +11,8 @@ import SecurityData from "./pages/Footer/SecurityData";
 import LegalNotices from "./pages/Footer/LegaleNotices";
 import UserStories from "./pages/Footer/UserStories";
 import NotFound from "./pages/NotFound";
+import Budgets from "./pages/Budgets";
+import BudgetDetails from "./pages/BudgetDetails";
 
 import PageBlanche from "./pages/PageBlanche.tsx";
 
@@ -25,6 +27,7 @@ function App() {
 					<Route path={"/login"} element={<Login />} />
 					<Route path={"/dashboard"} element={<Dashboard />} />
 					<Route path={"/budgets"} element={<Budgets />} />
+					<Route path={"/budgets/:slug"} element={<BudgetDetails />} />
 					<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 					<Route path={"/security-data"} element={<SecurityData />} />
 					<Route path={"/legal-notices"} element={<LegalNotices />} />

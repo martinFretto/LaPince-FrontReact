@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../App.css";
 import DonutDetail from "../components/DonughtDetails/index";
 import { budgets } from "../data/budget";
@@ -18,7 +18,7 @@ export default function Budgets() {
 						<p className="text-[12px] -mt-1 mb-3">disponible</p>
 					</div>
 					<progress
-						className="progress w-25 h-4 border-1 border-black custom-progress shadow-md shadow-gray-600"
+						className="progress progress-success w-25 h-4 border-1 border-black custom-progress shadow-md shadow-gray-600"
 						value="70"
 						max="100"
 					/>
@@ -33,20 +33,27 @@ export default function Budgets() {
 							key={budget.id}
 							className="relative border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60"
 						>
-							<img
-								src={budget.icon}
-								alt="icone du budget"
-								className="w-10 absolute mt-20"
-							/>
-							<DonutDetail budget={budget} />
+							<NavLink
+								to={`${budget.name}`}
+								state={{ budget }}
+								className="w-full h-full flex flex-col items-center"
+							>
+								<img
+									src={budget.icon}
+									alt="icone du budget"
+									className="w-10 mb-4"
+								/>
+								<DonutDetail budget={budget} />
+							</NavLink>
+
 							<div className="absolute bottom-4 right-4">
-								<Link to="/dashboard">
+								<NavLink to="/dashboard">
 									<img
 										src="/logo-settings.svg"
 										alt="logo-reglage"
 										className="w-8 h-8"
 									/>
-								</Link>
+								</NavLink>
 							</div>
 						</div>
 					))}
