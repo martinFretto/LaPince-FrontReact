@@ -18,7 +18,7 @@ type Budget = {
 const DonutDetail = ({ budget }: { budget: Budget }) => {
 	const { allocated_amount, spent_amount } = budget;
 
-	const remainingBudget = Math.round(allocated_amount - spent_amount, 0);
+	const remainingBudget = Math.round(allocated_amount - spent_amount);
 	const overBudget = spent_amount > allocated_amount;
 
 	const series = overBudget
