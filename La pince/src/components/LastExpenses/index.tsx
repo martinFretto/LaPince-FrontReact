@@ -1,15 +1,12 @@
 import { expenditures } from "../../data/expenditure";
-import { budgets } from "../../data/budget";
 
 export default function LastExpenses() {
-	// Trier les dépenses par date décroissante
 	const sortedExpenses = [...expenditures].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 	);
 
-	// On ne garde que les 6 dernieres (0, 6)
-	const recentExpenses = sortedExpenses.slice(0, 10);
-
+	// Garder les 5 ou 10 dernières par exemple
+	const recentExpenses = sortedExpenses.slice(0, 6);
 	return (
 		<div className="p-4 mt-4">
 			<h2 className="text-xl font-semibold mb-4 flex justify-center">
