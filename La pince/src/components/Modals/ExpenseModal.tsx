@@ -50,13 +50,15 @@ export default function ExpenseModal({
 						{/* Montant */}
 						<div className='text-center'>
 							<label className='block mb-1 text-black'>Montant</label>
-							<input
-								type='number'
-								value={amount}
-								onChange={(e) => setAmount(e.target.value)}
-								className='border border-gray-300 rounded w-full p-2 text-center'
-								placeholder='0.00 €'
-							/>
+							<div className='flex justify-center'>
+								<input
+									type='number'
+									value={amount}
+									onChange={(e) => setAmount(e.target.value)}
+									className='border border-gray-300 rounded p-2 text-center max-w-[80%]'
+									placeholder='0.00 €'
+								/>
+							</div>
 						</div>
 
 						{/* Description */}
@@ -64,23 +66,27 @@ export default function ExpenseModal({
 							<label className='block mb-1 text-black'>
 								Description
 							</label>
-							<input
-								type='text'
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-								className='border border-gray-300 rounded w-full p-2 text-center'
-							/>
+							<div className='flex justify-center'>
+								<input
+									type='text'
+									value={description}
+									onChange={(e) => setDescription(e.target.value)}
+									className='border border-gray-300 rounded p-2 text-center max-w-[80%]'
+								/>
+							</div>
 						</div>
 
 						{/* Date */}
 						<div className='text-center'>
 							<label className='block mb-1 text-black'>Date</label>
-							<input
-								type='date'
-								value={date}
-								onChange={(e) => setDate(e.target.value)}
-								className='border border-gray-300 rounded w-full p-2 text-center'
-							/>
+							<div className='flex justify-center'>
+								<input
+									type='date'
+									value={date}
+									onChange={(e) => setDate(e.target.value)}
+									className='border border-gray-300 rounded p-2 text-center max-w-[80%]'
+								/>
+							</div>
 						</div>
 					</div>
 
