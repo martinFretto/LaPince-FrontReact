@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../App.css";
 import DonutDetail from "../components/DonughtDetails/index";
 import { budgets } from "../data/budget";
@@ -58,6 +58,12 @@ export default function Budgets() {
 						</div>
 					))}
 				</div>
+				<button
+					type="button"
+					className="btn bg-[#4DABF7] border-2 border-[#1971C2] text-white mx-auto flex justify-center mt-4"
+				>
+					Ajouter un budget
+				</button>
 			</div>
 		</div>
 	);
