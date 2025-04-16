@@ -6,22 +6,36 @@ import { useState } from "react";
 
 export default function Budgets() {
 	const [isOpen, setIsOpen] = useState(false);
+
+	const totalBudget = budgets.reduce(
+		(acc, budget) => acc + budget.allocated_amount,
+		0,
+	);
+
+	const series = budgets.map((budget) => budget.spent_amount);
+	const spent = series.reduce((acc, val) => acc + val, 0);
+	// calcul du montant restant par budget
+	const remaining = Math.round((totalBudget - spent) * 100) / 100;
+
+	const remainingPercent = Math.round((remaining / totalBudget) * 100);
+	console.log(remainingPercent);
+
 	return (
 		<div>
 			{/* En-tête général */}
 			<div className="flex justify-around align-middle my-6 xl:mx-60 2xl:mx-150 ">
 				<div className="justify-items-center">
-					<p className="font-semibold text-xl">7777,77 €</p>
+					<p className="font-semibold text-xl">{remaining} €</p>
 					<p className="font-semibold text-xl">restant</p>
 				</div>
 				<div className="flex flex-col">
 					<div className="justify-items-center">
-						<p className="font-semibold text-xl">90 %</p>
+						<p className="font-semibold text-xl">{remainingPercent} %</p>
 						<p className="text-[12px] -mt-1 mb-3">disponible</p>
 					</div>
 					<progress
 						className="progress progress-success w-25 h-4 border-1 border-black custom-progress shadow-md shadow-gray-600"
-						value="70"
+						value={remainingPercent}
 						max="100"
 					/>
 				</div>
