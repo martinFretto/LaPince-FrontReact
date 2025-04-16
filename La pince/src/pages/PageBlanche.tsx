@@ -1,15 +1,25 @@
 import { useState } from "react";
 import ExpenseModal from "../components/Modals/ExpenseModal";
+import BudgetModal from "../components/Modals/AddedExpense";
 
 export default function PageBlanche() {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+	const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
 
-	const openModal = () => {
-		setIsModalOpen(true);
+	const openExpenseModal = () => {
+		setIsExpenseModalOpen(true);
 	};
 
-	const closeModal = () => {
-		setIsModalOpen(false);
+	const closeExpenseModal = () => {
+		setIsExpenseModalOpen(false);
+	};
+
+	const openBudgetModal = () => {
+		setIsBudgetModalOpen(true);
+	};
+
+	const closeBudgetModal = () => {
+		setIsBudgetModalOpen(false);
 	};
 
 	return (
@@ -25,7 +35,7 @@ export default function PageBlanche() {
 					</p>
 
 					<button
-						onClick={openModal}
+						onClick={openExpenseModal}
 						className='btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-2 rounded'
 					>
 						Modal d'ajout de dépense
@@ -40,19 +50,25 @@ export default function PageBlanche() {
 					</p>
 
 					<button
-						onClick={openModal}
+						onClick={openBudgetModal}
 						className='btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-2 rounded'
 					>
-						Modal d'ajout de ...
+						Modal d'ajout de budget
 					</button>
 				</div>
 			</div>
 
 			{/* Intégration de la modale de dépense */}
 			<ExpenseModal
-				isOpen={isModalOpen}
-				onClose={closeModal}
+				isOpen={isExpenseModalOpen}
+				onClose={closeExpenseModal}
 				categoryName='Cadeaux'
+			/>
+
+			{/* Intégration de la modale de budget */}
+			<BudgetModal
+				isOpen={isBudgetModalOpen}
+				onClose={closeBudgetModal}
 			/>
 		</div>
 	);

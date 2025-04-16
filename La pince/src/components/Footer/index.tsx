@@ -4,6 +4,7 @@ export default function Footer() {
 	return (
 		<div className="bg-yellow-100 w-full px-4 py-7 md:px-[5%]">
 			{/* Mobile design (par défaut) */}
+<<<<<<< HEAD
 			<div className="flex flex-col items-center space-y-3 md:hidden">
 				<div className="flex gap-2 justify-center">
 					<img
@@ -25,6 +26,29 @@ export default function Footer() {
 						src="/socialNetworkLogo/logo-instagram.svg"
 						alt="logo-instagram"
 						className="w-6.5 h-8"
+=======
+			<div className='flex flex-col items-center space-y-3 md:hidden'>
+				<div className='flex gap-2 justify-center'>
+					<img
+						src='/socialNetworkLogo/logo-youtube.svg'
+						alt='logo-youtube'
+						className='w-8 h-8'
+					/>
+					<img
+						src='/socialNetworkLogo/logo-facebook.svg'
+						alt='logo-facebook'
+						className='w-6 h-8'
+					/>
+					<img
+						src='/socialNetworkLogo/logo-linkedin.svg'
+						alt='logo-linkedin'
+						className='w-8 h-8'
+					/>
+					<img
+						src='/socialNetworkLogo/logo-instagram.svg'
+						alt='logo-instagram'
+						className='w-6.5 h-8'
+>>>>>>> feature/expense-modal
 					/>
 				</div>
 
