@@ -1,5 +1,7 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
+import LastExpenses from "../components/LastExpenses";
+import DetailsExpenses from "../components/DetailsExpenses";
 
 export default function BudgetDetails() {
 	const location = useLocation();
@@ -63,6 +65,10 @@ export default function BudgetDetails() {
 				<div className="flex justify-center font-semibold text-2xl mt-4">
 					<h2>Mes dépenses {budget.name}</h2>
 				</div>
+			</div>
+
+			<div>
+				<DetailsExpenses budget={budget.id} />
 			</div>
 		</div>
 	);
