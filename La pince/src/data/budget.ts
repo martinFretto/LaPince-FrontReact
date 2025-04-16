@@ -3,7 +3,7 @@ export const budgets = [
 		id: 1,
 		name: "Alimentation",
 		warning_amount: 200.0,
-		spent_amount: 120.0,
+		spent_amount: 150.0,
 		allocated_amount: 200.0,
 		color: "#FF6384",
 		icon: "/budgetsLogo/logo-cart.svg",

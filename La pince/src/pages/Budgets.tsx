@@ -43,7 +43,7 @@ export default function Budgets() {
 								<img
 									src={budget.icon}
 									alt="icone du budget"
-									className="w-10 mb-4"
+									className="w-10 mb-4 absolute mt-22"
 								/>
 								<DonutDetail budget={budget} />
 							</NavLink>
@@ -80,7 +80,7 @@ export default function Budgets() {
 						{/* Contenu de la modal */}
 						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div
-							className="bg-gray-200  shadow-2xl shadow-gray-700 w-4/5 sm:w-3/4 lg:w-2/3 xl:w-4/7 2xl:w-2/7 p-1 border-black border-2"
+							className="bg-gray-200 shadow-2xl shadow-gray-700 w-4/5 sm:w-3/4 lg:w-2/3 xl:w-4/7 2xl:w-2/7 p-1 border-black border-2"
 							onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique sur l'image
 						>
 							<h1>Titre</h1>
@@ -90,7 +90,7 @@ export default function Budgets() {
 							<p>champ</p>
 							<button
 								type="button"
-								className="btn bg-[#4DABF7] border-2 border-[#1971C2] rounded-xl text-white mx-auto flex justify-center mt-4"
+								className="btn bg-[#4DABF7] border-2 border-[#1971C2] rounded-2xl text-white mx-auto flex justify-center mt-4"
 							>
 								Valider
 							</button>

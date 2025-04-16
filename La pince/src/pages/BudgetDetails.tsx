@@ -9,6 +9,7 @@ export default function BudgetDetails() {
 	if (!budget) {
 		return <div>Budget non trouvé</div>;
 	}
+
 	interface BudgetType {
 		id: number;
 		name: string;

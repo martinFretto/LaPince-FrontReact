@@ -1,16 +1,31 @@
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 import { useNavigate } from "react-router-dom";
+import { budgets } from "../../data/budget";
 
 const DonutChart = () => {
 	const navigate = useNavigate();
 
-	const categories = ["test", "Crédit", "Transport", "Vacances"];
-	const series = [450, 157, 255, 1024]; // dépenses
-	const totalBudget = 2000;
-	const spent = series.reduce((acc, val) => acc + val, 0);
-	const remaining = totalBudget - spent;
+	// map de budgets pour récuperer les informations
+	const categories = budgets.map((budget) => budget.name);
+	const colors = budgets.map((budget) => budget.color);
+	const series = budgets.map((budget) => budget.spent_amount);
+	// récuperation et addition du total des budgets
+	const totalBudget = budgets.reduce(
+		(acc, budget) => acc + budget.allocated_amount,
+		0,
+	);
+	// calcul du montant restant par budget
+	const remainingByBudget = budgets.map(
+		(budget) => budget.allocated_amount - budget.spent_amount,
+	);
 
+	const spent = series.reduce((acc, val) => acc + val, 0);
+	// *100 / 100 pour les 2 chiffres apres la virgule
+	const remaining = Math.round((totalBudget - spent) * 100) / 100;
+
+	console.log("spent", spent);
+	console.log("spent", spent);
 	const options: ApexOptions = {
 		chart: {
 			type: "donut",
@@ -19,13 +34,17 @@ const DonutChart = () => {
 					const selectedIndex = config.dataPointIndex;
 					const selectedCategory = categories[selectedIndex];
 					if (selectedCategory) {
-						navigate(`/${selectedCategory.toLowerCase()}`);
+						navigate(`/budgets/${selectedCategory}`, {
+							state: {
+								budget: budgets[selectedIndex], // on envoi seulement le budget selectionné
+							},
+						});
 					}
 				},
 			},
 		},
 		labels: categories,
-		colors: ["#FFEC99", "#D0BFFF", "#A5D8FF", "#96F2D7"],
+		colors,
 		plotOptions: {
 			pie: {
 				donut: {
@@ -59,9 +78,9 @@ const DonutChart = () => {
 		},
 		dataLabels: {
 			enabled: true,
-			formatter: (_val: number, opts) => {
-				const value = opts.w.config.series[opts.seriesIndex];
-				return `${value} €`;
+			formatter: (_val, opts) => {
+				const value = remainingByBudget[opts.seriesIndex];
+				return `${Math.round(value * 100) / 100} €`;
 			},
 			style: {
 				colors: ["#000"],
