@@ -1,7 +1,6 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
-import { budgets } from "../../data/budget";
 
 export default function BudgetDetails() {
 	const location = useLocation();
