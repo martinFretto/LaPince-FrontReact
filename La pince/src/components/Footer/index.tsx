@@ -6,50 +6,26 @@ export default function Footer() {
 			{/* Mobile design (par défaut) */}
 			<div className='flex flex-col items-center space-y-3 md:hidden'>
 				<div className='flex gap-2 justify-center'>
-					<a
-						href='https://www.youtube.com/@OclockIo'
-						target='_blank'
-						rel='noopener noreferrer'
-					>
-						<img
-							src='/logo-youtube.svg'
-							alt='logo-youtube'
-							className='w-8 h-8'
-						/>
-					</a>
-					<a
-						href='https://www.facebook.com/Oclock.io/'
-						target='_blank'
-						rel='noopener noreferrer'
-					>
-						<img
-							src='/logo-facebook.svg'
-							alt='logo-facebook'
-							className='w-6 h-8'
-						/>
-					</a>
-					<a
-						href="https://www.linkedin.com/school/ecole-o'clock/"
-						target='_blank'
-						rel='noopener noreferrer'
-					>
-						<img
-							src='/logo-linkedin.svg'
-							alt='logo-linkedin'
-							className='w-9 h-9'
-						/>
-					</a>
-					<a
-						href='https://www.instagram.com/oclock_io/'
-						target='_blank'
-						rel='noopener noreferrer'
-					>
-						<img
-							src='/logo-instagram.svg'
-							alt='logo-instagram'
-							className='w-6.5 h-8'
-						/>
-					</a>
+					<img
+						src='/socialNetworkLogo/logo-youtube.svg'
+						alt='logo-youtube'
+						className='w-8 h-8'
+					/>
+					<img
+						src='/socialNetworkLogo/logo-facebook.svg'
+						alt='logo-facebook'
+						className='w-6 h-8'
+					/>
+					<img
+						src='/socialNetworkLogo/logo-linkedin.svg'
+						alt='logo-linkedin'
+						className='w-8 h-8'
+					/>
+					<img
+						src='/socialNetworkLogo/logo-instagram.svg'
+						alt='logo-instagram'
+						className='w-6.5 h-8'
+					/>
 				</div>
 
 				<div className='flex flex-col items-center space-y-1 text-[0.6rem]'>
