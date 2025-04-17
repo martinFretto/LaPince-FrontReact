@@ -23,11 +23,11 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path={"/"} element={<LandingPage />} />
-					<Route path={"/register"} element={<RegisterPage />} />
-					<Route path={"/login"} element={<Login />} />
+					<Route path={"/auth/register"} element={<RegisterPage />} />
+					<Route path={"/auth/login"} element={<Login />} />
 					<Route path={"/dashboard"} element={<Dashboard />} />
 					<Route path={"/budgets"} element={<Budgets />} />
-					<Route path={"/budgets/:slug"} element={<BudgetDetails />} />
+					<Route path={"/budgets/:id"} element={<BudgetDetails />} />
 					<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 					<Route path={"/security-data"} element={<SecurityData />} />
 					<Route path={"/legal-notices"} element={<LegalNotices />} />

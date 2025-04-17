@@ -63,7 +63,7 @@ export default function Budgets() {
 							className='relative border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60'
 						>
 							<NavLink
-								to={`${budget.name}`}
+								to={`${budget.id}`}
 								state={{ budget }}
 								className='w-full h-full flex flex-col items-center'
 							>

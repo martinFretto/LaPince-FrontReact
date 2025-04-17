@@ -1,11 +1,15 @@
 import { expenditures } from "../../data/expenditure";
 import { budgets } from "../../data/budget";
 
-type LastExpensesProps = {
+type DetailsExpensesProps = {
 	budget?: number;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	onExpenseClick?: (expense: any) => void;
 };
-
-export default function LastExpenses({ budget }: LastExpensesProps) {
+export default function DetailsExpenses({
+	budget,
+	onExpenseClick,
+}: DetailsExpensesProps) {
 	const filteredExpenses = budget
 		? expenditures.filter((exp) => exp.budget_id === budget)
 		: expenditures;
@@ -24,7 +28,12 @@ export default function LastExpenses({ budget }: LastExpensesProps) {
 						const relatedBudget = budgets.find((b) => b.id === exp.budget_id);
 
 						return (
-							<tr key={exp.id}>
+							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+							<tr
+								key={exp.id}
+								onClick={() => onExpenseClick?.(exp)}
+								className="cursor-pointer hover:bg-gray-100 transition"
+							>
 								<td colSpan={3}>
 									<div className="border-b border-gray-300 flex justify-between items-center pb-2">
 										<div className="flex items-center gap-2 justify-between w-full">
