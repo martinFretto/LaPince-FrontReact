@@ -9,7 +9,7 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 	const [title, setTitle] = useState("");
 	const [amount, setAmount] = useState("");
 	const [icon, setIcon] = useState("");
-	const [threshold, setThreshold] = useState("");
+	const [warning_amount, setWarning_amount] = useState("");
 	const [color, setColor] = useState("#A5D8FF");
 
 	if (!isOpen) return null;
@@ -98,15 +98,15 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 
 						{/* Seuil d'alerte */}
 						<div className="w-full md:w-[48%]">
-							<label className="block mb-1 text-black" htmlFor="warning_amount">
+							<label className="block mb-1 text-black" htmlFor="title">
 								Seuil d'alerte
 							</label>
 							<div className="relative">
 								<input
-									id="warning_amount"
+									id="title"
 									type="number"
-									value={threshold}
-									onChange={(e) => setThreshold(e.target.value)}
+									value={warning_amount}
+									onChange={(e) => setWarning_amount(e.target.value)}
 									className="border border-gray-300 rounded p-2 w-full"
 								/>
 								<span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
@@ -137,7 +137,7 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 							onClick={onClose}
 							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-black text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 						>
-							Valider
+							Ajouter
 						</button>
 					</div>
 				</div>

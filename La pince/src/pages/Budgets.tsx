@@ -2,11 +2,8 @@ import { NavLink } from "react-router-dom";
 import "../App.css";
 import DonutDetail from "../components/DonughtDetails/index";
 import { budgets } from "../data/budget";
-import { useState } from "react";
 
 export default function Budgets() {
-	const [isOpen, setIsOpen] = useState(false);
-
 	const totalBudget = budgets.reduce(
 		(acc, budget) => acc + budget.allocated_amount,
 		0,
@@ -77,40 +74,9 @@ export default function Budgets() {
 				<button
 					type="button"
 					className="btn bg-[#4DABF7] border-2 border-[#1971C2] text-white mx-auto flex justify-center mt-4"
-					onClick={() => setIsOpen(true)}
 				>
 					Ajouter un budget
 				</button>
-				{/* Modal d'ajout de budget */}
-				{isOpen && (
-					<div
-						className="fixed inset-0  flex items-center justify-center z-2 "
-						onClick={() => setIsOpen(false)} // Ferme la modal quand tu cliques sur le fond
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") setIsOpen(false); // Ferme avec "Enter" ou "Espace"
-						}}
-						aria-label="Fermer la modal"
-					>
-						{/* Contenu de la modal */}
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-						<div
-							className="bg-gray-200 shadow-2xl shadow-gray-700 w-4/5 sm:w-3/4 lg:w-2/3 xl:w-4/7 2xl:w-2/7 p-1 border-black border-2"
-							onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique sur l'image
-						>
-							<h1>Titre</h1>
-							<p>label</p>
-							<p>champ</p>
-							<p>label</p>
-							<p>champ</p>
-							<button
-								type="button"
-								className="btn bg-[#4DABF7] border-2 border-[#1971C2] rounded-2xl text-white mx-auto flex justify-center mt-4"
-							>
-								Valider
-							</button>
-						</div>
-					</div>
-				)}
 			</div>
 		</div>
 	);

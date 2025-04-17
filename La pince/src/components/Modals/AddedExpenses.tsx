@@ -103,7 +103,7 @@ export default function ExpenseModal({
 							onClick={onClose}
 							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-black text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
 						>
-							Valider
+							Ajouter
 						</button>
 					</div>
 				</div>

@@ -35,7 +35,7 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 
 						{/* Titre */}
 						<h2 className="text-lg font-medium text-black text-center w-full">
-							Ajouter un budget
+							Modifier un budget
 						</h2>
 					</div>
 
@@ -98,12 +98,12 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 
 						{/* Seuil d'alerte */}
 						<div className="w-full md:w-[48%]">
-							<label className="block mb-1 text-black" htmlFor="title">
+							<label className="block mb-1 text-black" htmlFor="warning_amount">
 								Seuil d'alerte
 							</label>
 							<div className="relative">
 								<input
-									id="title"
+									id="warning_amount"
 									type="number"
 									value={threshold}
 									onChange={(e) => setThreshold(e.target.value)}
@@ -137,7 +137,7 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 							onClick={onClose}
 							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-black text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 						>
-							Valider
+							Modifier
 						</button>
 					</div>
 				</div>
