@@ -17,11 +17,8 @@ export default function ExpensesModal({
 	const [description, setDescription] = useState("");
 	const [date, setDate] = useState("");
 
-<<<<<<< HEAD
-=======
 	const remainingLength = Math.max(0, 60 - description.length);
 
->>>>>>> modals-expenses
 	useEffect(() => {
 		if (isOpen && selectedExpense) {
 			setAmount(selectedExpense.amount.toString());
@@ -71,10 +68,7 @@ export default function ExpensesModal({
 								onChange={(e) => setAmount(e.target.value)}
 								className="bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
 								placeholder="0.00"
-<<<<<<< HEAD
-=======
 								required
->>>>>>> modals-expenses
 							/>
 							<span className="absolute right-17 top-1/2 transform -translate-y-1/2 text-gray-500">
 								€
@@ -87,16 +81,6 @@ export default function ExpensesModal({
 						<label className="block mb-1 text-black" htmlFor="description">
 							Description
 						</label>
-<<<<<<< HEAD
-						<div className="flex justify-center">
-							<input
-								id="description"
-								type="text"
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-								className="bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
-							/>
-=======
 						<div className="flex flex-col justify-center">
 							<textarea
 								id="description"
@@ -109,7 +93,6 @@ export default function ExpensesModal({
 							<li className="flex items-center">
 								Reste {remainingLength} caractères
 							</li>
->>>>>>> modals-expenses
 						</div>
 					</div>
 
@@ -125,10 +108,7 @@ export default function ExpensesModal({
 								value={date}
 								onChange={(e) => setDate(e.target.value)}
 								className="bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
-<<<<<<< HEAD
-=======
 								required
->>>>>>> modals-expenses
 							/>
 						</div>
 					</div>
