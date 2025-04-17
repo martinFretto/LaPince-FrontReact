@@ -24,8 +24,6 @@ const DonutChart = () => {
 	// *100 / 100 pour les 2 chiffres apres la virgule
 	const remaining = Math.round((totalBudget - spent) * 100) / 100;
 
-	console.log("spent", spent);
-	console.log("spent", spent);
 	const options: ApexOptions = {
 		chart: {
 			type: "donut",
