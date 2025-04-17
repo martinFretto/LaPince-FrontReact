@@ -2,7 +2,7 @@ export const budgets = [
 	{
 		id: 1,
 		name: "Alimentation",
-		warning_amount: 200.0,
+		warning_amount: 250.0,
 		spent_amount: 150.0,
 		allocated_amount: 200.0,
 		color: "#FF6384",

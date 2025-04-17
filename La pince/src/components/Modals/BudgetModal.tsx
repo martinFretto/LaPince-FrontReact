@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
 
 interface BudgetModalProps {
-	isOpen: boolean;
+	isModalOpen: boolean;
+
 	onClose: () => void;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	selectedBudget: any;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	setSelectedBudget: (expense: any) => void;
 }
 
-export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
-	const [title, setTitle] = useState("");
-	const [amount, setAmount] = useState("");
+export default function BudgetModal({
+	isModalOpen,
+	onClose,
+	selectedBudget,
+}: BudgetModalProps) {
+	const [name, setName] = useState("");
+	const [allocated_amount, setAllocated_amount] = useState("");
 	const [icon, setIcon] = useState("");
-	const [icons, setIcons] = useState<{ name: string; src: string }[]>([]);
 	const [warning_amount, setWarning_amount] = useState("");
 	const [color, setColor] = useState("#A5D8FF");
+
+	const [icons, setIcons] = useState<{ name: string; src: string }[]>([]);
 
 	useEffect(() => {
 		// Importation dynamique de tous les .svg
@@ -25,7 +35,27 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 		setIcons(loadedIcons);
 	}, []);
 
-	if (!isOpen) return null;
+	useEffect(() => {
+		if (!isModalOpen) return;
+
+		if (selectedBudget) {
+			// Mode édition
+			setName(selectedBudget.name?.toString() ?? "");
+			setAllocated_amount(selectedBudget.allocated_amount?.toString() ?? "");
+			setIcon(selectedBudget.icon ?? "");
+			setWarning_amount(selectedBudget.warning_amount?.toString() ?? "");
+			setColor(selectedBudget.color ?? "#A5D8FF");
+		} else {
+			// Mode ajout
+			setName("");
+			setAllocated_amount("");
+			setIcon("");
+			setWarning_amount("");
+			setColor("#A5D8FF");
+		}
+	}, [isModalOpen, selectedBudget]);
+
+	if (!isModalOpen) return null;
 
 	return (
 		<div className="fixed inset-0 flex items-center justify-center z-50">
@@ -44,7 +74,9 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 							✕
 						</button>
 						<h2 className="text-lg font-medium text-black text-center w-full">
-							Ajouter un budget
+							{selectedBudget
+								? `Modifier le budget ${selectedBudget.name}`
+								: "Ajouter un budget"}
 						</h2>
 					</div>
 
@@ -52,14 +84,14 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 					<div className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4">
 						{/* Titre */}
 						<div className="w-full md:w-[48%]">
-							<label className="block mb-1 text-black" htmlFor="title">
+							<label className="block mb-1 text-black" htmlFor="name">
 								Titre du budget
 							</label>
 							<input
-								id="title"
+								id="name"
 								type="text"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
+								value={name}
+								onChange={(e) => setName(e.target.value)}
 								className="border border-gray-300 rounded p-2 w-full bg-white"
 							/>
 						</div>
@@ -76,8 +108,8 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
 								<input
 									id="allocated_amount"
 									type="number"
-									value={amount}
-									onChange={(e) => setAmount(e.target.value)}
+									value={allocated_amount}
+									onChange={(e) => setAllocated_amount(e.target.value)}
 									className="border border-gray-300 rounded p-2 w-full bg-white"
 								/>
 								<span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">

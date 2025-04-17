@@ -7,10 +7,7 @@ type DetailsExpensesProps = {
 	onExpenseClick?: (expense: any) => void;
 };
 
-export default function LastExpenses({
-	budget,
-	onExpenseClick,
-}: DetailsExpensesProps) {
+export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 	// Trier les dépenses par date décroissante
 	const sortedExpenses = [...expenditures].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),

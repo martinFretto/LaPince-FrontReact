@@ -3,13 +3,20 @@ import DonutDetail from "../components/DonughtDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
 import { useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
+import BudgetModal from "../components/Modals/BudgetModal";
 
 export default function BudgetDetails() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedBudget, setSelectedBudget] = useState(null);
 
 	const [selectedExpense, setSelectedExpense] = useState(null);
 	const location = useLocation();
 	const { budget }: { budget?: BudgetType } = location.state || {};
+
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleExpenseClick = (expense: any) => {
@@ -35,6 +42,11 @@ export default function BudgetDetails() {
 		created_at: string;
 		updated_at: string;
 	}
+
+	const handleEditBudget = (budget: any) => {
+		setSelectedBudget(budget);
+		openModal();
+	};
 
 	return (
 		<div>
@@ -67,14 +79,16 @@ export default function BudgetDetails() {
 						className="w-10 absolute mt-20 "
 					/>
 					<DonutDetail budget={budget} />
-					<div className="absolute bottom-4 right-4">
-						<Link to="/dashboard">
-							<img
-								src="/logo-settings.svg"
-								alt="logo-reglage"
-								className="w-8 h-8"
-							/>
-						</Link>
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+					<div
+						className="absolute bottom-4 right-4"
+						onClick={() => handleEditBudget(budget)}
+					>
+						<img
+							src="/logo-settings.svg"
+							alt="logo-reglage"
+							className="w-8 h-8"
+						/>
 					</div>
 				</div>
 				<div className="flex justify-center font-semibold text-2xl mt-4">
@@ -96,6 +110,15 @@ export default function BudgetDetails() {
 					onExpenseClick={handleExpenseClick}
 				/>
 			</div>
+
+			{/* Modale de modification de budget */}
+
+			<BudgetModal
+				isModalOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				selectedBudget={selectedBudget}
+				setSelectedBudget={setSelectedBudget}
+			/>
 		</div>
 	);
 }
