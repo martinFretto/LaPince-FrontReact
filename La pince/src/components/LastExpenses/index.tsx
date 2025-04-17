@@ -1,7 +1,16 @@
 import { expenditures } from "../../data/expenditure";
 import { budgets } from "../../data/budget";
 
-export default function LastExpenses() {
+type DetailsExpensesProps = {
+	budget?: number;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	onExpenseClick?: (expense: any) => void;
+};
+
+export default function LastExpenses({
+	budget,
+	onExpenseClick,
+}: DetailsExpensesProps) {
 	// Trier les dépenses par date décroissante
 	const sortedExpenses = [...expenditures].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
@@ -22,7 +31,12 @@ export default function LastExpenses() {
 						const relatedBudget = budgets.find((b) => b.id === exp.budget_id);
 
 						return (
-							<tr key={exp.id}>
+							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+							<tr
+								key={exp.id}
+								onClick={() => onExpenseClick?.(exp)} // on déclenche le callback ici
+								className="cursor-pointer hover:bg-gray-100 transition"
+							>
 								<td colSpan={3}>
 									<div className="border-b border-gray-300 flex justify-between items-center pb-2">
 										<div className="flex items-center gap-2 justify-between w-full">
