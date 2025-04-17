@@ -31,6 +31,10 @@ export default function ExpensesModal({
 		}
 	}, [isOpen, selectedExpense]);
 
+	const handleDelete = () => {
+		console.log("handleDelete");
+	};
+
 	if (!isOpen) return null;
 
 	return (
@@ -132,6 +136,20 @@ export default function ExpensesModal({
 						{selectedExpense ? "Modifier" : "Ajouter"}
 					</button>
 				</div>
+				{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
+				{selectedExpense ? (
+					<div>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						<img
+							src="/trash-alt-svgrepo-com.svg"
+							alt="image-poubelle"
+							className="absolute w-8 bottom-7 right-5"
+							onClick={handleDelete}
+						/>
+					</div>
+				) : (
+					""
+				)}
 			</div>
 		</div>
 	);

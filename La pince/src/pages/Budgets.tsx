@@ -26,12 +26,15 @@ export default function Budgets() {
 		setIsModalOpen(true);
 	};
 
-	const closeModal = () => {
-		setIsModalOpen(false);
-	};
-
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleEditBudget = (budget: any) => {
 		setSelectedBudget(budget);
+		openModal();
+	};
+
+	const handleAddBudget = () => {
+		setSelectedBudget(null); // 👈 vider le budget sélectionné en premier
+		setIsModalOpen(true);
 		openModal();
 	};
 
@@ -94,7 +97,7 @@ export default function Budgets() {
 				<button
 					type="button"
 					className="btn bg-[#4DABF7] border-2 border-[#1971C2] text-white mx-auto flex justify-center mt-4"
-					onClick={openModal}
+					onClick={() => handleAddBudget()}
 				>
 					Ajouter un budget
 				</button>

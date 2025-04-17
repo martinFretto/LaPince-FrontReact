@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
 import { useState } from "react";
@@ -43,6 +43,7 @@ export default function BudgetDetails() {
 		updated_at: string;
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleEditBudget = (budget: any) => {
 		setSelectedBudget(budget);
 		openModal();

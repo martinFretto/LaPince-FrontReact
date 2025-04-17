@@ -36,24 +36,30 @@ export default function BudgetModal({
 	}, []);
 
 	useEffect(() => {
-		if (!isModalOpen) return;
-
-		if (selectedBudget) {
-			// Mode édition
-			setName(selectedBudget.name?.toString() ?? "");
-			setAllocated_amount(selectedBudget.allocated_amount?.toString() ?? "");
-			setIcon(selectedBudget.icon ?? "");
-			setWarning_amount(selectedBudget.warning_amount?.toString() ?? "");
+		if (isModalOpen && selectedBudget) {
+			setName(selectedBudget.name?.toString());
+			setAllocated_amount(selectedBudget.allocated_amount?.toString());
+			setIcon(selectedBudget.icon);
+			setWarning_amount(selectedBudget.warning_amount?.toString());
 			setColor(selectedBudget.color ?? "#A5D8FF");
-		} else {
-			// Mode ajout
+		}
+	}, [isModalOpen, selectedBudget]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (isModalOpen && !selectedBudget) {
+			// Forcer le vidage dans ce cas précis
 			setName("");
 			setAllocated_amount("");
 			setIcon("");
 			setWarning_amount("");
 			setColor("#A5D8FF");
 		}
-	}, [isModalOpen, selectedBudget]);
+	}, [isModalOpen]);
+
+	const handleDelete = () => {
+		console.log("coucou je suis une poubelle rouge");
+	};
 
 	if (!isModalOpen) return null;
 
@@ -198,6 +204,21 @@ export default function BudgetModal({
 							Ajouter
 						</button>
 					</div>
+					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
+
+					{selectedBudget ? (
+						<div>
+							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+							<img
+								src="/trash-alt-svgrepo-com.svg"
+								alt="Supprimer"
+								className="absolute w-8 bottom-7 right-5 cursor-pointer"
+								onClick={handleDelete}
+							/>
+						</div>
+					) : (
+						""
+					)}
 				</div>
 			</div>
 		</div>
