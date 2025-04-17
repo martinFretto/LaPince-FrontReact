@@ -6,14 +6,17 @@ type DetailsExpensesProps = {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	onExpenseClick?: (expense: any) => void;
 };
+
 export default function DetailsExpenses({
 	budget,
 	onExpenseClick,
 }: DetailsExpensesProps) {
+	// on va filtrer les dépenses d'un budget
 	const filteredExpenses = budget
 		? expenditures.filter((exp) => exp.budget_id === budget)
 		: expenditures;
 
+	// on va trier par date décroissante les dépenses d'un budget
 	const sortedExpenses = [...filteredExpenses].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 	);
