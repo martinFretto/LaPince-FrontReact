@@ -16,7 +16,6 @@ export default function Dashboard() {
 	return (
 		<div>
 			<DonutChart />
-
 			<LastExpenses onExpenseClick={handleExpenseClick} />
 			<ExpensesModal
 				isOpen={isOpen}

@@ -12,9 +12,9 @@ export const expenditures = [
 	},
 	{
 		id: 2,
-		description: "Essence voiture",
+		description: "Essence de la Clio",
 		payment_method: "Carte bancaire",
-		amount: 60.0,
+		amount: 186.2,
 		date: "2025-04-09",
 		user_id: 1,
 		budget_id: 2,
@@ -100,9 +100,9 @@ export const expenditures = [
 	},
 	{
 		id: 10,
-		description: "Billet de train",
+		description: "train passage titre pro",
 		payment_method: "Carte bancaire",
-		amount: 42.0,
+		amount: 267.4,
 		date: "2025-04-07",
 		user_id: 1,
 		budget_id: 2,

@@ -10,7 +10,6 @@ const DonutChart = () => {
 	const categories = budgets.map((budget) => budget.name);
 	const categoriesId = budgets.map((budget) => budget.id);
 	const colors = budgets.map((budget) => budget.color);
-	const series = budgets.map((budget) => budget.spent_amount);
 	// récuperation et addition du total des budgets
 	const totalBudget = budgets.reduce(
 		(acc, budget) => acc + budget.allocated_amount,
@@ -20,10 +19,12 @@ const DonutChart = () => {
 	const remainingByBudget = budgets.map(
 		(budget) => budget.allocated_amount - budget.spent_amount,
 	);
+	const series = remainingByBudget;
 
 	const spent = series.reduce((acc, val) => acc + val, 0);
 	// *100 / 100 pour les 2 chiffres apres la virgule
 	const remaining = Math.round((totalBudget - spent) * 100) / 100;
+	const totalRemaining = series.reduce((acc, val) => acc + val, 0);
 
 	const options: ApexOptions = {
 		chart: {
@@ -60,7 +61,7 @@ const DonutChart = () => {
 							fontSize: "20px",
 							color: remaining < 0 ? "#ef4444" : "#000", // rouge si dépassement
 							offsetY: 10,
-							formatter: () => `${remaining} €`,
+							formatter: () => `${Math.round(totalRemaining * 100) / 100} €`,
 						},
 						total: {
 							show: true,
@@ -69,7 +70,7 @@ const DonutChart = () => {
 							fontSize: "14px",
 							fontWeight: "bold",
 							color: "#666",
-							formatter: () => `${remaining} €`,
+							formatter: () => `${Math.round(totalRemaining * 100) / 100} €`,
 						},
 					},
 				},
@@ -87,6 +88,15 @@ const DonutChart = () => {
 				fontWeight: "normal",
 			},
 		},
+		legend: {
+			show: true,
+			position: "right", // 👈 change ça
+			fontSize: "14px",
+			labels: {
+				colors: ["#000"],
+			},
+		},
+
 		stroke: {
 			show: true,
 			width: 1,
@@ -115,14 +125,27 @@ const DonutChart = () => {
 	};
 
 	return (
-		<div className="mt-4 justify-center flex ">
-			<ReactApexChart
+		<>
+			<div className="flex justify-center mt-8 ml-13 sm:mr-15">
+				{/* <div className="w-full max-w-[600px]">
+				<ReactApexChart
 				options={options}
 				series={series}
 				type="donut"
 				width="100%"
-			/>
-		</div>
+				/>
+				</div> */}
+
+				<div className="w-full max-w-[600px]">
+					<ReactApexChart
+						options={options}
+						series={series}
+						type="donut"
+						height={300}
+					/>
+				</div>
+			</div>
+		</>
 	);
 };
 
