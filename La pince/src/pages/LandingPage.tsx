@@ -83,13 +83,13 @@ export default function LandingPage() {
 					Alors si toi aussi tu veux ton propre coffre tout plein comme le
 					notre, inscris-toi{" "}
 					<strong>
-						<Link to="/register" className="text-[#1971C2]">
+						<Link to="/auth/register" className="text-[#1971C2]">
 							ici
 						</Link>
 					</strong>{" "}
 					ou connecte-toi{" "}
 					<strong>
-						<Link to="/login" className="text-[#1971C2]">
+						<Link to="/auth/login" className="text-[#1971C2]">
 							là
 						</Link>
 					</strong>{" "}

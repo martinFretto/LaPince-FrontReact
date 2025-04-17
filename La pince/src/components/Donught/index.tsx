@@ -8,6 +8,7 @@ const DonutChart = () => {
 
 	// map de budgets pour récuperer les informations
 	const categories = budgets.map((budget) => budget.name);
+	const categoriesId = budgets.map((budget) => budget.id);
 	const colors = budgets.map((budget) => budget.color);
 	const series = budgets.map((budget) => budget.spent_amount);
 	// récuperation et addition du total des budgets
@@ -30,7 +31,7 @@ const DonutChart = () => {
 			events: {
 				dataPointSelection: (_event, _chartContext, config) => {
 					const selectedIndex = config.dataPointIndex;
-					const selectedCategory = categories[selectedIndex];
+					const selectedCategory = categoriesId[selectedIndex];
 					if (selectedCategory) {
 						navigate(`/budgets/${selectedCategory}`, {
 							state: {
