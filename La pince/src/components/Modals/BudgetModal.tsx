@@ -140,6 +140,7 @@ export default function BudgetModal({
 										src={i.src}
 										alt={i.name}
 										title={i.name}
+										loading="lazy"
 										onClick={() => setIcon(i.src)}
 										className={`w-10 h-10 p-1 border rounded cursor-pointer transition ${
 											icon === i.src
