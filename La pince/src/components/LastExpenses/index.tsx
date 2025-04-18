@@ -55,7 +55,9 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 
 											{/* Description de la dépense & date */}
 											<div className="flex flex-col w-6/10 justify-self-start">
-												<span className="font-semibold">{exp.description}</span>
+												<span className="font-semibold text-base leading-tight mb-1">
+													{exp.description}
+												</span>
 												<span className="italic text-[12px] text-gray-400">
 													{new Date(exp.date).toLocaleDateString()}
 												</span>

@@ -22,6 +22,7 @@ export default function BudgetModal({
 	const [color, setColor] = useState("#A5D8FF");
 
 	const [icons, setIcons] = useState<{ name: string; src: string }[]>([]);
+	const buttonLabel = selectedBudget ? "Modifier" : "Ajouter"; // bouton dynamique en fonction de la condition : budget seléctionné ou non
 
 	useEffect(() => {
 		// Importation dynamique de tous les .svg
@@ -201,7 +202,7 @@ export default function BudgetModal({
 							onClick={onClose}
 							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 						>
-							Ajouter
+							{buttonLabel}
 						</button>
 					</div>
 					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}

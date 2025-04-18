@@ -1,7 +1,7 @@
 export const expenditures = [
 	{
 		id: 1,
-		description: "Courses supermarché",
+		description: "Achat des tickets de Loto par Martin",
 		payment_method: "Carte bancaire",
 		amount: 75.5,
 		date: "2025-04-10",

@@ -66,7 +66,7 @@ export default function RegisterPage() {
 								value={lastname}
 								onChange={(e) => setLastname(e.target.value)}
 								required
-								className="w-72 input input-neutral"
+								className="w-72 input validator input-neutral"
 							/>
 						</div>
 
@@ -82,7 +82,7 @@ export default function RegisterPage() {
 								value={firstname}
 								onChange={(e) => setFirstname(e.target.value)}
 								required
-								className="w-72 input input-neutral"
+								className="w-72 input validator input-neutral"
 							/>
 						</div>
 
