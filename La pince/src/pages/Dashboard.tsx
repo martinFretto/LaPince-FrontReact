@@ -2,8 +2,8 @@ import { useState } from "react";
 import DonutChart from "../components/Donught";
 import LastExpenses from "../components/LastExpenses";
 import ExpensesModal from "../components/Modals/ExpensesModal";
-import AlertThresholdModal from "../components/Modals/AlertThresholdModal";
-import AlertExceededModal from "../components/Modals/AlertExceededModal";
+// import AlertThresholdModal from "../components/Modals/AlertThresholdModal";
+// import AlertExceededModal from "../components/Modals/AlertExceededModal";
 
 export default function Dashboard() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +17,8 @@ export default function Dashboard() {
 
 	return (
 		<div>
-			<AlertThresholdModal />
-			<AlertExceededModal />
+			{/* <AlertThresholdModal />
+			<AlertExceededModal /> */}
 			<DonutChart />
 			<LastExpenses onExpenseClick={handleExpenseClick} />
 			<ExpensesModal

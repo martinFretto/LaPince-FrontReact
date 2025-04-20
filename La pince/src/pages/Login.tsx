@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { loginUser } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -16,28 +19,17 @@ export default function Login() {
 		</span>
 	);
 
-	// Methode Fetch pour l'envoi des données à la bdd
+	// Appel de loginUser pour faire l'appel fetch a l'API
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		console.log("handleSubmit");
 
-		try {
-			const response = await fetch("https://", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					email,
-					password,
-				}),
-			});
-
-			const data = await response.json();
-			console.log(data);
-		} catch (error) {
-			console.error("Connexion impossible", error);
-		}
+		const userData = {
+			email,
+			password,
+		};
+		console.log("userData", userData);
+		await loginUser(userData);
+		navigate("/dashboard");
 	};
 
 	return (

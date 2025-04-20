@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { registerUser } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
+	const navigate = useNavigate();
 	const [lastname, setLastname] = useState("");
 	const [firstname, setFirstname] = useState("");
 	const [email, setEmail] = useState("");
@@ -21,27 +24,15 @@ export default function RegisterPage() {
 	// Methode Fetch pour l'envoi des données à la bdd
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		console.log("handleSubmit");
-
-		try {
-			const response = await fetch("https://", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					lastname,
-					firstname,
-					email,
-					password,
-				}),
-			});
-
-			const data = await response.json();
-			console.log(data);
-		} catch (error) {
-			console.error("Enregistrement impossible", error);
-		}
+		const userData = {
+			lastname,
+			firstname,
+			email,
+			password,
+		};
+		console.log(userData);
+		await registerUser(userData);
+		navigate("/auth/login");
 	};
 
 	return (
