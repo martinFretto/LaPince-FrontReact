@@ -72,6 +72,7 @@ export default function Login() {
 									onChange={(e) => setPassword(e.target.value)}
 									required
 									className="w-72 input input-neutral"
+									autoComplete="current-password" // permet au navigateur de suggerer le mot de passe deja enregistrer sur ce site
 								/>
 							</div>
 							{/* Liste des conditions */}

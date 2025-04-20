@@ -26,14 +26,16 @@ export default function Budgets() {
 		setIsModalOpen(true);
 	};
 
+	// Methode pour modifier un budget
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleEditBudget = (budget: any) => {
 		setSelectedBudget(budget);
 		openModal();
 	};
 
+	// Methode pour Ajouter un budget
 	const handleAddBudget = () => {
-		setSelectedBudget(null); // 👈 vider le budget sélectionné en premier
+		setSelectedBudget(null);
 		setIsModalOpen(true);
 		openModal();
 	};

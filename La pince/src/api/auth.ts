@@ -16,9 +16,10 @@ export async function registerUser(userData: RegisterData) {
 		},
 		body: JSON.stringify(userData),
 	});
-
 	if (!res.ok) throw new Error("Erreur lors de l'inscription");
-	return res.json();
+	const data = await res.json();
+	console.log("Réponse API:", data);
+	return data;
 }
 
 interface LoginData {
@@ -27,7 +28,6 @@ interface LoginData {
 }
 
 export async function loginUser(userData: LoginData) {
-	// <-- même principe ici
 	const res = await fetch(`${API_URL}/auth/login`, {
 		method: "POST",
 		headers: {
@@ -37,5 +37,7 @@ export async function loginUser(userData: LoginData) {
 	});
 
 	if (!res.ok) throw new Error("Erreur de connexion");
-	return res.json();
+	const data = await res.json();
+	console.log("Réponse API:", data);
+	return data;
 }
