@@ -14,13 +14,12 @@ export default function Budgets() {
 		0,
 	);
 
+	// "series" correspond a l'affichage des parts du donut
 	const series = budgets.map((budget) => budget.spent_amount);
 	const spent = series.reduce((acc, val) => acc + val, 0);
 	// calcul du montant restant par budget
 	const remaining = Math.round((totalBudget - spent) * 100) / 100;
-
 	const remainingPercent = Math.round((remaining / totalBudget) * 100);
-	console.log(remainingPercent);
 
 	const openModal = () => {
 		setIsModalOpen(true);

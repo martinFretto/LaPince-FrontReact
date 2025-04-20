@@ -27,9 +27,14 @@ export default function Login() {
 			email,
 			password,
 		};
-		console.log("userData", userData);
-		await loginUser(userData);
-		navigate("/dashboard");
+		try {
+			const data = await loginUser(userData); // Récupération des données et du token
+			sessionStorage.setItem("authToken", data.token); // Stockage du token
+			console.log("token :", data.token);
+			navigate("/dashboard");
+		} catch (err) {
+			console.error("Erreur lors de la connexion", err);
+		}
 	};
 
 	return (
