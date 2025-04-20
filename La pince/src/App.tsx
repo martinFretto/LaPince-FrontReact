@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+	BrowserRouter,
+	Navigate,
+	Outlet,
+	Route,
+	Routes,
+} from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
@@ -15,6 +21,11 @@ import Budgets from "./pages/Budgets";
 import BudgetDetails from "./pages/BudgetDetails";
 
 function App() {
+	function PrivateRoute() {
+		const token = sessionStorage.getItem("authToken");
+		return token ? <Outlet /> : <Navigate to="/auth/login" />;
+	}
+
 	return (
 		<>
 			<BrowserRouter>
@@ -24,13 +35,18 @@ function App() {
 						<Route path={"/"} element={<LandingPage />} />
 						<Route path={"/auth/register"} element={<RegisterPage />} />
 						<Route path={"/auth/login"} element={<Login />} />
-						<Route path={"/dashboard"} element={<Dashboard />} />
-						<Route path={"/budgets"} element={<Budgets />} />
-						<Route path={"/budgets/:id"} element={<BudgetDetails />} />
+
+						<Route element={<PrivateRoute />}>
+							<Route path="/dashboard" element={<Dashboard />} />
+							<Route path="/budgets" element={<Budgets />} />
+							<Route path="/budgets/:id" element={<BudgetDetails />} />
+						</Route>
+
 						<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 						<Route path={"/security-data"} element={<SecurityData />} />
 						<Route path={"/legal-notices"} element={<LegalNotices />} />
 						<Route path={"/user-guide"} element={<UserStories />} />
+
 						<Route path={"*"} element={<NotFound />} />
 					</Routes>
 				</div>

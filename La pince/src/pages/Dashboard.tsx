@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DonutChart from "../components/Donught";
 import LastExpenses from "../components/LastExpenses";
 import ExpensesModal from "../components/Modals/ExpensesModal";
+import { fetchBudget } from "../api/budget";
 // import AlertThresholdModal from "../components/Modals/AlertThresholdModal";
 // import AlertExceededModal from "../components/Modals/AlertExceededModal";
 
@@ -14,6 +15,10 @@ export default function Dashboard() {
 		setSelectedExpense(expense);
 		setIsOpen(true);
 	};
+
+	useEffect(() => {
+		fetchBudget();
+	}, []);
 
 	return (
 		<div>

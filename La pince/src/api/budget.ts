@@ -1,11 +1,12 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export async function fetchBudget(token) {
-	const token = localStorage.getItem("token");
-	const res = await fetch(`${API_URL}/budget`, {
+export async function fetchBudget() {
+	const token = sessionStorage.getItem("authToken");
+	const res = await fetch(`${API_URL}/budgets`, {
+		method: "GET",
 		headers: {
-			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
 		},
 	});
 	if (!res.ok) throw new Error("Erreur lors du chargement du budget");
@@ -13,7 +14,7 @@ export async function fetchBudget(token) {
 }
 
 export async function updateBudget(budget) {
-	const token = localStorage.getItem("token");
+	const token = localStorage.getItem("authToken");
 	const res = await fetch(`${API_URL}/budget`, {
 		method: "PUT",
 		headers: {
