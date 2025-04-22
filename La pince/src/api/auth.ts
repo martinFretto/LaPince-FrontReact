@@ -38,6 +38,9 @@ export async function loginUser(userData: LoginData) {
 
 	if (!res.ok) throw new Error("Erreur de connexion");
 	const data = await res.json();
+	sessionStorage.setItem("token", data.token);
 	console.log("Réponse API:", data);
+	console.log("token recu au login", data.token);
+
 	return data;
 }

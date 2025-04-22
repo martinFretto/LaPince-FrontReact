@@ -12,7 +12,7 @@ export async function fetchExpenses() {
 	return res.json();
 }
 
-export async function addExpense(expense) {
+export async function addExpense() {
 	const token = localStorage.getItem("token");
 	const res = await fetch(`${API_URL}/expenses`, {
 		method: "POST",
@@ -20,7 +20,7 @@ export async function addExpense(expense) {
 			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(expense),
+		// body: JSON.stringify(expense),
 	});
 	if (!res.ok) throw new Error("Erreur lors de l'ajout de la dépense");
 	return res.json();

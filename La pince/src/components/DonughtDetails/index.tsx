@@ -1,19 +1,20 @@
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
+import type { Budget } from "../../types/budget";
 
 // Déclare le type en ligne ici
-type Budget = {
-	id: number;
-	name: string;
-	warning_amount: number;
-	spent_amount: number;
-	allocated_amount: number;
-	color: string;
-	icon: string;
-	user_id: number;
-	created_at: string;
-	updated_at: string | null;
-};
+// type Budget = {
+// 	id: number;
+// 	name: string;
+// 	warning_amount: number;
+// 	spent_amount: number;
+// 	allocated_amount: number;
+// 	color: string;
+// 	icon: string;
+// 	user_id: number;
+// 	created_at: string;
+// 	updated_at: string | null;
+// };
 
 const DonutDetail = ({ budget }: { budget: Budget }) => {
 	const { allocated_amount, spent_amount } = budget;

@@ -1,22 +1,31 @@
 import "../App.css";
 import { NavLink } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
-import { budgets } from "../data/budget";
-import { useState } from "react";
+// import { budgets } from "../data/budget";
+import { fetchBudget } from "../api/budget";
+import { useEffect, useState } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
+import type { Budget } from "../types/budget";
 
 export default function Budgets() {
+	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedBudget, setSelectedBudget] = useState(null);
+
+	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
 	const totalBudget = budgets.reduce(
-		(acc, budget) => acc + budget.allocated_amount,
+		(acc, budget) => acc + Number(budget.allocated_amount),
 		0,
 	);
 
 	// "series" correspond a l'affichage des parts du donut
 	const series = budgets.map((budget) => budget.spent_amount);
-	const spent = series.reduce((acc, val) => acc + val, 0);
+
+	const spent = series.reduce(
+		(acc, val) => acc + (Number.isNaN(Number(val)) ? 0 : Number(val)),
+		0,
+	);
+
 	// calcul du montant restant par budget
 	const remaining = Math.round((totalBudget - spent) * 100) / 100;
 	const remainingPercent = Math.round((remaining / totalBudget) * 100);
@@ -36,8 +45,25 @@ export default function Budgets() {
 	const handleAddBudget = () => {
 		setSelectedBudget(null);
 		setIsModalOpen(true);
-		openModal();
+		// openModal();
 	};
+
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getBudgets = async () => {
+			try {
+				const data = await fetchBudget();
+				if (Array.isArray(data.data)) {
+					setBudgets(data.data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des budgets:", error);
+			}
+		};
+		getBudgets();
+	}, []);
 
 	return (
 		<div>
@@ -109,7 +135,7 @@ export default function Budgets() {
 					isModalOpen={isModalOpen}
 					onClose={() => setIsModalOpen(false)}
 					selectedBudget={selectedBudget}
-					setSelectedBudget={setSelectedBudget}
+					setSelectedBudget={setSelectedBudget} // Pas de modification ici, il semble correct
 				/>
 			</div>
 		</div>

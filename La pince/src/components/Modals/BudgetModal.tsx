@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
+import { AddBudget, DeleteBudget, updateBudget } from "../../api/budget";
+import type { Budget, ModifBudget, NewBudget } from "../../types/budget";
 
 interface BudgetModalProps {
 	isModalOpen: boolean;
-
 	onClose: () => void;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	selectedBudget: any;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	setSelectedBudget: (expense: any) => void;
+	selectedBudget: Budget | null;
+	setSelectedBudget: (budget: Budget | null) => void;
 }
 
 export default function BudgetModal({
@@ -20,12 +19,10 @@ export default function BudgetModal({
 	const [icon, setIcon] = useState("");
 	const [warning_amount, setWarning_amount] = useState("");
 	const [color, setColor] = useState("#A5D8FF");
-
 	const [icons, setIcons] = useState<{ name: string; src: string }[]>([]);
-	const buttonLabel = selectedBudget ? "Modifier" : "Ajouter"; // bouton dynamique en fonction de la condition : budget seléctionné ou non
 
+	// Importation dynamique de tous les .svg
 	useEffect(() => {
-		// Importation dynamique de tous les .svg
 		const imports = import.meta.glob("/src/assets/icons/*.svg", {
 			eager: true,
 		}) as Record<string, { default: string }>;
@@ -58,8 +55,58 @@ export default function BudgetModal({
 		}
 	}, [isModalOpen]);
 
-	const handleDelete = () => {
-		console.log("coucou je suis une poubelle rouge");
+	// Ajout d'un nouveau budget
+	const handleAdd = async () => {
+		const newBudget: NewBudget = {
+			name,
+			allocated_amount: Number.isNaN(Number(allocated_amount))
+				? 0
+				: Number(allocated_amount),
+			icon,
+			warning_amount: Number.isNaN(Number(warning_amount))
+				? 0
+				: Number(warning_amount),
+			color,
+		};
+
+		try {
+			await AddBudget(newBudget);
+			console.log(`Budget ${name} ajouté avec succès !`);
+			onClose();
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du budget :", error);
+		}
+	};
+
+	// Modification du budget
+	const handleUpdate = async (selectedBudget: number) => {
+		console.log(`handleUpdate du budget n°: ${selectedBudget}`);
+
+		const budgetToSend: ModifBudget = {
+			name,
+			// allocated_amount: Number(allocated_amount) || 0,
+			icon,
+			// warning_amount: Number(warning_amount) || 0,
+			color,
+			// selectedBudget: 0,
+		};
+
+		try {
+			await updateBudget(budgetToSend, selectedBudget);
+			console.log("Budget modifié avec succès !");
+		} catch (error) {
+			console.error("Erreur lors de la mise à jour du budget :", error);
+		}
+	};
+
+	// Suppression du budget
+	const handleDelete = (selectedBudget: { id: number; name: string }) => {
+		console.log(selectedBudget.id);
+
+		console.log(
+			`essai de suppression du budget ${selectedBudget.id} ${selectedBudget.name} `,
+		);
+		DeleteBudget(selectedBudget.id);
 	};
 
 	if (!isModalOpen) return null;
@@ -101,6 +148,7 @@ export default function BudgetModal({
 								onChange={(e) => setName(e.target.value)}
 								className="border border-gray-300 rounded p-2 w-full bg-white"
 							/>
+							{name}
 						</div>
 
 						{/* Montant alloué */}
@@ -123,6 +171,7 @@ export default function BudgetModal({
 									€
 								</span>
 							</div>
+							{allocated_amount}
 						</div>
 
 						{/* Icônes en grille */}
@@ -179,6 +228,7 @@ export default function BudgetModal({
 									€
 								</span>
 							</div>
+							{warning_amount}
 						</div>
 
 						{/* Couleur */}
@@ -194,20 +244,37 @@ export default function BudgetModal({
 								className="border border-gray-300 rounded p-1 w-full h-10 bg-white"
 							/>
 						</div>
+						{color}
 					</div>
 
 					{/* Bouton Valider */}
 					<div className="flex justify-center mt-8">
-						<button
-							type="button"
-							onClick={onClose}
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
-						>
-							{buttonLabel}
-						</button>
+						{selectedBudget ? (
+							<button
+								type="button"
+								onClick={() => {
+									handleUpdate(selectedBudget.id);
+									onClose();
+								}}
+								className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
+							>
+								Modifier
+							</button>
+						) : (
+							<button
+								type="button"
+								onClick={() => {
+									handleAdd();
+									onClose();
+								}}
+								className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
+							>
+								Ajouter
+							</button>
+						)}
 					</div>
-					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
 
+					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
 					{selectedBudget ? (
 						<div>
 							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -215,7 +282,7 @@ export default function BudgetModal({
 								src="/trash-alt-svgrepo-com.svg"
 								alt="Supprimer"
 								className="absolute w-8 bottom-7 right-5 cursor-pointer"
-								onClick={handleDelete}
+								onClick={() => handleDelete(selectedBudget)}
 							/>
 						</div>
 					) : (

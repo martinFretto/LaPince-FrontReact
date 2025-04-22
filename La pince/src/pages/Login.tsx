@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { loginUser } from "../api/auth";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Login() {
 	const navigate = useNavigate();
@@ -104,6 +104,17 @@ export default function Login() {
 						</button>
 					</form>
 				</div>
+			</div>
+			<div className="place-self-center -mt-8 mb-8">
+				<p className="italic">
+					Pas encore de compte ? creez le{" "}
+					<NavLink
+						to={"/auth/register"}
+						className="text-[#1971C2] font-semibold"
+					>
+						ici{" "}
+					</NavLink>
+				</p>
 			</div>
 		</div>
 	);

@@ -4,11 +4,12 @@ import DetailsExpenses from "../components/DetailsExpenses";
 import { useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
 import BudgetModal from "../components/Modals/BudgetModal";
+import type { Budget } from "../types/budget";
 
 export default function BudgetDetails() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedBudget, setSelectedBudget] = useState(null);
+	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
 	const [selectedExpense, setSelectedExpense] = useState(null);
 	const location = useLocation();
