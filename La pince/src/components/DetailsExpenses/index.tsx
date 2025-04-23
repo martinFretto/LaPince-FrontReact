@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import type { Expense } from "../../types/Expense";
 import type { Budget } from "../../types/budget";
-import { fetchExpenses } from "../../api/expenses";
+import { fetchExpensesByBudget } from "../../api/expenses";
 import { fetchBudget } from "../../api/budget";
 
 type DetailsExpensesProps = {
-	budget?: number;
+	budget: number;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	onExpenseClick?: (expense: any) => void;
 };
@@ -19,13 +19,15 @@ export default function DetailsExpenses({
 	const [expenses, setExpenses] = useState<Expense[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
 
-	// useEffect qui va chercher les budgets
+	// useEffect qui va chercher les dépenses
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		const getExpenses = async () => {
+		const getBudgetExpenses = async () => {
 			try {
-				const data = await fetchExpenses();
-				if (Array.isArray(data.data)) {
-					setExpenses(data.data);
+				const data = await fetchExpensesByBudget(budget);
+				if (Array.isArray(data)) {
+					setExpenses(data);
+					console.log(data);
 				} else {
 					console.warn("Données reçues non valides:", data);
 				}
@@ -33,7 +35,7 @@ export default function DetailsExpenses({
 				console.error("Erreur de chargement des dépenses:", error);
 			}
 		};
-		getExpenses();
+		getBudgetExpenses();
 	}, []);
 
 	// useEffect qui va chercher les budgets
@@ -105,9 +107,7 @@ export default function DetailsExpenses({
 											</div>
 
 											<div>
-												<span className="font-semibold">
-													{exp.amount.toFixed(2)} €
-												</span>
+												<span className="font-semibold">{exp.amount} €</span>
 											</div>
 										</div>
 									</div>

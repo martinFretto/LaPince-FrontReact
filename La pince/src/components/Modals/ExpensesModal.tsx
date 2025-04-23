@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import type { NewExpense } from "../../types/Expense";
-import { addExpense } from "../../api/expenses";
+import type { NewExpense, UpdateExpense } from "../../types/Expense";
+import { addExpense, DeleteExpense, updateExpense } from "../../api/expenses";
+import { updateBudget } from "../../api/budget";
 
 export default function ExpensesModal({
 	isOpen,
@@ -15,11 +16,11 @@ export default function ExpensesModal({
 	selectedExpense: any;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	setSelectedExpense: (expense: any) => void;
-	selectedBudget: any;
+	selectedBudget: number;
 }) {
 	const [amount, setAmount] = useState("");
 	const [description, setDescription] = useState("");
-	const [payment_method, setPayment_method] = useState("");
+	const [payment_method] = useState("");
 	const [date, setDate] = useState("");
 
 	const remainingLength = Math.max(0, 60 - description.length);
@@ -36,13 +37,9 @@ export default function ExpensesModal({
 		}
 	}, [isOpen, selectedExpense]);
 
-	const handleDelete = () => {
-		console.log("handleDelete");
-	};
-
-	const budget_id = selectedBudget;
 	// Ajout d'une nouvelle dépense
 	const handleAdd = async () => {
+		const budget_id = selectedBudget;
 		const newExpense: NewExpense = {
 			description,
 			payment_method,
@@ -54,15 +51,34 @@ export default function ExpensesModal({
 			await addExpense(newExpense, selectedBudget);
 			console.log("newExpense", newExpense);
 			console.log("selectedBudget", selectedBudget);
-
 			console.log(`dépense ${description} ajouté avec succès !`);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
 		}
 	};
 
-	const handleUpdate = () => {
-		console.log("handleUpdate");
+	const handleUpdate = async () => {
+		const expenseId = selectedExpense.id;
+		const expenseToSend: UpdateExpense = {
+			amount: Number(amount),
+			description,
+			payment_method,
+			date,
+		};
+		try {
+			await updateExpense(expenseId, expenseToSend);
+			console.log("expenseToSend", expenseToSend);
+			console.log("selectedBudget", selectedBudget);
+			console.log(`dépense ${description} modifiée avec succès !`);
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du budget :", error);
+		}
+	};
+
+	const handleDelete = () => {
+		const expenseId = selectedExpense.id;
+		DeleteExpense(expenseId);
+		setIsOpen(false);
 	};
 
 	if (!isOpen) return null;
@@ -150,27 +166,11 @@ export default function ExpensesModal({
 
 				{/* Bouton Valider */}
 				<div className="flex justify-center mt-6">
-					{/* <button
-						type="button"
-						onClick={() => {
-							if (selectedExpense) {
-								console.log("Modifier:", selectedExpense);
-							} else {
-								console.log("Ajouter:", { amount, description, date });
-							}
-							setIsOpen(false);
-							setSelectedExpense(null);
-						}}
-						className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
-					>
-						{selectedExpense ? "Modifier" : "Ajouter"}
-					</button> */}
-
 					{selectedExpense ? (
 						<button
 							type="button"
 							onClick={() => {
-								handleUpdate(selectedExpense.id);
+								handleUpdate();
 								setIsOpen(false);
 							}}
 							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"

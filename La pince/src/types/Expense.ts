@@ -16,11 +16,9 @@ export interface NewExpense {
 	budget_id: number;
 }
 
-// export interface ModifExpense {
-// 	name: string;
-// 	// allocated_amount: number;
-// 	icon: string;
-// 	// warning_amount: number;
-// 	color: string;
-// 	// selectedBudget: number;
-// }
+export interface UpdateExpense {
+	description: string;
+	payment_method: string;
+	amount: number;
+	date: string;
+}

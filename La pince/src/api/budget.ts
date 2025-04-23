@@ -1,11 +1,10 @@
 import type { ModifBudget, NewBudget } from "../types/budget";
 
+// Import de l'URL et on va chercher le token stocké dans le session storage pour le transmettre dans le header
 const API_URL = import.meta.env.VITE_API_URL;
-
-// On va chercher le token stocké dans le session storage pour le transmettre dans le header
 const token = sessionStorage.getItem("authToken");
-console.log(token);
 
+//
 // Methode fetch qui recupere les budgets
 export async function fetchBudget() {
 	const res = await fetch(`${API_URL}/budgets/`, {
@@ -20,6 +19,7 @@ export async function fetchBudget() {
 	return res.json();
 }
 
+//
 // Methode fetch qui ajoute un nouveau budget
 export async function AddBudget(newBudget: NewBudget) {
 	console.log("token avant le Addbudget", token);
@@ -37,6 +37,7 @@ export async function AddBudget(newBudget: NewBudget) {
 	return res.json();
 }
 
+//
 // Methode fetch qui modifie un budget
 export async function updateBudget(budget: ModifBudget, id: number) {
 	const res = await fetch(`${API_URL}/budgets/${id}/`, {
@@ -57,6 +58,7 @@ export async function updateBudget(budget: ModifBudget, id: number) {
 	return res.json();
 }
 
+//
 // Methode fetch qui supprime un budget par son id
 export async function DeleteBudget(id: number) {
 	const res = await fetch(`${API_URL}/budgets/${id}/`, {

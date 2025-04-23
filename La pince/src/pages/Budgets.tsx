@@ -6,6 +6,8 @@ import { fetchBudget } from "../api/budget";
 import { useEffect, useState } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
+import AlertExceededModal from "../components/Modals/AlertExceededModal";
+import AlertThresholdModal from "../components/Modals/AlertThresholdModal";
 
 export default function Budgets() {
 	// useEffect qui va chercher les budgets
@@ -127,6 +129,8 @@ export default function Budgets() {
 				>
 					Ajouter un budget
 				</button>
+				<AlertThresholdModal />
+				{/* <AlertExceededModal /> */}
 
 				{/* Modale d'ajout de budget */}
 

@@ -8,6 +8,21 @@ import type { Budget } from "../types/budget";
 import { fetchExpenses } from "../api/expenses";
 
 export default function BudgetDetails() {
+	interface BudgetType {
+		id: number;
+		name: string;
+		icon: string;
+		amount: number;
+		spent: number;
+		warning_amount: number;
+		spent_amount: number;
+		allocated_amount: number;
+		color: string;
+		user_id: number;
+		created_at: string;
+		updated_at: string;
+	}
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
@@ -25,21 +40,6 @@ export default function BudgetDetails() {
 		setSelectedExpense(expense);
 		setIsOpen(true);
 	};
-
-	interface BudgetType {
-		id: number;
-		name: string;
-		icon: string;
-		amount: number;
-		spent: number;
-		warning_amount: number;
-		spent_amount: number;
-		allocated_amount: number;
-		color: string;
-		user_id: number;
-		created_at: string;
-		updated_at: string;
-	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleEditBudget = (budget: any) => {
@@ -83,6 +83,7 @@ export default function BudgetDetails() {
 						className="w-10 absolute mt-20 "
 					/>
 					<DonutDetail budget={budget} />
+
 					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
 						className="absolute bottom-4 right-4"
@@ -117,7 +118,6 @@ export default function BudgetDetails() {
 			</div>
 
 			{/* Modale de modification de budget */}
-
 			<BudgetModal
 				isModalOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
