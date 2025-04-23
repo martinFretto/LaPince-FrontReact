@@ -33,6 +33,7 @@ export default function Dashboard() {
 				setIsOpen={setIsOpen}
 				selectedExpense={selectedExpense}
 				setSelectedExpense={setSelectedExpense}
+				selectedBudget={0}
 			/>
 		</div>
 	);

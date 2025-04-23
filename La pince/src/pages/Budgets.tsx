@@ -6,8 +6,7 @@ import { fetchBudget } from "../api/budget";
 import { useEffect, useState } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
-import AlertExceededModal from "../components/Modals/AlertExceededModal";
-import AlertThresholdModal from "../components/Modals/AlertThresholdModal";
+import Flag from "../components/flag";
 
 export default function Budgets() {
 	// useEffect qui va chercher les budgets
@@ -90,37 +89,55 @@ export default function Budgets() {
 			{/* Vignettes des budgets */}
 			<div className="container mx-auto px-4 py-6">
 				<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:mx-40 2xl:mx-80">
-					{budgets.map((budget) => (
-						<div
-							key={budget.id}
-							className="relative border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60"
-						>
-							<NavLink
-								to={`${budget.id}`}
-								state={{ budget }}
-								className="w-full h-full flex flex-col items-center"
-							>
-								<img
-									src={budget.icon}
-									alt="icone du budget"
-									className="w-10 mb-4 absolute mt-22"
-								/>
-								<DonutDetail budget={budget} />
-							</NavLink>
+					{budgets.map((budget) => {
+						const remainingAmount =
+							budget.allocated_amount - budget.spent_amount;
 
-							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						let flagColor = null;
+						let flagText = null;
+
+						if (remainingAmount < 0) {
+							flagColor = "bg-red-400";
+							flagText = "Budget dépassé";
+						} else if (remainingAmount < budget.warning_amount) {
+							flagColor = "bg-amber-400";
+							flagText = "Seuil d'alerte atteint";
+						}
+
+						return (
 							<div
-								className="absolute bottom-4 right-4"
-								onClick={() => handleEditBudget(budget)}
+								key={budget.id}
+								className="relative overflow-hidden border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60"
 							>
-								<img
-									src="/logo-settings.svg"
-									alt="logo-reglage"
-									className="w-8 h-8"
-								/>
+								<NavLink
+									to={`${budget.id}`}
+									state={{ budget }}
+									className="w-full h-full flex flex-col items-center"
+								>
+									{flagColor && <Flag color={flagColor} text={flagText} />}
+
+									<img
+										src={budget.icon}
+										alt="icone du budget"
+										className="w-10 mb-4 absolute mt-22"
+									/>
+									<DonutDetail budget={budget} />
+								</NavLink>
+
+								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+								<div
+									className="absolute bottom-4 right-4"
+									onClick={() => handleEditBudget(budget)}
+								>
+									<img
+										src="/logo-settings.svg"
+										alt="logo-reglage"
+										className="w-8 h-8"
+									/>
+								</div>
 							</div>
-						</div>
-					))}
+						);
+					})}
 				</div>
 				<button
 					type="button"
@@ -129,8 +146,6 @@ export default function Budgets() {
 				>
 					Ajouter un budget
 				</button>
-				<AlertThresholdModal />
-				{/* <AlertExceededModal /> */}
 
 				{/* Modale d'ajout de budget */}
 

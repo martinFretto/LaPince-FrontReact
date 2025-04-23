@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { NewExpense, UpdateExpense } from "../../types/Expense";
 import { addExpense, DeleteExpense, updateExpense } from "../../api/expenses";
-import { updateBudget } from "../../api/budget";
 
 export default function ExpensesModal({
 	isOpen,

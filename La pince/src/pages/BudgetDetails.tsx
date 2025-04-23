@@ -1,11 +1,10 @@
 import { NavLink, useLocation } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
-import { fetchExpenses } from "../api/expenses";
 
 export default function BudgetDetails() {
 	interface BudgetType {
@@ -26,7 +25,7 @@ export default function BudgetDetails() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
-	const [expenses, setExpenses] = useState("");
+
 	const [selectedExpense, setSelectedExpense] = useState(null);
 	const location = useLocation();
 	const { budget }: { budget?: BudgetType } = location.state || {};
@@ -123,6 +122,9 @@ export default function BudgetDetails() {
 				onClose={() => setIsModalOpen(false)}
 				selectedBudget={selectedBudget}
 				setSelectedBudget={setSelectedBudget}
+				fetchBudget={(): void | Promise<void> => {
+					throw new Error("Function not implemented.");
+				}}
 			/>
 		</div>
 	);

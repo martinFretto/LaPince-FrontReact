@@ -1,5 +1,5 @@
 // import { expenditure } from "../../data/expenditure";
-import { budgets } from "../../data/budget";
+// import { budgets } from "../../data/budget";
 import type { Expense } from "../../types/Expense";
 import { useEffect, useState } from "react";
 import { fetchExpenses } from "../../api/expenses";

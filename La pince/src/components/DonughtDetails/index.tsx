@@ -1,20 +1,37 @@
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 import type { Budget } from "../../types/budget";
+import { useEffect, useState } from "react";
+import { fetchBudget } from "../../api/budget";
 
 const DonutDetail = ({ budget }: { budget: Budget }) => {
+	const [, setBudgets] = useState<Budget[]>([]);
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getBudgets = async () => {
+			try {
+				const data = await fetchBudget();
+				if (Array.isArray(data.data)) {
+					setBudgets(data.data);
+					console.log(data.data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des budgets:", error);
+			}
+		};
+		getBudgets();
+	}, []);
 	const { allocated_amount, spent_amount } = budget;
 
 	const remainingBudget = allocated_amount - spent_amount;
+	const overBudget = remainingBudget < 0;
 
-	const overBudget = spent_amount > allocated_amount;
-
-	// const series = overBudget
-	// 	? [allocated_amount, spent_amount - allocated_amount]
-	// 	: [spent_amount, remainingBudget];
 	const safeSpent = Math.min(spent_amount, allocated_amount);
 	const overAmount = Math.max(spent_amount - allocated_amount, 0);
 	const safeRemaining = Math.max(allocated_amount - spent_amount, 0);
+
 	const series = overBudget
 		? [overAmount, allocated_amount]
 		: [safeSpent, safeRemaining];

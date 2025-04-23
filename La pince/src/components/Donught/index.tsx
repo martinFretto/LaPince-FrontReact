@@ -70,6 +70,7 @@ const DonutChart = () => {
 		plotOptions: {
 			pie: {
 				donut: {
+					size: "70%",
 					labels: {
 						show: true,
 						name: {
