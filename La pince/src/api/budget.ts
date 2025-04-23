@@ -67,8 +67,6 @@ export async function DeleteBudget(id: number) {
 		},
 	});
 	if (!res.ok) throw new Error("Erreur lors de la suppression du budget");
-	const jsonResponse = await res.json();
-	console.log(jsonResponse);
 
 	return;
 }

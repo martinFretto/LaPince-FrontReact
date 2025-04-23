@@ -8,9 +8,25 @@ import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
 
 export default function Budgets() {
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getBudgets = async () => {
+			try {
+				const data = await fetchBudget();
+				if (Array.isArray(data.data)) {
+					setBudgets(data.data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des budgets:", error);
+			}
+		};
+		getBudgets();
+	}, []);
+
 	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
 	const totalBudget = budgets.reduce(
@@ -48,23 +64,6 @@ export default function Budgets() {
 		// openModal();
 	};
 
-	// useEffect qui va chercher les budgets
-	useEffect(() => {
-		const getBudgets = async () => {
-			try {
-				const data = await fetchBudget();
-				if (Array.isArray(data.data)) {
-					setBudgets(data.data);
-				} else {
-					console.warn("Données reçues non valides:", data);
-				}
-			} catch (error) {
-				console.error("Erreur de chargement des budgets:", error);
-			}
-		};
-		getBudgets();
-	}, []);
-
 	return (
 		<div>
 			{/* En-tête général */}
@@ -80,7 +79,7 @@ export default function Budgets() {
 					</div>
 					<progress
 						className="progress progress-success w-25 h-4 border-1 border-black custom-progress shadow-md shadow-gray-600"
-						value={remainingPercent}
+						value={remainingPercent.toString()}
 						max="100"
 					/>
 				</div>
@@ -135,7 +134,8 @@ export default function Budgets() {
 					isModalOpen={isModalOpen}
 					onClose={() => setIsModalOpen(false)}
 					selectedBudget={selectedBudget}
-					setSelectedBudget={setSelectedBudget} // Pas de modification ici, il semble correct
+					setSelectedBudget={setSelectedBudget}
+					fetchBudget={fetchBudget}
 				/>
 			</div>
 		</div>

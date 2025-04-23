@@ -21,9 +21,9 @@ export interface NewBudget {
 
 export interface ModifBudget {
 	name: string;
-	// allocated_amount: number;
+	allocated_amount: number;
 	icon: string;
-	// warning_amount: number;
+	warning_amount: number;
 	color: string;
 	// selectedBudget: number;
 }

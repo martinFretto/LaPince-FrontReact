@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import type { NewExpense } from "../../types/Expense";
+import { addExpense } from "../../api/expenses";
 
 export default function ExpensesModal({
 	isOpen,
 	setIsOpen,
 	selectedExpense,
 	setSelectedExpense,
+	selectedBudget,
 }: {
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
@@ -12,9 +15,11 @@ export default function ExpensesModal({
 	selectedExpense: any;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	setSelectedExpense: (expense: any) => void;
+	selectedBudget: any;
 }) {
 	const [amount, setAmount] = useState("");
 	const [description, setDescription] = useState("");
+	const [payment_method, setPayment_method] = useState("");
 	const [date, setDate] = useState("");
 
 	const remainingLength = Math.max(0, 60 - description.length);
@@ -33,6 +38,31 @@ export default function ExpensesModal({
 
 	const handleDelete = () => {
 		console.log("handleDelete");
+	};
+
+	const budget_id = selectedBudget;
+	// Ajout d'une nouvelle dépense
+	const handleAdd = async () => {
+		const newExpense: NewExpense = {
+			description,
+			payment_method,
+			amount: Number(amount),
+			date,
+			budget_id,
+		};
+		try {
+			await addExpense(newExpense, selectedBudget);
+			console.log("newExpense", newExpense);
+			console.log("selectedBudget", selectedBudget);
+
+			console.log(`dépense ${description} ajouté avec succès !`);
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du budget :", error);
+		}
+	};
+
+	const handleUpdate = () => {
+		console.log("handleUpdate");
 	};
 
 	if (!isOpen) return null;
@@ -120,7 +150,7 @@ export default function ExpensesModal({
 
 				{/* Bouton Valider */}
 				<div className="flex justify-center mt-6">
-					<button
+					{/* <button
 						type="button"
 						onClick={() => {
 							if (selectedExpense) {
@@ -134,7 +164,31 @@ export default function ExpensesModal({
 						className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
 					>
 						{selectedExpense ? "Modifier" : "Ajouter"}
-					</button>
+					</button> */}
+
+					{selectedExpense ? (
+						<button
+							type="button"
+							onClick={() => {
+								handleUpdate(selectedExpense.id);
+								setIsOpen(false);
+							}}
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
+						>
+							Modifier
+						</button>
+					) : (
+						<button
+							type="button"
+							onClick={() => {
+								handleAdd();
+								setIsOpen(false);
+							}}
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
+						>
+							Ajouter
+						</button>
+					)}
 				</div>
 				{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
 				{selectedExpense ? (

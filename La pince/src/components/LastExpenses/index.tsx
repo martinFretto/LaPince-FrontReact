@@ -1,5 +1,8 @@
-import { expenditures } from "../../data/expenditure";
+// import { expenditure } from "../../data/expenditure";
 import { budgets } from "../../data/budget";
+import type { Expense } from "../../types/Expense";
+import { useEffect, useState } from "react";
+import { fetchExpenses } from "../../api/expenses";
 
 type DetailsExpensesProps = {
 	budget?: number;
@@ -8,8 +11,28 @@ type DetailsExpensesProps = {
 };
 
 export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
+	const [expenses, setExpenses] = useState<Expense[]>([]);
+
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getExpenses = async () => {
+			try {
+				const data = await fetchExpenses();
+				if (Array.isArray(data)) {
+					setExpenses(data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des budgets:", error);
+			}
+		};
+		getExpenses();
+	}, []);
+	console.log(expenses);
+
 	// Trier les dépenses par date décroissante
-	const sortedExpenses = [...expenditures].sort(
+	const sortedExpenses = [...expenses].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 	);
 
@@ -24,9 +47,6 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 			<table className="w-full text-left border-separate border-spacing-y-2 border-2 border-gray-500 px-4">
 				<tbody>
 					{recentExpenses.map((exp) => {
-						// Récupérer le budget associé entre la dépense et le budget
-						const relatedBudget = budgets.find((b) => b.id === exp.budget_id);
-
 						return (
 							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 							<tr
@@ -39,18 +59,17 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 										<div className="flex items-center gap-2 justify-between w-full">
 											<div className="">
 												{/* Icône du budget avec style séparé du className pour récupérer la couleur du budget */}
-												{relatedBudget?.icon && (
-													<div
-														className="w-10 h-10 border rounded-full p-1 flex items-center justify-center"
-														style={{ backgroundColor: relatedBudget.color }}
-													>
-														<img
-															src={relatedBudget.icon}
-															alt={relatedBudget.name}
-															className="w-full h-full object-contain"
-														/>
-													</div>
-												)}
+
+												<div
+													className="w-10 h-10 border rounded-full p-1 flex items-center justify-center"
+													style={{ backgroundColor: exp.budgetColor }}
+												>
+													<img
+														src={exp.budgetIcon}
+														alt={exp.description}
+														className="w-full h-full object-contain"
+													/>
+												</div>
 											</div>
 
 											{/* Description de la dépense & date */}
@@ -64,9 +83,7 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 											</div>
 											{/* Montant de la dépense */}
 											<div>
-												<span className="font-semibold ">
-													{exp.amount.toFixed(2)} €
-												</span>
+												<span className="font-semibold ">{exp.amount} €</span>
 											</div>
 										</div>
 									</div>

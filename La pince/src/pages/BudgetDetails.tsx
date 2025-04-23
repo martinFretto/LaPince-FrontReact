@@ -1,16 +1,17 @@
 import { NavLink, useLocation } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
+import { fetchExpenses } from "../api/expenses";
 
 export default function BudgetDetails() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
-
+	const [expenses, setExpenses] = useState("");
 	const [selectedExpense, setSelectedExpense] = useState(null);
 	const location = useLocation();
 	const { budget }: { budget?: BudgetType } = location.state || {};
@@ -24,10 +25,6 @@ export default function BudgetDetails() {
 		setSelectedExpense(expense);
 		setIsOpen(true);
 	};
-
-	if (!budget) {
-		return <div>Budget non trouvé</div>;
-	}
 
 	interface BudgetType {
 		id: number;
@@ -50,6 +47,9 @@ export default function BudgetDetails() {
 		openModal();
 	};
 
+	if (!budget) {
+		return <div>Budget non trouvé</div>;
+	}
 	return (
 		<div>
 			<div className="flex justify-between mx-4 mt-4">
@@ -66,7 +66,9 @@ export default function BudgetDetails() {
 				{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 				<div
 					className="flex flex-col items-center"
-					onClick={() => setIsOpen(true)}
+					onClick={() => {
+						setIsOpen(true);
+					}}
 				>
 					<img src="/logo-plus.svg" alt="logo plus" className="w-8" />
 					<p className="text-[10px]">Ajouter</p>
@@ -104,6 +106,7 @@ export default function BudgetDetails() {
 				setIsOpen={setIsOpen}
 				selectedExpense={selectedExpense}
 				setSelectedExpense={setSelectedExpense}
+				selectedBudget={budget.id}
 			/>
 
 			<div>

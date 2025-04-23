@@ -7,12 +7,14 @@ interface BudgetModalProps {
 	onClose: () => void;
 	selectedBudget: Budget | null;
 	setSelectedBudget: (budget: Budget | null) => void;
+	fetchBudget: () => void | Promise<void>;
 }
 
 export default function BudgetModal({
 	isModalOpen,
 	onClose,
 	selectedBudget,
+	fetchBudget,
 }: BudgetModalProps) {
 	const [name, setName] = useState("");
 	const [allocated_amount, setAllocated_amount] = useState("");
@@ -84,14 +86,16 @@ export default function BudgetModal({
 
 		const budgetToSend: ModifBudget = {
 			name,
-			// allocated_amount: Number(allocated_amount) || 0,
+			allocated_amount: Number(allocated_amount) || 0,
 			icon,
-			// warning_amount: Number(warning_amount) || 0,
+			warning_amount: Number(warning_amount) || 0,
 			color,
 			// selectedBudget: 0,
 		};
 
 		try {
+			console.log(budgetToSend);
+
 			await updateBudget(budgetToSend, selectedBudget);
 			console.log("Budget modifié avec succès !");
 		} catch (error) {
@@ -100,13 +104,15 @@ export default function BudgetModal({
 	};
 
 	// Suppression du budget
-	const handleDelete = (selectedBudget: { id: number; name: string }) => {
+	const handleDelete = async (selectedBudget: { id: number; name: string }) => {
 		console.log(selectedBudget.id);
 
 		console.log(
 			`essai de suppression du budget ${selectedBudget.id} ${selectedBudget.name} `,
 		);
-		DeleteBudget(selectedBudget.id);
+		await DeleteBudget(selectedBudget.id);
+		fetchBudget();
+		onClose();
 	};
 
 	if (!isModalOpen) return null;

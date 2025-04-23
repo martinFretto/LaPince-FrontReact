@@ -1,5 +1,10 @@
-import { expenditures } from "../../data/expenditure";
-import { budgets } from "../../data/budget";
+// import { expenditures } from "../../data/expenditure";
+// import { budgets } from "../../data/budget";
+import { useEffect, useState } from "react";
+import type { Expense } from "../../types/Expense";
+import type { Budget } from "../../types/budget";
+import { fetchExpenses } from "../../api/expenses";
+import { fetchBudget } from "../../api/budget";
 
 type DetailsExpensesProps = {
 	budget?: number;
@@ -11,10 +16,47 @@ export default function DetailsExpenses({
 	budget,
 	onExpenseClick,
 }: DetailsExpensesProps) {
+	const [expenses, setExpenses] = useState<Expense[]>([]);
+	const [budgets, setBudgets] = useState<Budget[]>([]);
+
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getExpenses = async () => {
+			try {
+				const data = await fetchExpenses();
+				if (Array.isArray(data.data)) {
+					setExpenses(data.data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des dépenses:", error);
+			}
+		};
+		getExpenses();
+	}, []);
+
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getBudgets = async () => {
+			try {
+				const data = await fetchBudget();
+				if (Array.isArray(data.data)) {
+					setBudgets(data.data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des budgets:", error);
+			}
+		};
+		getBudgets();
+	}, []);
+
 	// on va filtrer les dépenses d'un budget
 	const filteredExpenses = budget
-		? expenditures.filter((exp) => exp.budget_id === budget)
-		: expenditures;
+		? expenses.filter((exp) => exp.budget_id === budget)
+		: expenses;
 
 	// on va trier par date décroissante les dépenses d'un budget
 	const sortedExpenses = [...filteredExpenses].sort(
