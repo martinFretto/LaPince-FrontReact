@@ -1,33 +1,14 @@
-import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import DetailsExpenses from "../components/DetailsExpenses";
 import DonutDetail from "../components/DonughtDetails/index";
-import BudgetModal from "../components/Modals/BudgetModal";
+import DetailsExpenses from "../components/DetailsExpenses";
+import { useEffect, useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
+import BudgetModal from "../components/Modals/BudgetModal";
+import type { Budget } from "../types/budget";
+import { fetchExpenses } from "../api/expenses";
+import type { Expense } from "../types/Expense";
 
 export default function BudgetDetails() {
-	const [isOpen, setIsOpen] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedBudget, setSelectedBudget] = useState(null);
-
-	const [selectedExpense, setSelectedExpense] = useState(null);
-	const location = useLocation();
-	const { budget }: { budget?: BudgetType } = location.state || {};
-
-	const openModal = () => {
-		setIsModalOpen(true);
-	};
-
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const handleExpenseClick = (expense: any) => {
-		setSelectedExpense(expense);
-		setIsOpen(true);
-	};
-
-	if (!budget) {
-		return <div>Budget non trouvé</div>;
-	}
-
 	interface BudgetType {
 		id: number;
 		name: string;
@@ -43,12 +24,44 @@ export default function BudgetDetails() {
 		updated_at: string;
 	}
 
+	const [isOpen, setIsOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
+	const [expenses, setExpenses] = useState<Expense[]>([]);
+	const [selectedExpense, setSelectedExpense] = useState(null);
+	const location = useLocation();
+	const { budget }: { budget?: BudgetType } = location.state || {};
+	const [expensesUpdatedTrigger, setExpensesUpdatedTrigger] = useState(0);
+
+	const triggerExpensesReload = () => {
+		setExpensesUpdatedTrigger((prev) => prev + 1);
+	};
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const handleEditBudget = (budget: any) => {
-		setSelectedBudget(budget);
-		openModal();
+	const handleExpenseClick = (expense: any) => {
+		setSelectedExpense(expense);
+		setIsOpen(true);
 	};
 
+	const getExpenses = async () => {
+		try {
+			const data = await fetchExpenses();
+			if (Array.isArray(data)) {
+				setExpenses(data);
+			} else {
+				console.warn("Données reçues non valides:", data);
+			}
+		} catch (error) {
+			console.error("Erreur de chargement des budgets:", error);
+		}
+	};
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		getExpenses();
+	}, []);
+
+	if (!budget) {
+		return <div>Budget non trouvé</div>;
+	}
 	return (
 		<div>
 			<div className="flex justify-between mx-4 mt-4">
@@ -65,7 +78,9 @@ export default function BudgetDetails() {
 				{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 				<div
 					className="flex flex-col items-center"
-					onClick={() => setIsOpen(true)}
+					onClick={() => {
+						setIsOpen(true);
+					}}
 				>
 					<img src="/logo-plus.svg" alt="logo plus" className="w-8" />
 					<p className="text-[10px]">Ajouter</p>
@@ -77,11 +92,15 @@ export default function BudgetDetails() {
 					<img
 						src={budget.icon}
 						alt="icone du budget"
-						className="w-10 absolute mt-20 "
+						className="w-10 absolute mt-24 "
 					/>
-					<DonutDetail budget={budget} />
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-					<div
+					<DonutDetail
+						expenses={expenses}
+						budget={budget}
+						expensesUpdatedTrigger={expensesUpdatedTrigger}
+					/>
+
+					{/* <div
 						className="absolute bottom-4 right-4"
 						onClick={() => handleEditBudget(budget)}
 					>
@@ -90,7 +109,7 @@ export default function BudgetDetails() {
 							alt="logo-reglage"
 							className="w-8 h-8"
 						/>
-					</div>
+					</div> */}
 				</div>
 				<div className="flex justify-center font-semibold text-2xl mt-4">
 					<h2>Mes dépenses {budget.name}</h2>
@@ -103,22 +122,26 @@ export default function BudgetDetails() {
 				setIsOpen={setIsOpen}
 				selectedExpense={selectedExpense}
 				setSelectedExpense={setSelectedExpense}
+				selectedBudget={budget.id}
+				fetchExpenses={getExpenses}
+				triggerReload={triggerExpensesReload}
 			/>
 
-			<div>
-				<DetailsExpenses
-					budget={budget.id}
-					onExpenseClick={handleExpenseClick}
-				/>
-			</div>
+			<DetailsExpenses
+				budget={budget.id}
+				expenses={expenses}
+				onExpenseClick={handleExpenseClick}
+			/>
 
 			{/* Modale de modification de budget */}
-
 			<BudgetModal
 				isModalOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				selectedBudget={selectedBudget}
 				setSelectedBudget={setSelectedBudget}
+				fetchBudget={(): void | Promise<void> => {
+					throw new Error("Function not implemented.");
+				}}
 			/>
 		</div>
 	);

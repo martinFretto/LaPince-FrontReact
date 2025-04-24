@@ -1,9 +1,31 @@
 import type { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { useNavigate } from "react-router-dom";
-import { budgets } from "../../data/budget";
+// import { budgets } from "../../data/budget";
+import { useEffect, useState } from "react";
+import { fetchBudget } from "../../api/budget";
+import type { Budget } from "../../types/budget";
 
 const DonutChart = () => {
+	const [budgets, setBudgets] = useState<Budget[]>([]);
+
+	// useEffect qui va chercher les budgets
+	useEffect(() => {
+		const getBudgets = async () => {
+			try {
+				const data = await fetchBudget();
+				if (Array.isArray(data.data)) {
+					setBudgets(data.data);
+				} else {
+					console.warn("Données reçues non valides:", data);
+				}
+			} catch (error) {
+				console.error("Erreur de chargement des budgets:", error);
+			}
+		};
+		getBudgets();
+	}, []);
+
 	const navigate = useNavigate();
 
 	// map de budgets pour récuperer les informations
@@ -15,6 +37,7 @@ const DonutChart = () => {
 		(acc, budget) => acc + budget.allocated_amount,
 		0
 	);
+
 	// calcul du montant restant par budget
 	const remainingByBudget = budgets.map(
 		(budget) => budget.allocated_amount - budget.spent_amount
@@ -48,6 +71,7 @@ const DonutChart = () => {
 		plotOptions: {
 			pie: {
 				donut: {
+					size: "70%",
 					labels: {
 						show: true,
 						name: {

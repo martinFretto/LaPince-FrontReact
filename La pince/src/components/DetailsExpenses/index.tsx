@@ -1,20 +1,27 @@
-import { budgets } from "../../data/budget";
-import { expenditures } from "../../data/expenditure";
+// import { expenditures } from "../../data/expenditure";
+// import { budgets } from "../../data/budget";
+import { useState } from "react";
+import type { Expense } from "../../types/Expense";
+import type { Budget } from "../../types/budget";
 
 type DetailsExpensesProps = {
-	budget?: number;
+	budget: number;
+	expenses: Expense[];
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	onExpenseClick?: (expense: any) => void;
 };
 
 export default function DetailsExpenses({
 	budget,
+	expenses,
 	onExpenseClick,
 }: DetailsExpensesProps) {
+	const [budgets] = useState<Budget[]>([]);
+
 	// on va filtrer les dépenses d'un budget
 	const filteredExpenses = budget
-		? expenditures.filter((exp) => exp.budget_id === budget)
-		: expenditures;
+		? expenses.filter((exp) => exp.budget_id === budget)
+		: expenses;
 
 	// on va trier par date décroissante les dépenses d'un budget
 	const sortedExpenses = [...filteredExpenses].sort(
@@ -62,9 +69,7 @@ export default function DetailsExpenses({
 											</div>
 
 											<div>
-												<span className="font-semibold">
-													{exp.amount.toFixed(2)} €
-												</span>
+												<span className="font-semibold">{exp.amount} €</span>
 											</div>
 										</div>
 									</div>

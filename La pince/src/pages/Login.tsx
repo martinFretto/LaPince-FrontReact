@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { loginUser } from "../api/auth";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Login() {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -16,27 +19,21 @@ export default function Login() {
 		</span>
 	);
 
-	// Methode Fetch pour l'envoi des données à la bdd
+	// Appel de loginUser pour faire l'appel fetch a l'API
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		console.log("handleSubmit");
 
+		const userData = {
+			email,
+			password,
+		};
 		try {
-			const response = await fetch("https://", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					email,
-					password,
-				}),
-			});
-
-			const data = await response.json();
-			console.log(data);
-		} catch (error) {
-			console.error("Connexion impossible", error);
+			const data = await loginUser(userData); // Récupération des données et du token
+			sessionStorage.setItem("authToken", data.token); // Stockage du token
+			console.log("token :", data.token);
+			navigate("/dashboard");
+		} catch (err) {
+			console.error("Erreur lors de la connexion", err);
 		}
 	};
 
@@ -80,6 +77,7 @@ export default function Login() {
 									onChange={(e) => setPassword(e.target.value)}
 									required
 									className="w-72 input input-neutral"
+									autoComplete="current-password" // permet au navigateur de suggerer le mot de passe deja enregistrer sur ce site
 								/>
 							</div>
 							{/* Liste des conditions */}
@@ -106,6 +104,17 @@ export default function Login() {
 						</button>
 					</form>
 				</div>
+			</div>
+			<div className="place-self-center -mt-8 mb-8">
+				<p className="italic">
+					Pas encore de compte ? creez le{" "}
+					<NavLink
+						to={"/auth/register"}
+						className="text-[#1971C2] font-semibold"
+					>
+						ici{" "}
+					</NavLink>
+				</p>
 			</div>
 		</div>
 	);

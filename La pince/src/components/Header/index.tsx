@@ -1,11 +1,19 @@
-import { NavLink } from "react-router-dom";
-
-// Permet de modifier la couleur du lien clické
-const linkBaseClasses = "font-semibold";
-const activeClass = "text-[#1971C2]";
-const inactiveClass = "text-black";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Header() {
+	const navigate = useNavigate();
+
+	// Permet de modifier la couleur du lien clické
+	const linkBaseClasses = "font-semibold";
+	const activeClass = "text-[#1971C2]";
+	const inactiveClass = "text-black";
+
+	// Permet la suppression du token et de revenir a la page login
+	const logout = () => {
+		sessionStorage.removeItem("authToken");
+		navigate("/auth/login");
+	};
+
 	return (
 		<div>
 			<div className="relative bg-[#99E9F2] flex justify-around">
@@ -41,14 +49,13 @@ export default function Header() {
 							Mes budgets
 						</NavLink>
 
-						<NavLink
-							to="/"
-							className={({ isActive }) =>
-								`${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
-							}
+						<button
+							type="button"
+							onClick={logout}
+							className={`${linkBaseClasses} ${inactiveClass} cursor-pointer`}
 						>
 							Se déconnecter
-						</NavLink>
+						</button>
 					</div>
 				</div>
 			</div>

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+import type { NewExpense, UpdateExpense } from "../../types/Expense";
+import { addExpense, DeleteExpense, updateExpense } from "../../api/expenses";
 
 export default function ExpensesModal({
 	isOpen,
 	setIsOpen,
 	selectedExpense,
 	setSelectedExpense,
+	selectedBudget,
+	fetchExpenses,
+	triggerReload,
 }: {
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
@@ -12,12 +17,16 @@ export default function ExpensesModal({
 	selectedExpense: any;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	setSelectedExpense: (expense: any) => void;
+	selectedBudget: number;
+	fetchExpenses: () => void | Promise<void>;
+	triggerReload: () => void | Promise<void>;
 }) {
 	const [amount, setAmount] = useState("");
 	const [description, setDescription] = useState("");
+	const [payment_method] = useState("");
 	const [date, setDate] = useState("");
 
-	const remainingLength = Math.max(0, 60 - description.length);
+	const remainingLength = Math.max(0, 60 - description?.length);
 
 	useEffect(() => {
 		if (isOpen && selectedExpense) {
@@ -31,8 +40,56 @@ export default function ExpensesModal({
 		}
 	}, [isOpen, selectedExpense]);
 
-	const handleDelete = () => {
-		console.log("handleDelete");
+	// Ajout d'une nouvelle dépense
+	const handleAdd = async () => {
+		const budget_id = selectedBudget;
+		const newExpense: NewExpense = {
+			description,
+			payment_method,
+			amount: Number(amount),
+			date,
+			budget_id,
+		};
+		try {
+			await addExpense(newExpense, selectedBudget);
+			await fetchExpenses();
+			triggerReload();
+			setIsOpen(false);
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du budget :", error);
+		}
+	};
+
+	// Modification d'une dépense
+	const handleUpdate = async () => {
+		const expenseId = selectedExpense.id;
+		const expenseToSend: UpdateExpense = {
+			amount: Number(amount),
+			description,
+			payment_method,
+			date,
+		};
+		try {
+			await updateExpense(expenseId, expenseToSend);
+			await fetchExpenses();
+			triggerReload();
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du budget :", error);
+		}
+	};
+
+	// suppression d'une dépense
+	const handleDelete = async () => {
+		try {
+			const expenseId = selectedExpense.id;
+			await DeleteExpense(expenseId);
+			await fetchExpenses();
+			setIsOpen(false);
+			setSelectedExpense(null);
+			console.log(`Dépense ${expenseId} supprimée avec succès !`);
+		} catch (error) {
+			console.error("Erreur lors de la suppression :", error);
+		}
 	};
 
 	if (!isOpen) return null;
@@ -58,7 +115,14 @@ export default function ExpensesModal({
 				</div>
 
 				{/* Formulaire */}
-				<div className="space-y-4">
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						selectedExpense ? handleUpdate() : handleAdd();
+						setIsOpen(false);
+					}}
+					className="space-y-4"
+				>
 					{/* Montant */}
 					<div className="text-center">
 						<label className="block mb-1 text-black" htmlFor="number">
@@ -70,7 +134,7 @@ export default function ExpensesModal({
 								type="number"
 								value={amount}
 								onChange={(e) => setAmount(e.target.value)}
-								className="bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
+								className="validator bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
 								placeholder="0.00"
 								required
 							/>
@@ -90,11 +154,11 @@ export default function ExpensesModal({
 								id="description"
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
-								className="bg-white border border-gray-300 rounded p-2 text-center w-1/1 h-18"
+								className=" validator bg-white border border-gray-300 rounded p-2 text-center w-1/1 h-18"
 								maxLength={60}
 								required
 							/>
-							<li className="flex items-center">
+							<li className="flex items-center text-sm ml-2">
 								Reste {remainingLength} caractères
 							</li>
 						</div>
@@ -111,45 +175,39 @@ export default function ExpensesModal({
 								type="date"
 								value={date}
 								onChange={(e) => setDate(e.target.value)}
-								className="bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
+								className="validator bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
 								required
 							/>
 						</div>
 					</div>
-				</div>
 
-				{/* Bouton Valider */}
-				<div className="flex justify-center mt-6">
-					<button
-						type="button"
-						onClick={() => {
-							if (selectedExpense) {
-								console.log("Modifier:", selectedExpense);
-							} else {
-								console.log("Ajouter:", { amount, description, date });
-							}
-							setIsOpen(false);
-							setSelectedExpense(null);
-						}}
-						className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
-					>
-						{selectedExpense ? "Modifier" : "Ajouter"}
-					</button>
-				</div>
-				{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
-				{selectedExpense ? (
-					<div>
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-						<img
-							src="/trash-alt-svgrepo-com.svg"
-							alt="image-poubelle"
-							className="absolute w-8 bottom-7 right-5"
-							onClick={handleDelete}
-						/>
+					{/* Bouton Valider */}
+					<div className="flex justify-center mt-6">
+						<div className="flex justify-center mt-6">
+							<button
+								type="submit"
+								className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded -mb-5"
+							>
+								{selectedExpense ? "Modifier" : "Ajouter"}
+							</button>
+						</div>
 					</div>
-				) : (
-					""
-				)}
+
+					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
+					{selectedExpense ? (
+						<div>
+							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+							<img
+								src="/trash-alt-svgrepo-com.svg"
+								alt="image-poubelle"
+								className="absolute w-8 bottom-6 right-5"
+								onClick={handleDelete}
+							/>
+						</div>
+					) : (
+						""
+					)}
+				</form>
 			</div>
 		</div>
 	);
