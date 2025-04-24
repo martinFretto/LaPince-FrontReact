@@ -8,7 +8,6 @@ interface RegisterData {
 }
 
 export async function registerUser(userData: RegisterData) {
-	// <-- utilisation du type ici
 	const res = await fetch(`${API_URL}/auth/register`, {
 		method: "POST",
 		headers: {

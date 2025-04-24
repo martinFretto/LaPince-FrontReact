@@ -82,7 +82,6 @@ export default function BudgetModal({
 	};
 
 	// Modification d'un budget
-	// Modification d'un budget
 	const handleUpdate = async (budgetId: number) => {
 		const budgetToSend: ModifBudget = {
 			name,
