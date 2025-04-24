@@ -56,29 +56,31 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 								<td colSpan={3}>
 									<div className="border-b border-gray-300 flex justify-between items-center pb-2">
 										<div className="flex items-center gap-2 justify-between w-full">
-											<div className="">
-												{/* Icône du budget avec style séparé du className pour récupérer la couleur du budget */}
+											<div className="flex w-7/10">
+												<div className="">
+													{/* Icône du budget avec style séparé du className pour récupérer la couleur du budget */}
 
-												<div
-													className="w-10 h-10 border rounded-full p-1 flex items-center justify-center"
-													style={{ backgroundColor: exp.budgetColor }}
-												>
-													<img
-														src={exp.budgetIcon}
-														alt={exp.description}
-														className="w-full h-full object-contain"
-													/>
+													<div
+														className="w-10 h-10 border rounded-full p-1 flex items-center justify-center"
+														style={{ backgroundColor: exp.budgetColor }}
+													>
+														<img
+															src={exp.budgetIcon}
+															alt={exp.description}
+															className="w-full h-full object-contain"
+														/>
+													</div>
 												</div>
-											</div>
 
-											{/* Description de la dépense & date */}
-											<div className="flex flex-col w-6/10 justify-self-start">
-												<span className="font-semibold text-base leading-tight mb-1">
-													{exp.description}
-												</span>
-												<span className="italic text-[12px] text-gray-400">
-													{new Date(exp.date).toLocaleDateString()}
-												</span>
+												{/* Description de la dépense & date */}
+												<div className="flex flex-col w-6/10 justify-self-start ml-10">
+													<span className="font-semibold text-base leading-tight mb-1">
+														{exp.description}
+													</span>
+													<span className="italic text-[12px] text-gray-400">
+														{new Date(exp.date).toLocaleDateString()}
+													</span>
+												</div>
 											</div>
 											{/* Montant de la dépense */}
 											<div>
