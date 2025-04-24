@@ -13,9 +13,9 @@ export default function ExpensesModal({
 }: {
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+
 	selectedExpense: any;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+
 	setSelectedExpense: (expense: any) => void;
 	selectedBudget: number;
 	fetchExpenses: () => void | Promise<void>;
@@ -196,7 +196,6 @@ export default function ExpensesModal({
 					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
 					{selectedExpense ? (
 						<div>
-							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 							<img
 								src="/trash-alt-svgrepo-com.svg"
 								alt="image-poubelle"

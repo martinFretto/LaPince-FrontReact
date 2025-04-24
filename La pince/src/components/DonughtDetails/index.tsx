@@ -18,7 +18,6 @@ export const DonutDetail: React.FC<DonutDetailProps> = ({
 	const [series, setSeries] = useState<number[]>([]);
 	const [options, setOptions] = useState<ApexOptions>({});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		// Calculer les montants à afficher dans le graphique
 		const { allocated_amount } = budget;

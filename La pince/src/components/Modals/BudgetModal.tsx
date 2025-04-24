@@ -45,7 +45,6 @@ export default function BudgetModal({
 		}
 	}, [isModalOpen, selectedBudget]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (isModalOpen && !selectedBudget) {
 			// Forcer le vidage dans ce cas précis
@@ -188,7 +187,6 @@ export default function BudgetModal({
 							</label>
 							<div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto">
 								{icons.map((i, index) => (
-									// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 									<img
 										id="icon"
 										// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -277,7 +275,6 @@ export default function BudgetModal({
 						{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
 						{selectedBudget ? (
 							<div>
-								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<img
 									src="/trash-alt-svgrepo-com.svg"
 									alt="Supprimer"

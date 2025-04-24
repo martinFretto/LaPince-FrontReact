@@ -36,7 +36,6 @@ export default function BudgetDetails() {
 	const triggerExpensesReload = () => {
 		setExpensesUpdatedTrigger((prev) => prev + 1);
 	};
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleExpenseClick = (expense: any) => {
 		setSelectedExpense(expense);
 		setIsOpen(true);
@@ -54,7 +53,7 @@ export default function BudgetDetails() {
 			console.error("Erreur de chargement des budgets:", error);
 		}
 	};
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+
 	useEffect(() => {
 		getExpenses();
 	}, []);
@@ -75,7 +74,7 @@ export default function BudgetDetails() {
 						<p className="font-semibold mb-1 pl-1 text-md">retour</p>
 					</div>
 				</NavLink>
-				{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+
 				<div
 					className="flex flex-col items-center"
 					onClick={() => {

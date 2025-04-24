@@ -6,7 +6,7 @@ import { fetchExpenses } from "../../api/expenses";
 
 type DetailsExpensesProps = {
 	budget?: number;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+
 	onExpenseClick?: (expense: any) => void;
 };
 
@@ -48,7 +48,6 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 				<tbody>
 					{recentExpenses.map((exp) => {
 						return (
-							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 							<tr
 								key={exp.id}
 								onClick={() => onExpenseClick?.(exp)} // on déclenche le callback ici

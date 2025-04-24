@@ -7,7 +7,6 @@ import type { Budget } from "../../types/budget";
 type DetailsExpensesProps = {
 	budget: number;
 	expenses: Expense[];
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	onExpenseClick?: (expense: any) => void;
 };
 

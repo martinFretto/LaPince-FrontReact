@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 // import { budgets } from "../data/budget";
 import { fetchBudget } from "../api/budget";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
 import Flag from "../components/flag";
@@ -50,7 +50,6 @@ export default function Budgets() {
 		getData();
 	}, []);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		getBudgets();
 	}, []);
@@ -77,7 +76,6 @@ export default function Budgets() {
 	};
 
 	// Methode pour modifier un budget
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const handleEditBudget = (budget: any) => {
 		setSelectedBudget(budget);
 		openModal();
@@ -115,11 +113,6 @@ export default function Budgets() {
 							/>
 						</div>
 					</div>
-					<progress
-						className="progress progress-success w-25 h-4 border-1 border-black custom-progress shadow-md shadow-gray-600"
-						value={remainingPercent.toString()}
-						max="100"
-					/>
 				</div>
 			</div>
 
@@ -168,7 +161,6 @@ export default function Budgets() {
 										/>
 									</NavLink>
 
-									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 									<div
 										className="absolute bottom-4 right-4"
 										onClick={() => handleEditBudget(budget)}
