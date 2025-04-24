@@ -117,11 +117,8 @@ export default function Budgets() {
 			</div>
 
 			{/* Vignettes des budgets */}
-			<div className="container mx-auto px-4 py-6 w-full">
-				<div
-					className="grid gap-15 grid-cols-1 min-[791px]:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-3 mx-auto"
-					style={{ maxWidth: "1200px" }}
-				>
+			<div className="container mx-auto px-4 py-6">
+				<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:mx-40 2xl:mx-80">
 					{/* Tri des budgets par ordre alphabétique */}
 					{[...budgets] // on clone pour éviter de muter le state directement
 						.sort((a, b) => a.name.localeCompare(b.name)) // tri alphabétique
@@ -143,7 +140,7 @@ export default function Budgets() {
 							return (
 								<div
 									key={budget.id}
-									className="relative border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-md min-w-[280px] mx-auto min-h-60 overflow-hidden"
+									className="relative overflow-hidden border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60"
 								>
 									<NavLink
 										to={`${budget.id}`}
