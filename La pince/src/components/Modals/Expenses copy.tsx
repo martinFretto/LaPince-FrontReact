@@ -115,14 +115,7 @@ export default function ExpensesModal({
 				</div>
 
 				{/* Formulaire */}
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						selectedExpense ? handleUpdate() : handleAdd();
-						setIsOpen(false);
-					}}
-					className="space-y-4"
-				>
+				<div className="space-y-4">
 					{/* Montant */}
 					<div className="text-center">
 						<label className="block mb-1 text-black" htmlFor="number">
@@ -158,7 +151,7 @@ export default function ExpensesModal({
 								maxLength={60}
 								required
 							/>
-							<li className="flex items-center text-sm ml-2">
+							<li className="flex items-center">
 								Reste {remainingLength} caractères
 							</li>
 						</div>
@@ -175,39 +168,53 @@ export default function ExpensesModal({
 								type="date"
 								value={date}
 								onChange={(e) => setDate(e.target.value)}
-								className="validator bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
+								className="bg-white border border-gray-300 rounded p-2 text-center max-w-[80%]"
 								required
 							/>
 						</div>
 					</div>
+				</div>
 
-					{/* Bouton Valider */}
-					<div className="flex justify-center mt-6">
-						<div className="flex justify-center mt-6">
-							<button
-								type="submit"
-								className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded -mb-5"
-							>
-								{selectedExpense ? "Modifier" : "Ajouter"}
-							</button>
-						</div>
-					</div>
-
-					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
+				{/* Bouton Valider */}
+				<div className="flex justify-center mt-6">
 					{selectedExpense ? (
-						<div>
-							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-							<img
-								src="/trash-alt-svgrepo-com.svg"
-								alt="image-poubelle"
-								className="absolute w-8 bottom-6 right-5"
-								onClick={handleDelete}
-							/>
-						</div>
+						<button
+							type="button"
+							onClick={() => {
+								handleUpdate();
+								setIsOpen(false);
+							}}
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
+						>
+							Modifier
+						</button>
 					) : (
-						""
+						<button
+							type="button"
+							onClick={() => {
+								handleAdd();
+								setIsOpen(false);
+							}}
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded"
+						>
+							Ajouter
+						</button>
 					)}
-				</form>
+				</div>
+				{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
+				{selectedExpense ? (
+					<div>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						<img
+							src="/trash-alt-svgrepo-com.svg"
+							alt="image-poubelle"
+							className="absolute w-8 bottom-7 right-5"
+							onClick={handleDelete}
+						/>
+					</div>
+				) : (
+					""
+				)}
 			</div>
 		</div>
 	);
