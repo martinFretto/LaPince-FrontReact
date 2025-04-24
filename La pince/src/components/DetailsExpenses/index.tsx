@@ -1,59 +1,22 @@
 // import { expenditures } from "../../data/expenditure";
 // import { budgets } from "../../data/budget";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Expense } from "../../types/Expense";
 import type { Budget } from "../../types/budget";
-import { fetchExpensesByBudget } from "../../api/expenses";
-import { fetchBudget } from "../../api/budget";
 
 type DetailsExpensesProps = {
 	budget: number;
+	expenses: Expense[];
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	onExpenseClick?: (expense: any) => void;
 };
 
 export default function DetailsExpenses({
 	budget,
+	expenses,
 	onExpenseClick,
 }: DetailsExpensesProps) {
-	const [expenses, setExpenses] = useState<Expense[]>([]);
-	const [budgets, setBudgets] = useState<Budget[]>([]);
-
-	// useEffect qui va chercher les dépenses
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		const getBudgetExpenses = async () => {
-			try {
-				const data = await fetchExpensesByBudget(budget);
-				if (Array.isArray(data)) {
-					setExpenses(data);
-					console.log(data);
-				} else {
-					console.warn("Données reçues non valides:", data);
-				}
-			} catch (error) {
-				console.error("Erreur de chargement des dépenses:", error);
-			}
-		};
-		getBudgetExpenses();
-	}, []);
-
-	// useEffect qui va chercher les budgets
-	useEffect(() => {
-		const getBudgets = async () => {
-			try {
-				const data = await fetchBudget();
-				if (Array.isArray(data.data)) {
-					setBudgets(data.data);
-				} else {
-					console.warn("Données reçues non valides:", data);
-				}
-			} catch (error) {
-				console.error("Erreur de chargement des budgets:", error);
-			}
-		};
-		getBudgets();
-	}, []);
+	const [budgets] = useState<Budget[]>([]);
 
 	// on va filtrer les dépenses d'un budget
 	const filteredExpenses = budget

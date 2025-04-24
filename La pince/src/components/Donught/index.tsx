@@ -37,6 +37,7 @@ const DonutChart = () => {
 		(acc, budget) => acc + budget.allocated_amount,
 		0,
 	);
+
 	// calcul du montant restant par budget
 	const remainingByBudget = budgets.map(
 		(budget) => budget.allocated_amount - budget.spent_amount,

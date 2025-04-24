@@ -45,7 +45,6 @@ export default function BudgetModal({
 		}
 	}, [isModalOpen, selectedBudget]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (isModalOpen && !selectedBudget) {
 			// Forcer le vidage dans ce cas précis
@@ -74,36 +73,35 @@ export default function BudgetModal({
 		try {
 			await AddBudget(newBudget);
 			console.log(`Budget ${name} ajouté avec succès !`);
+			await fetchBudget();
 			onClose();
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
 		}
 	};
 
-	// Modification du budget
+	// Modification d'un budget
 	const handleUpdate = async (selectedBudget: number) => {
 		console.log(`handleUpdate du budget n°: ${selectedBudget}`);
-
 		const budgetToSend: ModifBudget = {
 			name,
 			allocated_amount: Number(allocated_amount) || 0,
 			icon,
 			warning_amount: Number(warning_amount) || 0,
 			color,
-			// selectedBudget: 0,
 		};
 
 		try {
-			console.log(budgetToSend);
-
 			await updateBudget(budgetToSend, selectedBudget);
 			console.log("Budget modifié avec succès !");
+			await fetchBudget();
+			onClose();
 		} catch (error) {
 			console.error("Erreur lors de la mise à jour du budget :", error);
 		}
 	};
 
-	// Suppression du budget
+	// Suppression d'un budget
 	const handleDelete = async (selectedBudget: { id: number; name: string }) => {
 		console.log(selectedBudget.id);
 
@@ -154,7 +152,6 @@ export default function BudgetModal({
 								onChange={(e) => setName(e.target.value)}
 								className="border border-gray-300 rounded p-2 w-full bg-white"
 							/>
-							{name}
 						</div>
 
 						{/* Montant alloué */}
@@ -170,6 +167,7 @@ export default function BudgetModal({
 									id="allocated_amount"
 									type="number"
 									value={allocated_amount}
+									required
 									onChange={(e) => setAllocated_amount(e.target.value)}
 									className="border border-gray-300 rounded p-2 w-full bg-white"
 								/>
@@ -177,7 +175,6 @@ export default function BudgetModal({
 									€
 								</span>
 							</div>
-							{allocated_amount}
 						</div>
 
 						{/* Icônes en grille */}
@@ -195,6 +192,7 @@ export default function BudgetModal({
 										src={i.src}
 										alt={i.name}
 										title={i.name}
+										aria-required
 										loading="lazy"
 										onClick={() => setIcon(i.src)}
 										className={`w-10 h-10 p-1 border rounded cursor-pointer transition ${
@@ -216,6 +214,7 @@ export default function BudgetModal({
 								</div>
 							)}
 						</div>
+						{icon.length}
 
 						{/* Seuil d'alerte */}
 						<div className="w-full md:w-[48%]">
@@ -227,6 +226,7 @@ export default function BudgetModal({
 									id="warning_amount"
 									type="number"
 									value={warning_amount}
+									required
 									onChange={(e) => setWarning_amount(e.target.value)}
 									className="border border-gray-300 rounded p-2 w-full bg-white"
 								/>
@@ -234,7 +234,6 @@ export default function BudgetModal({
 									€
 								</span>
 							</div>
-							{warning_amount}
 						</div>
 
 						{/* Couleur */}
@@ -246,11 +245,11 @@ export default function BudgetModal({
 								id="color"
 								type="color"
 								value={color}
+								required
 								onChange={(e) => setColor(e.target.value)}
 								className="border border-gray-300 rounded p-1 w-full h-10 bg-white"
 							/>
 						</div>
-						{color}
 					</div>
 
 					{/* Bouton Valider */}

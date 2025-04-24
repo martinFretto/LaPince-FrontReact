@@ -8,21 +8,23 @@ export default function ExpensesModal({
 	selectedExpense,
 	setSelectedExpense,
 	selectedBudget,
+	fetchExpenses,
+	triggerReload,
 }: {
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	selectedExpense: any;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	setSelectedExpense: (expense: any) => void;
 	selectedBudget: number;
+	fetchExpenses: () => void | Promise<void>;
+	triggerReload: () => void | Promise<void>;
 }) {
 	const [amount, setAmount] = useState("");
 	const [description, setDescription] = useState("");
 	const [payment_method] = useState("");
 	const [date, setDate] = useState("");
 
-	const remainingLength = Math.max(0, 60 - description.length);
+	const remainingLength = Math.max(0, 60 - description?.length);
 
 	useEffect(() => {
 		if (isOpen && selectedExpense) {
@@ -48,14 +50,15 @@ export default function ExpensesModal({
 		};
 		try {
 			await addExpense(newExpense, selectedBudget);
-			console.log("newExpense", newExpense);
-			console.log("selectedBudget", selectedBudget);
-			console.log(`dépense ${description} ajouté avec succès !`);
+			await fetchExpenses();
+			triggerReload();
+			setIsOpen(false);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
 		}
 	};
 
+	// Modification d'une dépense
 	const handleUpdate = async () => {
 		const expenseId = selectedExpense.id;
 		const expenseToSend: UpdateExpense = {
@@ -66,18 +69,25 @@ export default function ExpensesModal({
 		};
 		try {
 			await updateExpense(expenseId, expenseToSend);
-			console.log("expenseToSend", expenseToSend);
-			console.log("selectedBudget", selectedBudget);
-			console.log(`dépense ${description} modifiée avec succès !`);
+			await fetchExpenses();
+			triggerReload();
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
 		}
 	};
 
-	const handleDelete = () => {
-		const expenseId = selectedExpense.id;
-		DeleteExpense(expenseId);
-		setIsOpen(false);
+	// suppression d'une dépense
+	const handleDelete = async () => {
+		try {
+			const expenseId = selectedExpense.id;
+			await DeleteExpense(expenseId);
+			await fetchExpenses();
+			setIsOpen(false);
+			setSelectedExpense(null);
+			console.log(`Dépense ${expenseId} supprimée avec succès !`);
+		} catch (error) {
+			console.error("Erreur lors de la suppression :", error);
+		}
 	};
 
 	if (!isOpen) return null;

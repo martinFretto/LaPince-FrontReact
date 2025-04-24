@@ -2,6 +2,7 @@ import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 import type { Budget } from "../../types/budget";
 import { useEffect, useState } from "react";
+import { fetchBudget } from "../../api/budget";
 import type { Expense } from "../../types/Expense";
 
 interface DonutDetailProps {
@@ -11,20 +12,20 @@ interface DonutDetailProps {
 }
 
 export const DonutDetail: React.FC<DonutDetailProps> = ({
+	expenses,
 	budget,
 	expensesUpdatedTrigger,
-	expenses,
 }) => {
 	const [series, setSeries] = useState<number[]>([]);
 	const [options, setOptions] = useState<ApexOptions>({});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
+		// Log to verify if the budget and expensesUpdatedTrigger change correctly
+		console.log("Budget updated:", budget);
+		console.log("Expenses Updated Trigger:", expensesUpdatedTrigger);
+
 		// Calculer les montants à afficher dans le graphique
-		const { allocated_amount } = budget;
-		const spent_amount = expenses
-			.filter((expense) => expense.budget_id === budget.id)
-			.reduce((total, expense) => total + Number(expense.amount), 0);
+		const { allocated_amount, spent_amount } = budget;
 
 		const remainingBudget = allocated_amount - spent_amount;
 		const overBudget = remainingBudget < 0;
@@ -36,6 +37,9 @@ export const DonutDetail: React.FC<DonutDetailProps> = ({
 		const newSeries = overBudget
 			? [overAmount, allocated_amount]
 			: [safeSpent, safeRemaining];
+
+		// Log the calculated series to ensure it is calculated correctly
+		console.log("Series data:", newSeries);
 
 		const newOptions: ApexOptions = {
 			chart: {
@@ -89,9 +93,13 @@ export const DonutDetail: React.FC<DonutDetailProps> = ({
 			},
 		};
 
+		// Log the new options to verify that they are being updated correctly
+		console.log("Options updated:", newOptions);
+
+		// Mise à jour de l'état
 		setSeries(newSeries);
 		setOptions(newOptions);
-	}, [budget, expenses, expensesUpdatedTrigger]); // Ajouter 'expenses' dans les dépendances
+	}, [budget, expensesUpdatedTrigger]);
 
 	return (
 		<div>

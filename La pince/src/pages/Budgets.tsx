@@ -7,28 +7,53 @@ import { useEffect, useState } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
 import Flag from "../components/flag";
+import type { Expense } from "../types/Expense";
+import { fetchExpenses } from "../api/expenses";
 
 export default function Budgets() {
-	// useEffect qui va chercher les budgets
-	useEffect(() => {
-		const getBudgets = async () => {
-			try {
-				const data = await fetchBudget();
-				if (Array.isArray(data.data)) {
-					setBudgets(data.data);
-				} else {
-					console.warn("Données reçues non valides:", data);
-				}
-			} catch (error) {
-				console.error("Erreur de chargement des budgets:", error);
-			}
-		};
-		getBudgets();
-	}, []);
-
 	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
+	const [expenses, setExpenses] = useState<Expense[]>([]);
+	const [expensesUpdatedTrigger, ] =
+		useState<number>(0);
+	const getBudgets = async () => {
+		try {
+			const data = await fetchBudget();
+			if (Array.isArray(data.data)) {
+				setBudgets(data.data);
+			} else {
+				console.warn("Données reçues non valides:", data);
+			}
+		} catch (error) {
+			console.error("Erreur de chargement des budgets:", error);
+		}
+	};
+
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const budgetsData = await fetchBudget();
+				if (Array.isArray(budgetsData.data)) {
+					setBudgets(budgetsData.data);
+				}
+
+				const expensesData = await fetchExpenses();
+				if (Array.isArray(expensesData)) {
+					setExpenses(expensesData);
+				}
+			} catch (error) {
+				console.error("Erreur lors du chargement des données :", error);
+			}
+		};
+
+		getData();
+	}, []);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		getBudgets();
+	}, []);
 
 	const totalBudget = budgets.reduce(
 		(acc, budget) => acc + Number(budget.allocated_amount),
@@ -89,55 +114,62 @@ export default function Budgets() {
 			{/* Vignettes des budgets */}
 			<div className="container mx-auto px-4 py-6">
 				<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:mx-40 2xl:mx-80">
-					{budgets.map((budget) => {
-						const remainingAmount =
-							budget.allocated_amount - budget.spent_amount;
+					{/* Tri des budgets par ordre alphabétique */}
+					{[...budgets] // on clone pour éviter de muter le state directement
+						.sort((a, b) => a.name.localeCompare(b.name)) // tri alphabétique
+						.map((budget) => {
+							const remainingAmount =
+								budget.allocated_amount - budget.spent_amount;
 
-						let flagColor = null;
-						let flagText = null;
+							let flagColor = null;
+							let flagText = null;
 
-						if (remainingAmount < 0) {
-							flagColor = "bg-red-400";
-							flagText = "Budget dépassé";
-						} else if (remainingAmount < budget.warning_amount) {
-							flagColor = "bg-amber-400";
-							flagText = "Seuil d'alerte atteint";
-						}
+							if (remainingAmount < 0) {
+								flagColor = "bg-red-400";
+								flagText = "Budget dépassé";
+							} else if (remainingAmount < budget.warning_amount) {
+								flagColor = "bg-amber-400";
+								flagText = "Seuil d'alerte atteint";
+							}
 
-						return (
-							<div
-								key={budget.id}
-								className="relative overflow-hidden border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60"
-							>
-								<NavLink
-									to={`${budget.id}`}
-									state={{ budget }}
-									className="w-full h-full flex flex-col items-center"
-								>
-									{flagColor && <Flag color={flagColor} text={flagText} />}
-
-									<img
-										src={budget.icon}
-										alt="icone du budget"
-										className="w-10 mb-4 absolute mt-22"
-									/>
-									<DonutDetail budget={budget} />
-								</NavLink>
-
-								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+							return (
 								<div
-									className="absolute bottom-4 right-4"
-									onClick={() => handleEditBudget(budget)}
+									key={budget.id}
+									className="relative overflow-hidden border border-gray-300 rounded-xl p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60"
 								>
-									<img
-										src="/logo-settings.svg"
-										alt="logo-reglage"
-										className="w-8 h-8"
-									/>
+									<NavLink
+										to={`${budget.id}`}
+										state={{ budget }}
+										className="w-full h-full flex flex-col items-center"
+									>
+										{flagColor && <Flag color={flagColor} text={flagText} />}
+
+										<img
+											src={budget.icon}
+											alt="icone du budget"
+											className="w-10 mb-4 absolute mt-24"
+										/>
+										<DonutDetail
+											expenses={expenses}
+											budget={budget}
+											expensesUpdatedTrigger={expensesUpdatedTrigger}
+										/>
+									</NavLink>
+
+									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+									<div
+										className="absolute bottom-4 right-4"
+										onClick={() => handleEditBudget(budget)}
+									>
+										<img
+											src="/logo-settings.svg"
+											alt="logo-reglage"
+											className="w-8 h-8"
+										/>
+									</div>
 								</div>
-							</div>
-						);
-					})}
+							);
+						})}
 				</div>
 				<button
 					type="button"
@@ -154,7 +186,7 @@ export default function Budgets() {
 					onClose={() => setIsModalOpen(false)}
 					selectedBudget={selectedBudget}
 					setSelectedBudget={setSelectedBudget}
-					fetchBudget={fetchBudget}
+					fetchBudget={getBudgets}
 				/>
 			</div>
 		</div>
