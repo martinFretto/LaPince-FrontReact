@@ -1,5 +1,5 @@
-import { expenditures } from "../../data/expenditure";
 import { budgets } from "../../data/budget";
+import { expenditures } from "../../data/expenditure";
 
 type DetailsExpensesProps = {
 	budget?: number;
@@ -18,7 +18,7 @@ export default function DetailsExpenses({
 
 	// on va trier par date décroissante les dépenses d'un budget
 	const sortedExpenses = [...filteredExpenses].sort(
-		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 	);
 
 	const recentExpenses = sortedExpenses.slice(0, 10);
@@ -31,7 +31,6 @@ export default function DetailsExpenses({
 						const relatedBudget = budgets.find((b) => b.id === exp.budget_id);
 
 						return (
-							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 							<tr
 								key={exp.id}
 								onClick={() => onExpenseClick?.(exp)}

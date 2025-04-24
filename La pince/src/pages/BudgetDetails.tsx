@@ -1,9 +1,9 @@
-import { NavLink, useLocation } from "react-router-dom";
-import DonutDetail from "../components/DonughtDetails/index";
-import DetailsExpenses from "../components/DetailsExpenses";
 import { useState } from "react";
-import ExpensesModal from "../components/Modals/ExpensesModal";
+import { NavLink, useLocation } from "react-router-dom";
+import DetailsExpenses from "../components/DetailsExpenses";
+import DonutDetail from "../components/DonughtDetails/index";
 import BudgetModal from "../components/Modals/BudgetModal";
+import ExpensesModal from "../components/Modals/ExpensesModal";
 
 export default function BudgetDetails() {
 	const [isOpen, setIsOpen] = useState(false);

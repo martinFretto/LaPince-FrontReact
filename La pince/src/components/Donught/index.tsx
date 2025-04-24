@@ -1,5 +1,5 @@
-import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
+import ReactApexChart from "react-apexcharts";
 import { useNavigate } from "react-router-dom";
 import { budgets } from "../../data/budget";
 
@@ -13,11 +13,11 @@ const DonutChart = () => {
 	// récuperation et addition du total des budgets
 	const totalBudget = budgets.reduce(
 		(acc, budget) => acc + budget.allocated_amount,
-		0,
+		0
 	);
 	// calcul du montant restant par budget
 	const remainingByBudget = budgets.map(
-		(budget) => budget.allocated_amount - budget.spent_amount,
+		(budget) => budget.allocated_amount - budget.spent_amount
 	);
 	const series = remainingByBudget;
 

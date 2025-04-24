@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@theme {
+	--breakpoint-3xl: 125rem; /* 2000px */
+	--breakpoint-4xl: 150rem; /* 2400px */
+}
+
 /* Classes custom pour la barre de progression du budget */
 .custom-progress::-webkit-progress-bar {
 	background-color: #e5e7eb; /* gris clair */

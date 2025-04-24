@@ -21,11 +21,9 @@ export default function Header() {
 							<NavLink
 								to="/dashboard"
 								className={(
-									{ isActive }, // Si le lien Accueil est clické, le isActive devient actif et applique activeClass et sa couleur défini plus haut
+									{ isActive } // Si le lien Accueil est clické, le isActive devient actif et applique activeClass et sa couleur défini plus haut
 								) =>
-									`absolute -mt-5 ml-3 ${linkBaseClasses} ${
-										isActive ? activeClass : inactiveClass
-									}`
+									`absolute -mt-5 ml-3 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
 								}
 							>
 								Accueil
@@ -37,9 +35,7 @@ export default function Header() {
 						<NavLink
 							to="/budgets"
 							className={({ isActive }) =>
-								`pr-6 ${linkBaseClasses} ${
-									isActive ? activeClass : inactiveClass
-								}`
+								`pr-6 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
 							}
 						>
 							Mes budgets

@@ -1,18 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header";
-import Dashboard from "./pages/Dashboard";
-import LandingPage from "./pages/LandingPage";
-import RegisterPage from "./pages/RegisterPage";
-import Login from "./pages/Login";
 import Footer from "./components/Footer";
+import Header from "./components/Header";
+import BudgetDetails from "./pages/BudgetDetails";
+import Budgets from "./pages/Budgets";
+import Dashboard from "./pages/Dashboard";
+import LegalNotices from "./pages/Footer/LegaleNotices";
 import PrivacyPolicy from "./pages/Footer/PrivacyPolicy";
 import SecurityData from "./pages/Footer/SecurityData";
-import LegalNotices from "./pages/Footer/LegaleNotices";
 import UserStories from "./pages/Footer/UserStories";
+import LandingPage from "./pages/LandingPage";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import Budgets from "./pages/Budgets";
-import BudgetDetails from "./pages/BudgetDetails";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
 	return (

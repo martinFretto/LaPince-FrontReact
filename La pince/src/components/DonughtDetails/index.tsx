@@ -1,5 +1,5 @@
-import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
+import ReactApexChart from "react-apexcharts";
 
 // Déclare le type en ligne ici
 type Budget = {

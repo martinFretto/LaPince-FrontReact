@@ -1,5 +1,5 @@
-import { expenditures } from "../../data/expenditure";
 import { budgets } from "../../data/budget";
+import { expenditures } from "../../data/expenditure";
 
 type DetailsExpensesProps = {
 	budget?: number;
@@ -10,7 +10,7 @@ type DetailsExpensesProps = {
 export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 	// Trier les dépenses par date décroissante
 	const sortedExpenses = [...expenditures].sort(
-		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 	);
 
 	// On ne garde que les 6 dernieres (0, 6)
