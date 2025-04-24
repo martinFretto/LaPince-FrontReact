@@ -25,6 +25,7 @@ export default function ExpensesModal({
 	const [description, setDescription] = useState("");
 	const [payment_method] = useState("");
 	const [date, setDate] = useState("");
+	const [isOpenDelete, setIsOpenDelete] = useState(false);
 
 	const remainingLength = Math.max(0, 60 - description?.length);
 
@@ -78,7 +79,7 @@ export default function ExpensesModal({
 		}
 	};
 
-	// suppression d'une dépense
+	// Suppression d'une dépense avec confirmation
 	const handleDelete = async () => {
 		try {
 			const expenseId = selectedExpense.id;
@@ -105,7 +106,7 @@ export default function ExpensesModal({
 							setSelectedExpense(null);
 							setIsOpen(false);
 						}}
-						className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
+						className="absolute top-0 right-0 text-gray-500 hover:text-gray-700 hover:cursor-pointer"
 					>
 						✕
 					</button>
@@ -138,7 +139,7 @@ export default function ExpensesModal({
 								placeholder="0.00"
 								required
 							/>
-							<span className="absolute right-17 top-1/2 transform -translate-y-1/2 text-gray-500">
+							<span className="absolute right-17 top-1/2 transform -translate-y-1/2 text-gray-500 sm:right-28">
 								€
 							</span>
 						</div>
@@ -182,7 +183,7 @@ export default function ExpensesModal({
 					</div>
 
 					{/* Bouton Valider */}
-					<div className="flex justify-center mt-6">
+					<div className="flex justify-center my-6">
 						<div className="flex justify-center mt-6">
 							<button
 								type="submit"
@@ -199,9 +200,39 @@ export default function ExpensesModal({
 							<img
 								src="/trash-alt-svgrepo-com.svg"
 								alt="image-poubelle"
-								className="absolute w-8 bottom-6 right-5"
-								onClick={handleDelete}
+								className="absolute w-8 bottom-8 right-5 hover:cursor-pointer"
+								onClick={() => setIsOpenDelete(true)}
 							/>
+
+							{/* Modal de confirmation avec DaisyUI */}
+							<div
+								className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 ${isOpenDelete ? "block" : "hidden"}`}
+							>
+								<div className="modal modal-open">
+									<div className="modal-box">
+										<h2 className="text-xl font-bold text-center">
+											Êtes-vous sûr de vouloir supprimer la dépense{" "}
+											{description} ?
+										</h2>
+										<div className="flex justify-center mt-4">
+											<button
+												type="button"
+												className="btn btn-success"
+												onClick={handleDelete}
+											>
+												Confirmer
+											</button>
+											<button
+												type="button"
+												className="btn btn-error ml-2"
+												onClick={() => setIsOpenDelete(false)}
+											>
+												Annuler
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					) : (
 						""

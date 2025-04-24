@@ -62,7 +62,7 @@ export default function BudgetDetails() {
 		return <div>Budget non trouvé</div>;
 	}
 	return (
-		<div>
+		<div className="3xl:mx-80">
 			<div className="flex justify-between mx-4 mt-4">
 				<NavLink to={"/budgets"}>
 					<div className="flex items-center">
@@ -76,7 +76,7 @@ export default function BudgetDetails() {
 				</NavLink>
 
 				<div
-					className="flex flex-col items-center"
+					className="flex flex-col items-center hover:cursor-pointer"
 					onClick={() => {
 						setIsOpen(true);
 					}}

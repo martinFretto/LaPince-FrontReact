@@ -22,6 +22,7 @@ export default function BudgetModal({
 	const [warning_amount, setWarning_amount] = useState("");
 	const [color, setColor] = useState("#A5D8FF");
 	const [icons, setIcons] = useState<{ name: string; src: string }[]>([]);
+	const [isOpenDelete, setIsOpenDelete] = useState(false);
 
 	// Importation dynamique de tous les .svg
 	useEffect(() => {
@@ -103,7 +104,7 @@ export default function BudgetModal({
 	// Suppression d'un budget
 	const handleDelete = async (selectedBudget: { id: number; name: string }) => {
 		await DeleteBudget(selectedBudget.id);
-		fetchBudget();
+		await fetchBudget();
 		onClose();
 	};
 
@@ -122,7 +123,7 @@ export default function BudgetModal({
 						<button
 							type="button"
 							onClick={onClose}
-							className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
+							className="absolute top-0 right-0 text-gray-500 hover:text-gray-700 hover:cursor-pointer"
 						>
 							✕
 						</button>
@@ -216,7 +217,7 @@ export default function BudgetModal({
 								</div>
 							)}
 						</div>
-						{icon?.length}
+						{/* {icon?.length} */}
 
 						{/* Seuil d'alerte */}
 						<div className="w-full md:w-[48%]">
@@ -254,38 +255,67 @@ export default function BudgetModal({
 						</div>
 
 						{/* Bouton Valider */}
-						<div className="flex justify-center mt-8">
+						<div className="flex justify-center items-center mt-8 w-full">
 							{selectedBudget ? (
 								<button
 									type="submit"
-									className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
+									className="bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 								>
 									Modifier
 								</button>
 							) : (
 								<button
 									type="submit"
-									className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
+									className="bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 								>
 									Ajouter
 								</button>
 							)}
 						</div>
-
-						{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
-						{selectedBudget ? (
-							<div>
-								<img
-									src="/trash-alt-svgrepo-com.svg"
-									alt="Supprimer"
-									className="absolute w-8 bottom-11 right-5 cursor-pointer"
-									onClick={() => handleDelete(selectedBudget)}
-								/>
-							</div>
-						) : (
-							""
-						)}
 					</form>
+
+					{/* Condition d'affichage de la poubelle pour supprimer la dépense en fonction de si une dépense est séléctionnée */}
+					{selectedBudget ? (
+						<div className="flex justify-center">
+							<img
+								src="/trash-alt-svgrepo-com.svg"
+								alt="Supprimer"
+								className="absolute w-8 bottom-8 right-5 cursor-pointer"
+								onClick={() => setIsOpenDelete(true)}
+							/>
+							{/* Modal de confirmation avec DaisyUI */}
+							<div
+								className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 ${isOpenDelete ? "block" : "hidden"}`}
+							>
+								<div className="modal modal-open">
+									<div className="modal-box">
+										<h2 className="text-xl font-bold text-center">
+											Êtes-vous sûr de vouloir supprimer le budget{" "}
+											{selectedBudget.name} ?
+										</h2>
+										<div className="flex justify-center mt-4">
+											<button
+												type="button"
+												className="btn btn-success"
+												onClick={() => handleDelete(selectedBudget)}
+											>
+												Confirmer
+											</button>
+											<button
+												type="button"
+												className="btn btn-error ml-2"
+												onClick={() => setIsOpenDelete(false)}
+											>
+												Annuler
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					) : (
+						""
+					)}
 				</div>
 			</div>
 		</div>

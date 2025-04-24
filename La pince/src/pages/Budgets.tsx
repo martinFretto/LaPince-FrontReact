@@ -165,7 +165,7 @@ export default function Budgets() {
 									</NavLink>
 
 									<div
-										className="absolute bottom-4 right-4"
+										className="absolute bottom-4 right-4 hover:cursor-pointer"
 										onClick={() => handleEditBudget(budget)}
 									>
 										<img

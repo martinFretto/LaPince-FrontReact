@@ -14,7 +14,7 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div>
+		<div className="sm:mx-10 3xl:mx-90 4xl:mx-120">
 			<DonutChart />
 			<LastExpenses onExpenseClick={handleExpenseClick} />
 			<ExpensesModal
