@@ -197,6 +197,13 @@ export default function Budgets() {
 					fetchBudget={getBudgets}
 				/>
 			</div>
+
+			{budgets.length === 0 && (
+				<div className="text-center mt-4">
+					<p className="text-lg font-semibold">Vous n'avez aucun budget</p>
+					<p>Commencez par en ajouter un !</p>
+				</div>
+			)}
 		</div>
 	);
 }
