@@ -8,11 +8,14 @@ export default function Header() {
 	const activeClass = "text-[#1971C2]";
 	const inactiveClass = "text-black";
 
-	// Permet la suppression du token et de revenir a la page login
+	// Permet la suppression du token et de revenir à la page login
 	const logout = () => {
 		sessionStorage.removeItem("authToken");
 		navigate("/auth/login");
 	};
+
+	// Vérifie si un token existe dans le sessionStorage
+	const isAuthenticated = sessionStorage.getItem("authToken");
 
 	return (
 		<div>
@@ -24,13 +27,11 @@ export default function Header() {
 							<img
 								src="/logo-crab.svg"
 								alt="Logo La pince"
-								className="w-20 -mt-4.5"
+								className="w-20 -mt-4.5 mr-10"
 							/>
 							<NavLink
 								to="/dashboard"
-								className={(
-									{ isActive } // Si le lien Accueil est clické, le isActive devient actif et applique activeClass et sa couleur défini plus haut
-								) =>
+								className={({ isActive }) =>
 									`absolute -mt-5 ml-3 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
 								}
 							>
@@ -40,21 +41,25 @@ export default function Header() {
 					</div>
 
 					<div className="flex -ml-12 place-self-center">
-						<NavLink
-							to="/budgets"
-							className={({ isActive }) =>
-								`pr-6 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
-							}
-						>
-							Mes budgets
-						</NavLink>
+						{/* Affiche "Mes budgets" uniquement si l'utilisateur est authentifié */}
+						{isAuthenticated && (
+							<NavLink
+								to="/budgets"
+								className={({ isActive }) =>
+									`pr-6 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
+								}
+							>
+								Mes budgets
+							</NavLink>
+						)}
 
+						{/* Change le texte du bouton en fonction de l'authentification */}
 						<button
 							type="button"
-							onClick={logout}
+							onClick={isAuthenticated ? logout : () => navigate("/auth/login")}
 							className={`${linkBaseClasses} ${inactiveClass} cursor-pointer`}
 						>
-							Se déconnecter
+							{isAuthenticated ? "Se déconnecter" : "Se connecter"}
 						</button>
 					</div>
 				</div>

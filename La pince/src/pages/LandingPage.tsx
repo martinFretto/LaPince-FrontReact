@@ -65,7 +65,7 @@ export default function LandingPage() {
 				</p>
 
 				<br />
-				<strong>Qui sommes nous ?</strong>
+				<strong>Qui sommes-nous ?</strong>
 				<br />
 				<br />
 				<p>
@@ -81,7 +81,7 @@ export default function LandingPage() {
 				<br />
 				<p>
 					Alors si toi aussi tu veux ton propre coffre tout plein comme le
-					notre, inscris-toi{" "}
+					nôtre, inscris-toi{" "}
 					<strong>
 						<Link to="/auth/register" className="text-[#1971C2]">
 							ici

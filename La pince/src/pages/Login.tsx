@@ -39,7 +39,7 @@ export default function Login() {
 
 	return (
 		<div className="place-self-center">
-			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-100 max-w-100 flex flex-col justify-center">
+			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-90 max-w-90 flex flex-col justify-center">
 				<div className="flex flex-col items-center text-2xl font-semibold mb-16">
 					<h1 className="justify-center">Formulaire</h1>
 					<h1 className="justify-center">de connexion</h1>
@@ -98,7 +98,7 @@ export default function Login() {
 
 						<button
 							type="submit"
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-20 mb-4"
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-20 mb-4 justify-center"
 						>
 							Se connecter
 						</button>
