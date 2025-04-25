@@ -15,7 +15,16 @@ export async function registerUser(userData: RegisterData) {
 		},
 		body: JSON.stringify(userData),
 	});
-	if (!res.ok) throw new Error("Erreur lors de l'inscription");
+	if (!res.ok) {
+		// Récupereration de l'erreur
+		const errorData = await res.json();
+		const error = new Error("Erreur lors de l'inscription");
+		// Ajouter la réponse d'erreur à l'erreur lancée
+		(error as any).response = errorData;
+		// Envoi de l'erreur avec les données
+		throw error;
+	}
+
 	const data = await res.json();
 	console.log("Réponse API:", data);
 	return data;

@@ -10,6 +10,9 @@ export default function RegisterPage() {
 	const [password, setPassword] = useState("");
 	const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [isSamePass, setIsSamePass] = useState(false);
+	const [, setIsEmailAlreadyExist] = useState(false);
+	const [isInvalidPassword, setIsInvalidPassword] = useState(false);
+	const [errorMessage, setErrorMessage] = useState(""); // Ajouter un état pour l'erreur
 
 	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -26,18 +29,53 @@ export default function RegisterPage() {
 	// Methode Fetch pour l'envoi des données à la bdd
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		if (password === passwordConfirm) {
-			const userData = {
-				lastname,
-				firstname,
-				email,
-				password,
-			};
-			console.log(userData);
+
+		// Vérification des conditions du mot de passe
+		if (!hasMinLength || !hasUpperCase || !hasNumber) {
+			setIsInvalidPassword(true);
+			// Return si les mots de passe ne respecte pas les conditions
+			return;
+		}
+		setIsInvalidPassword(false);
+
+		// Vérification si les mots de passe sont identiques
+		if (password !== passwordConfirm) {
+			setIsSamePass(true);
+			// Return si les mots de passe ne correspondent pas
+			return;
+		}
+
+		const userData = {
+			lastname,
+			firstname,
+			email,
+			password,
+		};
+
+		try {
+			// Appeler la méthode pour enregistrer l'utilisateur
 			await registerUser(userData);
 			navigate("/auth/login");
-		} else {
-			setIsSamePass(true);
+		} catch (err: any) {
+			console.error("Erreur lors de l'enregistrement :", err);
+
+			// Vérification de la réponse dans l'erreur
+			if (err.response) {
+				const statusCode = err.response.status;
+				console.log("Status Code:", statusCode); // Loguer le code d'erreur
+
+				// Gestion du message en fonction du code d'erreur
+				if (statusCode === 409) {
+					setErrorMessage("Cet email existe déjà.");
+					setIsEmailAlreadyExist(true);
+				} else if (statusCode === 400) {
+					setErrorMessage("Les données envoyées sont invalides.");
+				} else {
+					setErrorMessage("Une erreur inconnue est survenue.");
+				}
+			} else {
+				setErrorMessage("Une erreur est survenue, veuillez réessayer.");
+			}
 		}
 	};
 
@@ -49,7 +87,7 @@ export default function RegisterPage() {
 					<h1 className="justify-center">d'enregistrement</h1>
 				</div>
 				<div className="px-6">
-					{/* Fomulaire d'enregistrement */}
+					{/* Formulaire d'enregistrement */}
 					<form onSubmit={handleSubmit} className="space-y-6 ">
 						{/* Champ Nom d'utilisateur */}
 						<div className="flex items-center">
@@ -131,7 +169,6 @@ export default function RegisterPage() {
 							</div>
 
 							{/* Champ confirmation du Mot de passe d'utilisateur */}
-
 							<div className="flex items-center mt-8">
 								<label
 									htmlFor="passwordConfirm"
@@ -152,6 +189,21 @@ export default function RegisterPage() {
 							{isSamePass && (
 								<span className="text-red-500 text-md self-center">
 									Les mots de passe ne sont pas identiques
+								</span>
+							)}
+
+							{/* Affichage du message d'erreur si le mot de passe est invalide */}
+							{isInvalidPassword && (
+								<span className="text-red-500 text-md self-center">
+									Le mot de passe doit comporter au moins 8 caractères, une
+									majuscule et un chiffre.
+								</span>
+							)}
+
+							{/* Affichage du message d'erreur généré par l'API */}
+							{errorMessage && (
+								<span className="text-red-500 text-md self-center">
+									{errorMessage}
 								</span>
 							)}
 						</div>
