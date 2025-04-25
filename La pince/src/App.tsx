@@ -19,6 +19,7 @@ import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import RegisterPage from "./pages/RegisterPage";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
 	function PrivateRoute() {
@@ -36,18 +37,17 @@ function App() {
 							<Route path={"/"} element={<LandingPage />} />
 							<Route path={"/auth/register"} element={<RegisterPage />} />
 							<Route path={"/auth/login"} element={<Login />} />
-
+							<Route path={"/auth/resetPassword"} element={<ResetPassword />} />
 							<Route element={<PrivateRoute />}>
 								<Route path="/dashboard" element={<Dashboard />} />
 								<Route path="/budgets" element={<Budgets />} />
 								<Route path="/budgets/:id" element={<BudgetDetails />} />
 							</Route>
-
+							/auth/resetPassword
 							<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 							<Route path={"/security-data"} element={<SecurityData />} />
 							<Route path={"/legal-notices"} element={<LegalNotices />} />
 							<Route path={"/user-guide"} element={<UserStories />} />
-
 							<Route path={"*"} element={<NotFound />} />
 						</Routes>
 					</main>

@@ -43,3 +43,21 @@ export async function loginUser(userData: LoginData) {
 
 	return data;
 }
+
+export async function ResetPass(userData: LoginData) {
+	const res = await fetch(
+		`${API_URL}/auth/reset-password-request
+`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(userData),
+		}
+	);
+
+	if (!res.ok) throw new Error("Erreur de connexion");
+	const data = await res.json();
+	return data;
+}
