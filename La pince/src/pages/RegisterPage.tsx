@@ -8,6 +8,8 @@ export default function RegisterPage() {
 	const [firstname, setFirstname] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [passwordConfirm, setPasswordConfirm] = useState("");
+	const [isSamePass, setIsSamePass] = useState(false);
 
 	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -24,15 +26,19 @@ export default function RegisterPage() {
 	// Methode Fetch pour l'envoi des données à la bdd
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		const userData = {
-			lastname,
-			firstname,
-			email,
-			password,
-		};
-		console.log(userData);
-		await registerUser(userData);
-		navigate("/auth/login");
+		if (password === passwordConfirm) {
+			const userData = {
+				lastname,
+				firstname,
+				email,
+				password,
+			};
+			console.log(userData);
+			await registerUser(userData);
+			navigate("/auth/login");
+		} else {
+			setIsSamePass(true);
+		}
 	};
 
 	return (
@@ -42,9 +48,9 @@ export default function RegisterPage() {
 					<h1 className="justify-center">Formulaire</h1>
 					<h1 className="justify-center">d'enregistrement</h1>
 				</div>
-				<div className="px-12">
+				<div className="px-6">
 					{/* Fomulaire d'enregistrement */}
-					<form onSubmit={handleSubmit} className="space-y-6">
+					<form onSubmit={handleSubmit} className="space-y-6 ">
 						{/* Champ Nom d'utilisateur */}
 						<div className="flex items-center">
 							<label htmlFor="lastname" className="w-32 text-right pr-4">
@@ -94,7 +100,7 @@ export default function RegisterPage() {
 						</div>
 
 						{/* Champ Mot de passe d'utilisateur */}
-						<div>
+						<div className="flex flex-col">
 							<div className="flex items-center">
 								<label htmlFor="password" className="w-32 text-right pr-4">
 									Mot de passe
@@ -110,8 +116,8 @@ export default function RegisterPage() {
 								/>
 							</div>
 							{/* Liste des conditions */}
-							<div className="flex justify-center">
-								<ul className="mt-2 text-sm">
+							<div className="flex justify-center -mt-2">
+								<ul className="mt-2 text-sm ml-8">
 									<li className="flex items-center">
 										{icon(hasMinLength)} Minimum 8 caractères
 									</li>
@@ -123,11 +129,36 @@ export default function RegisterPage() {
 									</li>
 								</ul>
 							</div>
+
+							{/* Champ confirmation du Mot de passe d'utilisateur */}
+
+							<div className="flex items-center mt-8">
+								<label
+									htmlFor="passwordConfirm"
+									className="w-32 text-right pr-4"
+								>
+									Confirmation
+								</label>
+								<input
+									type="password"
+									id="passwordConfirm"
+									placeholder="********"
+									value={passwordConfirm}
+									onChange={(e) => setPasswordConfirm(e.target.value)}
+									required
+									className="w-72 input input-neutral"
+								/>
+							</div>
+							{isSamePass && (
+								<span className="text-red-500 text-md self-center">
+									Les mots de passe ne sont pas identiques
+								</span>
+							)}
 						</div>
 
 						<button
 							type="submit"
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-20 mb-4"
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-12 mb-4"
 						>
 							S'enregistrer
 						</button>
