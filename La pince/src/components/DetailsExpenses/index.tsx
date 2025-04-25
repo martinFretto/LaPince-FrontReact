@@ -60,15 +60,35 @@ export default function DetailsExpenses({
 												)}
 											</div>
 
-											<div className="flex flex-col w-6/10">
-												<span className="font-semibold">{exp.description}</span>
-												<span className="italic text-[12px] text-gray-400">
-													{new Date(exp.date).toLocaleDateString()}
-												</span>
-											</div>
+											<div className="flex justify-between w-1/1">
+												{/* test */}
 
-											<div>
-												<span className="font-semibold">{exp.amount} €</span>
+												<div className="flex">
+													<div
+														className="w-10 h-10 border rounded-full p-1 flex items-center justify-center"
+														style={{ backgroundColor: exp.budgetColor }}
+													>
+														<img
+															src={exp.budgetIcon}
+															alt={exp.description}
+															className="w-full h-full object-contain"
+														/>
+													</div>
+
+													{/* test */}
+													<div className="flex flex-col ml-8">
+														<span className="font-semibold">
+															{exp.description}
+														</span>
+														<span className="italic text-[12px] text-gray-400">
+															{new Date(exp.date).toLocaleDateString()}
+														</span>
+													</div>
+												</div>
+
+												<div>
+													<span className="font-semibold">{exp.amount} €</span>
+												</div>
 											</div>
 										</div>
 									</div>

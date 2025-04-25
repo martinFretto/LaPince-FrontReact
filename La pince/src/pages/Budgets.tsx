@@ -17,6 +17,7 @@ export default function Budgets() {
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
 	const [expensesUpdatedTrigger] = useState<number>(0);
+
 	const getBudgets = async () => {
 		try {
 			const data = await fetchBudget();
@@ -135,7 +136,7 @@ export default function Budgets() {
 							if (remainingAmount < 0) {
 								flagColor = "bg-red-400";
 								flagText = "Budget dépassé";
-							} else if (remainingAmount < budget.warning_amount) {
+							} else if (remainingAmount <= budget.warning_amount) {
 								flagColor = "bg-amber-400";
 								flagText = "Seuil d'alerte atteint";
 							}
