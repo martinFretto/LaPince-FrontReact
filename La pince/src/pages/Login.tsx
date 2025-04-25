@@ -27,16 +27,21 @@ export default function Login() {
 			email,
 			password,
 		};
+
 		try {
-			const data = await loginUser(userData); // Récupération des données et du token
-			sessionStorage.setItem("authToken", data.token); // Stockage du token
+			// Récupération des données et du token
+			const data = await loginUser(userData);
+			// Stockage du token
+			sessionStorage.setItem("authToken", data.token);
 			console.log("token :", data.token);
-			navigate("/dashboard");
+			// Vérifiez que navigate est appelé correctement
+			navigate("/dashboard"); // La redirection vers le dashboard
+			// Rechargement de la page pour que le dashboard soit bien a jour apres le login
+			window.location.reload();
 		} catch (err) {
 			console.error("Erreur lors de la connexion", err);
 		}
 	};
-
 	return (
 		<div className="place-self-center">
 			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-90 max-w-90 flex flex-col justify-center">
