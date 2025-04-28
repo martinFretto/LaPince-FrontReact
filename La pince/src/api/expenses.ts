@@ -46,7 +46,7 @@ export async function fetchExpensesByBudget(budget: number) {
 // Methode fetch qui ajoute une dépense à un budget
 export async function addExpense(
 	newExpense: NewExpense,
-	selectedBudget: number,
+	selectedBudget: number
 ) {
 	console.log("token avant le AddExpense", token);
 	console.log("selectedBudget", selectedBudget);
@@ -66,9 +66,11 @@ export async function addExpense(
 
 //
 // Methode fetch qui modifie une dépense d'un budget
+console.log("token avant update dépense", token);
+
 export async function updateExpense(
 	expenseId: number,
-	expenseToSend: UpdateExpense,
+	expenseToSend: UpdateExpense
 ) {
 	console.log("token avant le updateExpense", token);
 	console.log("expenseId", expenseId);
@@ -79,6 +81,7 @@ export async function updateExpense(
 		headers: {
 			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
+			Connection: "close", // Force HTTP/1.1
 		},
 		body: JSON.stringify(expenseToSend),
 	});

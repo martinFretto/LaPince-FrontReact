@@ -39,11 +39,13 @@ export async function AddBudget(newBudget: NewBudget) {
 
 //
 // Methode fetch qui modifie un budget
+console.log("token avant update budget", token);
+
 export async function updateBudget(budget: ModifBudget, id: number) {
 	const res = await fetch(`${API_URL}/budgets/${id}/`, {
 		method: "PATCH",
 		headers: {
-			Authorization: `Bearer ${sessionStorage.getItem("token")}`, // ou autre méthode
+			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(budget),

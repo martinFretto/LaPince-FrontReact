@@ -14,6 +14,7 @@ export async function registerUser(userData: RegisterData) {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(userData),
+		mode: "cors",
 	});
 	if (!res.ok) {
 		// Récupereration de l'erreur

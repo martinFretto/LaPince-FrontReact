@@ -69,7 +69,7 @@ export default function RegisterPage() {
 					setErrorMessage("Cet email existe déjà.");
 					setIsEmailAlreadyExist(true);
 				} else if (statusCode === 400) {
-					setErrorMessage("Les données envoyées sont invalides.");
+					setErrorMessage("Le format de l'email est invalide.");
 				} else {
 					setErrorMessage("Une erreur inconnue est survenue.");
 				}

@@ -78,6 +78,7 @@ export default function BudgetDetails() {
 				<div
 					className="flex flex-col items-center hover:cursor-pointer"
 					onClick={() => {
+						setSelectedExpense(null);
 						setIsOpen(true);
 					}}
 				>
