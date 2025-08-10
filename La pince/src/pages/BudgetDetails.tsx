@@ -1,10 +1,10 @@
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import DonutDetail from "../components/DonughtDetails/index";
+import DoughnutDetails from "../components/DoughnutDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
-import BudgetModal from "../components/Modals/BudgetModal";
-import type { Budget } from "../types/budget";
+//import BudgetModal from "../components/Modals/BudgetModal";
+//import type { Budget } from "../types/budget";
 import { fetchExpensesByBudget } from "../api/expenses";
 import type { Expense, ExpenseWithDetails } from "../types/expense";
 
@@ -27,29 +27,26 @@ export default function BudgetDetails() {
 	const { budgetId } = useParams<{ budgetId: string }>();
 
 	const [isOpen, setIsOpen] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
+	//const [isModalOpen, setIsModalOpen] = useState(false);
+	//const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
-	const [selectedExpense, setSelectedExpense] = useState(null);
+	const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
 	const location = useLocation();
 	const { budget }: { budget?: BudgetType } = location.state || {};
-	const [expensesUpdatedTrigger, setExpensesUpdatedTrigger] = useState(0);
+//	const [expensesUpdatedTrigger, setExpensesUpdatedTrigger] = useState(0);
 
-	const triggerExpensesReload = () => {
+/*	const triggerExpensesReload = () => {
 		setExpensesUpdatedTrigger((prev) => prev + 1);
-	};
-	const handleExpenseClick = (expense: any) => {
+	};*/
+	const handleExpenseClick = (expense: Expense | null) => {
 		setSelectedExpense(expense);
 		setIsOpen(true);
 	};
 
-	const getExpenses = async () => {
+	const getExpenses = useCallback(async () => {
 		try {
-			console.log("on lance le fetch bi budget")
 			const data = await fetchExpensesByBudget(Number(budgetId));
 			if (Array.isArray(data.data)) {
-				console.log("données trouvées pr les dépenses de ce budget: ", data.data)
-
 				const expenses: Expense[] = data.data.map((item: ExpenseWithDetails) => ({
 										...item.expenditure,
 										budgetColor: item.budgetColor,
@@ -57,7 +54,7 @@ export default function BudgetDetails() {
 									}));
 				setExpenses(expenses);
 			} else {
-				console.log("Données reçues non valides:", data);
+				throw Error;
 			}
 		} catch (err: unknown) {
 			if (err instanceof Error) {
@@ -66,13 +63,11 @@ export default function BudgetDetails() {
 				console.log("Une erreur est survenue lors de la récupération des budgets");
 			}
 		}
-	};
+	},[budgetId]);
 
 	useEffect(() => {
-		console.log("budgetid vaut: ", budgetId);
-
 		getExpenses();
-	}, []);
+	}, [getExpenses]);
 
 	if (!budget) {
 		return <div>Budget non trouvé</div>;
@@ -110,10 +105,10 @@ export default function BudgetDetails() {
 						alt="icone du budget"
 						className="w-10 absolute mt-24 "
 					/>
-					<DonutDetail
+					<DoughnutDetails
 						expenses={expenses}
 						budget={budget}
-						expensesUpdatedTrigger={expensesUpdatedTrigger}
+					//	expensesUpdatedTrigger={expensesUpdatedTrigger}
 					/>
 
 					{/* <div
@@ -140,7 +135,7 @@ export default function BudgetDetails() {
 				setSelectedExpense={setSelectedExpense}
 				selectedBudget={budget.id}
 				fetchExpenses={getExpenses}
-				triggerReload={triggerExpensesReload}
+		//		triggerReload={triggerExpensesReload}
 			/>
 
 			{expenses.length > 0 && (
@@ -150,14 +145,8 @@ export default function BudgetDetails() {
 				/>
 			)}
 
-		{/*}	<DetailsExpenses
-				budget={budget.id}
-				expenses={expenses}
-				onExpenseClick={handleExpenseClick}
-			/>*/}
-
 			{/* Modale de modification de budget */}
-			<BudgetModal
+		{/*	<BudgetModal
 				isModalOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				selectedBudget={selectedBudget}
@@ -165,7 +154,7 @@ export default function BudgetDetails() {
 				fetchBudgets={(): void | Promise<void> => {
 					throw new Error("Function not implemented.");
 				}}
-			/>
+			/>*/}
 		</div>
 	);
 }

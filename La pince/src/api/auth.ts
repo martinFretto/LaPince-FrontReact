@@ -52,7 +52,6 @@ export async function loginUser(userData: LoginData) {
 }
 
 export async function resetPasswordRequest(email: string) {
-	console.log("fetch api reset")
 	const res = await fetch(`${API_URL}/auth/reset_password_request`, {
 		method: "POST",
 		credentials: "include",
@@ -70,7 +69,6 @@ export async function resetPasswordRequest(email: string) {
 }
 
 export async function setNewPassword(password: string, token: string | null) {
-	console.log("PATCH NEW PASSWORD: password and token ", password, token);
 	const res = await fetch(`${API_URL}/auth/set_new_password`, {
 		method: "PATCH",
 		credentials: "include",

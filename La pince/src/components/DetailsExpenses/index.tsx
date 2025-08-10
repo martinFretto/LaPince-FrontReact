@@ -1,11 +1,11 @@
 // import { expenditures } from "../../data/expenditure";
 // import { budgets } from "../../data/budget";
-import { useState } from "react";
+//import { useState } from "react";
 import type { Expense } from "../../types/expense";
-import type { Budget } from "../../types/budget";
+//import type { Budget } from "../../types/budget";
 
 type DetailsExpensesProps = {
-	budget: number;
+//	budget: number;
 	expenses: Expense[];
 	onExpenseClick?: (expense: Expense) => void;
 };

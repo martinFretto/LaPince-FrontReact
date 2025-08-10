@@ -1,29 +1,34 @@
 import type { ApexOptions } from "apexcharts";
 import type { Budget } from "../../types/budget";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Expense } from "../../types/expense";
 import ReactApexChart from "react-apexcharts";
 
-interface DonutDetailProps {
+interface DoughnutDetailsProps {
 	expenses: Expense[];
 	budget: Budget;
-	expensesUpdatedTrigger: number;
+//	expensesUpdatedTrigger: number;
 }
 
-export const DonutDetail: React.FC<DonutDetailProps> = ({
-	budget,
-	expensesUpdatedTrigger,
+export const DoughnutDetails: React.FC<DoughnutDetailsProps> = ({
 	expenses,
+	budget,
+//	expensesUpdatedTrigger,
 }) => {
 	const [series, setSeries] = useState<number[]>([]);
 	const [options, setOptions] = useState<ApexOptions>({});
 
-	useEffect(() => {
+	const getDoughnutData = useCallback(async() => {				
 		// Calculer les montants à afficher dans le graphique
+		console.log("on filtre avec le budget id", budget.id)
 		const { allocated_amount } = budget;
+		console.log("allocatedamount: ", allocated_amount);
+
+		console.log("DOUGHNUTS EXPENSES: ", expenses);
 		const spent_amount = expenses
-			.filter((expense) => expense.budget_id === budget.id)
+			.filter((expense) => expense.budget_id === budget.id)                  //nécessaire?????????
 			.reduce((total, expense) => total + Number(expense.amount), 0);
+		console.log("spent_amount: ", spent_amount);
 
 		const remainingBudget = allocated_amount - spent_amount;
 		const overBudget = remainingBudget < 0;
@@ -90,21 +95,34 @@ export const DonutDetail: React.FC<DonutDetailProps> = ({
 
 		setSeries(newSeries);
 		setOptions(newOptions);
-	}, [budget, expenses, expensesUpdatedTrigger]); // Ajouter 'expenses' dans les dépendances
+	}, [budget, expenses]);
+
+	useEffect(() => {
+		console.log("useEffect du doughnuts!!!!!!")
+		getDoughnutData();
+	},  [budget, expenses, getDoughnutData]);
+
 
 	return (
 		<div>
 			<h2 className="text-xl font-semibold flex justify-center -mt-2">
 				{budget.name}
 			</h2>
-			<ReactApexChart
+		{/*	<ReactApexChart
 				options={options}
 				series={series}
 				type="donut"
 				width="350"
+			/>*/}
+			<ReactApexChart
+			key={`${budget.id}-${expenses.length}-${series.join(",")}`}
+			options={options}
+			series={series}
+			type="donut"
+			width="350"
 			/>
 		</div>
 	);
 };
 
-export default DonutDetail;
+export default DoughnutDetails;

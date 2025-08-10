@@ -52,7 +52,6 @@ export default function RegisterPage() {
 		try {
 			setIsLoading(true);
 			// Appeler la méthode pour enregistrer l'utilisateur
-			console.log("ptite requête api")
 			await registerUser(userData);
 
 			setErrorMessage("");
@@ -64,7 +63,6 @@ export default function RegisterPage() {
 			}, 2000);
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-					console.log("bam erreur")
 					setErrorMessage(err.message);
 			} else {
 					setErrorMessage("Une erreur est survenue");

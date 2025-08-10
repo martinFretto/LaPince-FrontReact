@@ -15,7 +15,6 @@ export default function Dashboard() {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const handleExpenseClick = (expense: Expense) => {
-		console.log("oléolé")
 		setSelectedExpense(expense);
 		setIsOpen(true);
 	};
@@ -27,7 +26,7 @@ export default function Dashboard() {
 				if (Array.isArray(data.data)) {
 					setBudgets(data.data);
 				} else {
-					console.log("Données reçues non valides:", data);
+					throw Error;
 				}
 			} catch (err) {
 				if (err instanceof Error) {

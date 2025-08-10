@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import type { Budget } from "../../types/budget";
 
 
-const DonutChart = ({ budgets }: { budgets: Budget[] }) => {
+const DoughnutChart = ({ budgets }: { budgets: Budget[] }) => {
 
 	const navigate = useNavigate();
 
@@ -146,4 +146,4 @@ const DonutChart = ({ budgets }: { budgets: Budget[] }) => {
 	);
 };
 
-export default DonutChart;
+export default DoughnutChart;

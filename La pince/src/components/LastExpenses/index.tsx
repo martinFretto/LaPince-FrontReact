@@ -10,7 +10,6 @@ type DetailsExpensesProps = {
 };
 
 export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
-	console.log("LAST EXPENSES COMPONENT");
 //	const [expenses, setExpenses] = useState<Partial<Expense>[]>([]);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
 
@@ -34,7 +33,6 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 	
 
 	useEffect(() => {
-		console.log("lastExpenses first useEffect")
 		const getExpenses = async () => {
 			try {
 				const data = await fetchExpenses();

@@ -1,14 +1,13 @@
 import "../App.css";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
-import DonutDetail from "../components/DonughtDetails/index";
-// import { budgets } from "../data/budget";
+import DoughnutDetails from "../components/DoughnutDetails/index";
 import { fetchBudgets } from "../api/budget";
 import { useEffect } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
 import Flag from "../components/flag";
-import type { Expense } from "../types/expense";
+import type { Expense, ExpenseWithDetails } from "../types/expense";
 import { fetchExpenses } from "../api/expenses";
 
 export default function Budgets() {
@@ -16,77 +15,84 @@ export default function Budgets() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
-	const [expensesUpdatedTrigger] = useState<number>(0);
+//	const [expensesUpdatedTrigger] = useState<number>(0);
 
-	const getBudgets = async () => {
-		try {
-			const data = await fetchBudgets();
-			if (Array.isArray(data.data)) {
-				setBudgets(data.data);
-			} else {
-				console.warn("Données reçues non valides:", data);
-			}
-		} catch (error) {
-			console.error("Erreur de chargement des budgets:", error);
-		}
-	};
-
-	useEffect(() => {
-		const getData = async () => {
+	const getBudgets = useCallback(async() => {
 			try {
+				console.log("on recup les donnés");
 				const budgetsData = await fetchBudgets();
 				if (Array.isArray(budgetsData.data)) {
+					console.log("les budgets: ", budgetsData.data);
 					setBudgets(budgetsData.data);
 				}
 
-				const expensesData = await fetchExpenses();
-				if (Array.isArray(expensesData)) {
-					setExpenses(expensesData);
+				const expensesData = await fetchExpenses();   //est-ce utile   ???????????
+				if (Array.isArray(expensesData.data)) {
+					const expenses: Expense[] = expensesData.data.map((item: ExpenseWithDetails) => ({
+										...item.expenditure,
+										budgetColor: item.budgetColor,
+										budgetIcon: item.budgetIcon,
+									}));
+	
+					setExpenses(expenses);
 				}
-			} catch (error) {
-				console.error("Erreur lors du chargement des données :", error);
-			}
-		};
 
-		getData();
-	}, []);
+			} catch (err: unknown) {
+				console.log("cacth")
+				if (err instanceof Error) {
+						console.log(err.message);
+				} else {
+						console.log("Une erreur est survenue lors de la récupération des budgets");
+					}
+			}
+		},[]);
 
 	useEffect(() => {
+		console.log("all budget pages, useEffect");
 		getBudgets();
-	}, []);
+	}, [getBudgets]);
+
 
 	const totalBudget = budgets.reduce(
 		(acc, budget) => acc + Number(budget.allocated_amount),
 		0
 	);
+	console.log("totalbudget, cest le total des montants alloués: ", totalBudget)
 
-	// "series" correspond a l'affichage des parts du donut
-	const series = budgets.map((budget) => budget.spent_amount);
 
-	const spent = series.reduce(
+	const spentAmountByBudget = budgets.map((budget) => budget.spent_amount);
+	console.log("spentAmountByBudget: ", spentAmountByBudget)
+
+
+	const totalSpent = spentAmountByBudget.reduce(
 		(acc, val) => acc + (Number.isNaN(Number(val)) ? 0 : Number(val)),
 		0
 	);
+	console.log("totalSpent: ", totalSpent)
 
 	// calcul du montant restant par budget
-	const remaining = Math.round((totalBudget - spent) * 100) / 100;
+	const remaining = Math.round((totalBudget - totalSpent) * 100) / 100;
+	console.log("remaining: ", remaining);
 	const remainingPercent = Math.round((remaining / totalBudget) * 100);
+	console.log("remainingpercent: ", remainingPercent)
 
-	const openModal = () => {
-		setIsModalOpen(true);
-	};
+//	const openModal = () => {
+//		setIsModalOpen(true);
+//	};
 
 	// Methode pour modifier un budget
-	const handleEditBudget = (budget: any) => {
+	const handleEditBudget = (budget: Budget) => {
+		console.log("editbudget!!!!! ", budget)
 		setSelectedBudget(budget);
-		openModal();
+	//	openModal();
+		setIsModalOpen(true);
 	};
 
 	// Methode pour Ajouter un budget
 	const handleAddBudget = () => {
 		setSelectedBudget(null);
 		setIsModalOpen(true);
-		// openModal();
+	// 	openModal();
 	};
 
 	return (
@@ -158,11 +164,14 @@ export default function Budgets() {
 											alt="icone du budget"
 											className="w-10 mb-4 absolute mt-24"
 										/>
-										<DonutDetail
+									
+										{expenses.length > 0 && (
+											<DoughnutDetails
 											expenses={expenses}
 											budget={budget}
-											expensesUpdatedTrigger={expensesUpdatedTrigger}
+										//	expensesUpdatedTrigger={expensesUpdatedTrigger}
 										/>
+										)}
 									</NavLink>
 
 									<div
@@ -194,7 +203,7 @@ export default function Budgets() {
 					onClose={() => setIsModalOpen(false)}
 					selectedBudget={selectedBudget}
 					setSelectedBudget={setSelectedBudget}
-					fetchBudget={getBudgets}
+					fetchBudgets={getBudgets}
 				/>
 			</div>
 
