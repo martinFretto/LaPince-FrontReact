@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { registerUser } from "../api/auth";
-import { useNavigate } from "react-router-dom";
+ import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
 	const navigate = useNavigate();
-	const [lastname, setLastname] = useState("");
-	const [firstname, setFirstname] = useState("");
+	const [last_name, setLastname] = useState("");
+	const [first_name, setFirstname] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordConfirm, setPasswordConfirm] = useState("");
-	const [isSamePass, setIsSamePass] = useState(false);
-	const [, setIsEmailAlreadyExist] = useState(false);
-	const [isInvalidPassword, setIsInvalidPassword] = useState(false);
-	const [errorMessage, setErrorMessage] = useState(""); // Ajouter un état pour l'erreur
+	const [isSamePass, setIsSamePass] = useState(true);
+	const [errorMessage, setErrorMessage] = useState("");
+	const [successMessage, setSuccessMessage] = useState("");  
 
 	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -30,51 +29,37 @@ export default function RegisterPage() {
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
 
-		// Vérification des conditions du mot de passe
-		if (!hasMinLength || !hasUpperCase || !hasNumber) {
-			setIsInvalidPassword(true);
-			// Return si les mots de passe ne respecte pas les conditions
-			return;
-		}
-		setIsInvalidPassword(false);
-
-		// Vérification si les mots de passe sont identiques
+		
 		if (password !== passwordConfirm) {
-			setIsSamePass(true);
-			// Return si les mots de passe ne correspondent pas
+			setIsSamePass(false);
 			return;
-		}
+		} 
+		setIsSamePass(true);
 
 		const userData = {
-			lastname,
-			firstname,
+			last_name,
+			first_name,
 			email,
 			password,
 		};
 
+		
 		try {
 			// Appeler la méthode pour enregistrer l'utilisateur
 			await registerUser(userData);
-			navigate("/auth/login");
-		} catch (err: any) {
-			console.error("Erreur lors de l'enregistrement :", err);
 
-			// Vérification de la réponse dans l'erreur
-			if (err.response) {
-				const statusCode = err.response.status;
-				console.log("Status Code:", statusCode); // Loguer le code d'erreur
+			setErrorMessage("");
+			setSuccessMessage("Compte créé avec succès vous allez être redirigé vers la page de connexion !");
 
-				// Gestion du message en fonction du code d'erreur
-				if (statusCode === 409) {
-					setErrorMessage("Cet email existe déjà.");
-					setIsEmailAlreadyExist(true);
-				} else if (statusCode === 400) {
-					setErrorMessage("Le format de l'email est invalide.");
-				} else {
-					setErrorMessage("Une erreur inconnue est survenue.");
-				}
+			// Délai de 2 secondes avant la redirection
+			setTimeout(() => {
+				navigate("/auth/login");
+			}, 2000);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+					setErrorMessage(err.message);
 			} else {
-				setErrorMessage("Une erreur est survenue, veuillez réessayer.");
+					setErrorMessage("Une erreur est survenue");
 			}
 		}
 	};
@@ -98,7 +83,7 @@ export default function RegisterPage() {
 								type="text"
 								id="lastname"
 								placeholder="Nom"
-								value={lastname}
+								value={last_name}
 								onChange={(e) => setLastname(e.target.value)}
 								required
 								className="w-72 input validator input-neutral"
@@ -114,7 +99,7 @@ export default function RegisterPage() {
 								type="text"
 								id="firstname"
 								placeholder="Prénom"
-								value={firstname}
+								value={first_name}
 								onChange={(e) => setFirstname(e.target.value)}
 								required
 								className="w-72 input validator input-neutral"
@@ -186,24 +171,23 @@ export default function RegisterPage() {
 									className="w-72 input input-neutral"
 								/>
 							</div>
-							{isSamePass && (
+							{!isSamePass && (
 								<span className="text-red-500 text-md self-center">
-									Les mots de passe ne sont pas identiques
+									Les mots de passe ne sont pas identiques.
 								</span>
 							)}
 
-							{/* Affichage du message d'erreur si le mot de passe est invalide */}
-							{isInvalidPassword && (
-								<span className="text-red-500 text-md self-center">
-									Le mot de passe doit comporter au moins 8 caractères, une
-									majuscule et un chiffre.
-								</span>
-							)}
 
 							{/* Affichage du message d'erreur généré par l'API */}
 							{errorMessage && (
 								<span className="text-red-500 text-md self-center">
 									{errorMessage}
+								</span>
+							)}
+
+							{successMessage && (
+								<span className="text-green-500 text-md self-center">
+									{successMessage}
 								</span>
 							)}
 						</div>

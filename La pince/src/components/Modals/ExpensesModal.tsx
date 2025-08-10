@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { NewExpense, UpdateExpense } from "../../types/Expense";
+import type { NewExpense, UpdateExpense } from "../../types/expense";
 import { addExpense, DeleteExpense, updateExpense } from "../../api/expenses";
 
 export default function ExpensesModal({
@@ -26,24 +26,38 @@ export default function ExpensesModal({
 	const [payment_method] = useState("");
 	const [date, setDate] = useState("");
 	const [isOpenDelete, setIsOpenDelete] = useState(false);
-
 	const remainingLength = Math.max(0, 60 - description?.length);
 
 	useEffect(() => {
+
+		console.log("useEffect Expenses modal, isopen and selectedExpense: ", isOpen, selectedExpense);
+		console.log("useEffect Expenses modal");
 		if (isOpen && selectedExpense) {
+
 			setAmount(selectedExpense.amount.toString());
 			setDescription(selectedExpense.description);
 			setDate(new Date(selectedExpense.date).toISOString().split("T")[0]);
 		} else if (isOpen && !selectedExpense) {
+			console.log("on veut ajouter une dépense");
 			setAmount("");
 			setDescription("");
 			setDate("");
 		}
 	}, [isOpen, selectedExpense]);
 
+	const handleSubmit = async () => {
+		if(selectedExpense){
+			handleUpdate()
+		} else {
+			handleAdd()
+		}
+	}
+
 	// Ajout d'une nouvelle dépense
 	const handleAdd = async () => {
+		console.log("HandleAdd")
 		const budget_id = selectedBudget;
+		console.log("Selected budget: ", selectedBudget)
 		const newExpense: NewExpense = {
 			description,
 			payment_method,
@@ -51,8 +65,10 @@ export default function ExpensesModal({
 			date,
 			budget_id,
 		};
+		console.log("new expense: ", newExpense)
 		try {
-			await addExpense(newExpense, selectedBudget);
+			console.log("ADD")
+			await addExpense(newExpense);
 			await fetchExpenses();
 			triggerReload();
 			setIsOpen(false);
@@ -63,6 +79,7 @@ export default function ExpensesModal({
 
 	// Modification d'une dépense
 	const handleUpdate = async () => {
+		console.log("handleUpdate")
 		const expenseId = selectedExpense.id;
 		const expenseToSend: UpdateExpense = {
 			amount: Number(amount),
@@ -119,7 +136,9 @@ export default function ExpensesModal({
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();
-						selectedExpense ? handleUpdate() : handleAdd();
+						handleSubmit()
+					//	selectedExpense && handleUpdate();
+    				//	!selectedExpense && handleAdd();
 						setIsOpen(false);
 					}}
 					className="space-y-4"

@@ -2,29 +2,12 @@ import type { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { useNavigate } from "react-router-dom";
 // import { budgets } from "../../data/budget";
-import { useEffect, useState } from "react";
-import { fetchBudget } from "../../api/budget";
+//import { useEffect, useState } from "react";
+//import { fetchBudgets } from "../../api/budget";
 import type { Budget } from "../../types/budget";
 
-const DonutChart = () => {
-	const [budgets, setBudgets] = useState<Budget[]>([]);
 
-	// useEffect qui va chercher les budgets
-	useEffect(() => {
-		const getBudgets = async () => {
-			try {
-				const data = await fetchBudget();
-				if (Array.isArray(data.data)) {
-					setBudgets(data.data);
-				} else {
-					console.warn("Données reçues non valides:", data);
-				}
-			} catch (error) {
-				console.error("Erreur de chargement des budgets:", error);
-			}
-		};
-		getBudgets();
-	}, []);
+const DonutChart = ({ budgets }: { budgets: Budget[] }) => {
 
 	const navigate = useNavigate();
 
@@ -32,22 +15,19 @@ const DonutChart = () => {
 	const categories = budgets.map((budget) => budget.name);
 	const categoriesId = budgets.map((budget) => budget.id);
 	const colors = budgets.map((budget) => budget.color);
+
 	// récuperation et addition du total des budgets
-	const totalBudget = budgets.reduce(
-		(acc, budget) => acc + budget.allocated_amount,
+/*	const totalBudget = budgets.reduce(
+		(acc, budget) => acc + Number(budget.allocated_amount),
 		0
-	);
+	);*/
 
 	// calcul du montant restant par budget
 	const remainingByBudget = budgets.map(
 		(budget) => budget.allocated_amount - budget.spent_amount
 	);
-	const series = remainingByBudget;
 
-	const spent = series.reduce((acc, val) => acc + val, 0);
-	// *100 / 100 pour les 2 chiffres apres la virgule
-	const remaining = Math.round((totalBudget - spent) * 100) / 100;
-	const totalRemaining = series.reduce((acc, val) => acc + val, 0);
+	const totalRemaining = remainingByBudget.reduce((acc, val) => acc + val, 0);
 
 	const options: ApexOptions = {
 		chart: {
@@ -83,7 +63,7 @@ const DonutChart = () => {
 						value: {
 							show: true,
 							fontSize: "20px",
-							color: remaining < 0 ? "#ef4444" : "#000", // rouge si dépassement
+							color: totalRemaining < 0 ? "#ef4444" : "#000", // rouge si dépassement
 							offsetY: 10,
 							formatter: () => `${Math.round(totalRemaining * 100) / 100} €`,
 						},
@@ -150,24 +130,17 @@ const DonutChart = () => {
 
 	return (
 		<>
-			<div className="flex justify-center mt-8 ml-13 sm:mr-15">
-				{/* <div className="w-full max-w-[600px]">
-				<ReactApexChart
-				options={options}
-				series={series}
-				type="donut"
-				width="100%"
-				/>
-				</div> */}
-
-				<div className="w-full max-w-[600px]">
-					<ReactApexChart
+			<div className="flex justify-center mt-8 ml-13 sm:mr-15">   
+				{budgets.length > 0 && (
+					<div className="w-full max-w-[600px]">
+						<ReactApexChart
 						options={options}
-						series={series}
+						series={remainingByBudget}
 						type="donut"
 						height={300}
-					/>
-				</div>
+						/>
+					</div>
+				)}
 			</div>
 		</>
 	);

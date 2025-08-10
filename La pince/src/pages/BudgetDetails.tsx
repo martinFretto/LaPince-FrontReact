@@ -1,12 +1,12 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
 import { useEffect, useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
-import { fetchExpenses } from "../api/expenses";
-import type { Expense } from "../types/Expense";
+import { fetchExpensesByBudget } from "../api/expenses";
+import type { Expense, ExpenseWithDetails } from "../types/expense";
 
 export default function BudgetDetails() {
 	interface BudgetType {
@@ -23,6 +23,8 @@ export default function BudgetDetails() {
 		created_at: string;
 		updated_at: string;
 	}
+	/****New ***/
+	const { budgetId } = useParams<{ budgetId: string }>();
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,18 +45,32 @@ export default function BudgetDetails() {
 
 	const getExpenses = async () => {
 		try {
-			const data = await fetchExpenses();
-			if (Array.isArray(data)) {
-				setExpenses(data);
+			console.log("on lance le fetch bi budget")
+			const data = await fetchExpensesByBudget(Number(budgetId));
+			if (Array.isArray(data.data)) {
+				console.log("données trouvées pr les dépenses de ce budget: ", data.data)
+
+				const expenses: Expense[] = data.data.map((item: ExpenseWithDetails) => ({
+										...item.expenditure,
+										budgetColor: item.budgetColor,
+										budgetIcon: item.budgetIcon,
+									}));
+				setExpenses(expenses);
 			} else {
-				console.warn("Données reçues non valides:", data);
+				console.log("Données reçues non valides:", data);
 			}
-		} catch (error) {
-			console.error("Erreur de chargement des budgets:", error);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.log(err.message);
+			} else {
+				console.log("Une erreur est survenue lors de la récupération des budgets");
+			}
 		}
 	};
 
 	useEffect(() => {
+		console.log("budgetid vaut: ", budgetId);
+
 		getExpenses();
 	}, []);
 
@@ -127,11 +143,18 @@ export default function BudgetDetails() {
 				triggerReload={triggerExpensesReload}
 			/>
 
-			<DetailsExpenses
+			{expenses.length > 0 && (
+				<DetailsExpenses
+				expenses={expenses}
+				onExpenseClick={handleExpenseClick}
+				/>
+			)}
+
+		{/*}	<DetailsExpenses
 				budget={budget.id}
 				expenses={expenses}
 				onExpenseClick={handleExpenseClick}
-			/>
+			/>*/}
 
 			{/* Modale de modification de budget */}
 			<BudgetModal
@@ -139,7 +162,7 @@ export default function BudgetDetails() {
 				onClose={() => setIsModalOpen(false)}
 				selectedBudget={selectedBudget}
 				setSelectedBudget={setSelectedBudget}
-				fetchBudget={(): void | Promise<void> => {
+				fetchBudgets={(): void | Promise<void> => {
 					throw new Error("Function not implemented.");
 				}}
 			/>

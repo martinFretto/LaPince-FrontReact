@@ -1,7 +1,7 @@
 // import { expenditures } from "../../data/expenditure";
 // import { budgets } from "../../data/budget";
 import { useState } from "react";
-import type { Expense } from "../../types/Expense";
+import type { Expense } from "../../types/expense";
 import type { Budget } from "../../types/budget";
 
 type DetailsExpensesProps = {
@@ -11,19 +11,15 @@ type DetailsExpensesProps = {
 };
 
 export default function DetailsExpenses({
-	budget,
 	expenses,
 	onExpenseClick,
 }: DetailsExpensesProps) {
 	const [budgets] = useState<Budget[]>([]);
 
-	// on va filtrer les dépenses d'un budget
-	const filteredExpenses = budget
-		? expenses.filter((exp) => exp.budget_id === budget)
-		: expenses;
+
 
 	// on va trier par date décroissante les dépenses d'un budget
-	const sortedExpenses = [...filteredExpenses].sort(
+	const sortedExpenses = [...expenses].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 	);
 
@@ -34,7 +30,6 @@ export default function DetailsExpenses({
 			<table className="w-full text-left border-separate border-spacing-y-2 border-2 border-gray-500 px-4">
 				<tbody>
 					{recentExpenses.map((exp) => {
-						const relatedBudget = budgets.find((b) => b.id === exp.budget_id);
 
 						return (
 							<tr
@@ -45,23 +40,8 @@ export default function DetailsExpenses({
 								<td colSpan={3}>
 									<div className="border-b border-gray-300 flex justify-between items-center pb-2">
 										<div className="flex items-center gap-2 justify-between w-full">
-											<div>
-												{relatedBudget?.icon && (
-													<div
-														className="w-10 h-10 border rounded-full p-1 flex items-center justify-center"
-														style={{ backgroundColor: relatedBudget.color }}
-													>
-														<img
-															src={relatedBudget.icon}
-															alt={relatedBudget.name}
-															className="w-full h-full object-contain"
-														/>
-													</div>
-												)}
-											</div>
 
 											<div className="flex justify-between w-1/1">
-												{/* test */}
 
 												<div className="flex">
 													<div

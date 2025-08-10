@@ -1,12 +1,23 @@
-import { useState } from "react";
-import { ResetPass } from "../api/auth";
-import { useNavigate } from "react-router-dom";
+import { useState,useEffect } from "react";
+import { loginUser } from "../api/auth";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 
-export default function ResetPassword() {
+export default function LoginPage() {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [isOpen, setIsOpen] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+	const { isAuthenticated, login } = useAuthStore();
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			console.log("useEffect: Utilisateur authentifié");
+
+			navigate("/dashboard");
+		//	window.location.reload();
+		}
+	}, [isAuthenticated, navigate]);
 
 	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -20,35 +31,46 @@ export default function ResetPassword() {
 		</span>
 	);
 
-	// Appel de ResetPassword pour faire l'appel fetch a l'API
+	// Appel de loginUser pour faire l'appel fetch a l'API
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
+
 		const userData = {
 			email,
 			password,
 		};
-		setIsOpen(true);
+
 		try {
 			// Récupération des données et du token
-			const data = await ResetPass(userData);
+
+			await loginUser(userData);
+
+			setErrorMessage("");
+
+			// fonction du store pour fixer authenticated à true
+			login();
+
 			// Stockage du token
-			console.log(data);
-			// Vérifiez que navigate est appelé correctement
-			navigate("/auth/login");
-			// Rechargement de la page pour que le dashboard soit bien a jour apres le login
-			window.location.reload();
-		} catch (err) {
-			console.error("Erreur lors de la connexion", err);
+			//	sessionStorage.setItem("authToken", data.token);
+
+			//	navigate("/dashboard"); // La redirection vers le dashboard
+			//window.location.reload();
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+					setErrorMessage(err.message);
+			} else {
+					setErrorMessage("Une erreur est survenue");
+			}
 		}
 	};
 	return (
 		<div className="place-self-center">
 			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-90 max-w-90 flex flex-col justify-center">
 				<div className="flex flex-col items-center text-2xl font-semibold mb-16">
-					<h1 className="justify-center">Formulaire de reinitialisation</h1>
-					<h1 className="justify-center">du mot de passe</h1>
+					<h1 className="justify-center">Formulaire</h1>
+					<h1 className="justify-center">de connexion</h1>
 				</div>
-				<div className="px-10">
+				<div className="px-12">
 					{/* Fomulaire d'enregistrement */}
 					<form onSubmit={handleSubmit} className="space-y-6">
 						{/* Champ Email d'utilisateur */}
@@ -71,7 +93,7 @@ export default function ResetPassword() {
 						<div>
 							<div className="flex items-center">
 								<label htmlFor="password" className="w-32 text-right pr-4">
-									Nouveau Mot de passe
+									Mot de passe
 								</label>
 								<input
 									type="password"
@@ -86,7 +108,7 @@ export default function ResetPassword() {
 							</div>
 							{/* Liste des conditions */}
 							<div className="flex justify-center">
-								<ul className="text-sm ml-15 -mt-3">
+								<ul className="mt-2 text-sm">
 									<li className="flex items-center">
 										{icon(hasMinLength)} Minimum 8 caractères
 									</li>
@@ -102,36 +124,38 @@ export default function ResetPassword() {
 
 						<button
 							type="submit"
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-10 mb-4 justify-center"
+							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-20 mb-4 justify-center"
 						>
-							Confirmer
+							Se connecter
 						</button>
-					</form>
 
-					{isOpen && (
-						<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-							<div className="modal modal-open">
-								<div className="modal-box">
-									<h2 className="text-xl font-bold text-center">
-										Un email vous a été envoyé
-									</h2>
-									<h2 className="text-xl font-bold text-center">
-										(ou pas, le systeme n'est pas encore mis en place)
-									</h2>
-									<div className="flex justify-center mt-4">
-										<button
-											type="button"
-											className="btn btn-info"
-											onClick={() => setIsOpen(false)}
-										>
-											Confirmer
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
+						{errorMessage && (
+							<span className="text-red-500 text-md self-center">
+								{errorMessage}
+							</span>
+						)}
+					</form>
 				</div>
+			</div>
+			<div className="place-self-center -mt-8 mb-8">
+				<p className="italic place-self-center">
+					Pas encore de compte ? Créez-le{" "}
+					<NavLink
+						to={"/auth/register"}
+						className="text-[#1971C2] font-semibold"
+					>
+						ici{" "}
+					</NavLink>
+				</p>
+				<p className="italic place-self-center">
+					Mot de passe oublié ? Réinitialisez-le{" "}
+					<NavLink
+						to={"/auth/resetPassword"}
+						className="text-[#1971C2] font-semibold"
+					>
+						ici{" "}
+					</NavLink>
+				</p>
 			</div>
 		</div>
 	);

@@ -33,7 +33,7 @@ export default function LandingPage() {
 					<div className="flex items-start gap-2">
 						<img src="/check.svg" alt="check" className="w-4 h-4 mt-1" />
 						<p>
-							Suit tes dépenses sans te juger, (même si tu as craqué sur un
+							Suis tes dépenses sans te juger, (même si tu as craqué sur un
 							canard en plastique hors de prix !)
 						</p>
 					</div>

@@ -2,33 +2,42 @@ import type { ModifBudget, NewBudget } from "../types/budget";
 
 // Import de l'URL et on va chercher le token stocké dans le session storage pour le transmettre dans le header
 const API_URL = import.meta.env.VITE_API_URL;
-const token = sessionStorage.getItem("authToken");
+//const token = sessionStorage.getItem("authToken");
 
 //
 // Methode fetch qui recupere les budgets
-export async function fetchBudget() {
-	const res = await fetch(`${API_URL}/budgets/`, {
+export async function fetchBudgets() {
+	const res = await fetch(`${API_URL}/budgets`, {
 		method: "GET",
+		credentials: 'include',
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`,
+	//		Authorization: `Bearer ${token}`,
 		},
 	});
 
-	if (!res.ok) throw new Error("Erreur lors du chargement du budget");
+	if(res.status===204){
+		return {data:[]}
+	}
+
+	if (!res.ok) {
+		const errorData = await res.json();
+		const error = new Error(errorData.message);
+		throw error;
+	} 
+
 	return res.json();
 }
 
 //
 // Methode fetch qui ajoute un nouveau budget
 export async function AddBudget(newBudget: NewBudget) {
-	console.log("token avant le Addbudget", token);
 
 	const res = await fetch(`${API_URL}/budgets/`, {
 		method: "POST",
+		credentials: 'include',
 		headers: {
-			Authorization: `Bearer ${token}`,
-
+//			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(newBudget),
@@ -37,15 +46,14 @@ export async function AddBudget(newBudget: NewBudget) {
 	return res.json();
 }
 
-//
-// Methode fetch qui modifie un budget
-console.log("token avant update budget", token);
 
+// Methode fetch qui modifie un budget
 export async function updateBudget(budget: ModifBudget, id: number) {
 	const res = await fetch(`${API_URL}/budgets/${id}/`, {
 		method: "PATCH",
+		credentials: 'include',
 		headers: {
-			Authorization: `Bearer ${token}`,
+//			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(budget),
@@ -53,7 +61,7 @@ export async function updateBudget(budget: ModifBudget, id: number) {
 
 	if (!res.ok) {
 		const err = await res.json().catch(() => ({}));
-		console.error("Erreur API :", err);
+	//	console.error("Erreur API :", err);
 		throw new Error("Erreur lors de la mise à jour du budget");
 	}
 
@@ -65,8 +73,9 @@ export async function updateBudget(budget: ModifBudget, id: number) {
 export async function DeleteBudget(id: number) {
 	const res = await fetch(`${API_URL}/budgets/${id}/`, {
 		method: "DELETE",
+		credentials: 'include',
 		headers: {
-			Authorization: `Bearer ${token}`,
+//			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
 		},
 	});

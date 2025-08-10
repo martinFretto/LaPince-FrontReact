@@ -1,7 +1,10 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore";
 
 export default function Header() {
 	const navigate = useNavigate();
+	const { isAuthenticated, logout } = useAuthStore();
+	
 
 	// Permet de modifier la couleur du lien clické
 	const linkBaseClasses = "font-semibold";
@@ -9,13 +12,15 @@ export default function Header() {
 	const inactiveClass = "text-black";
 
 	// Permet la suppression du token et de revenir à la page login
-	const logout = () => {
-		sessionStorage.removeItem("authToken");
+	const handleLogout = () => {
+		console.log("logout!!!")
+		logout();
+	//	sessionStorage.removeItem("authToken");
 		navigate("/auth/login");
 	};
 
 	// Vérifie si un token existe dans le sessionStorage
-	const isAuthenticated = sessionStorage.getItem("authToken");
+//	const isAuthenticated = sessionStorage.getItem("authToken");
 
 	return (
 		<div>
@@ -29,8 +34,10 @@ export default function Header() {
 								alt="Logo La pince"
 								className="w-20 -mt-4.5 mr-10"
 							/>
+							{/*to="/dashboard"*/}
 							<NavLink
-								to="/dashboard"
+								to={isAuthenticated? "/dashboard" : "/"}
+								
 								className={({ isActive }) =>
 									`absolute -mt-5 ml-3 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
 								}
@@ -41,6 +48,19 @@ export default function Header() {
 					</div>
 
 					<div className="flex -ml-12 place-self-center">
+
+						{/* Affiche "Mon profil" uniquement si l'utilisateur est authentifié */}
+						{isAuthenticated && (
+							<NavLink
+								to="/profile"
+								className={({ isActive }) =>
+									`pr-6 ${linkBaseClasses} ${isActive ? activeClass : inactiveClass}`
+								}
+							>
+								Mon profil
+							</NavLink>
+						)}
+
 						{/* Affiche "Mes budgets" uniquement si l'utilisateur est authentifié */}
 						{isAuthenticated && (
 							<NavLink
@@ -54,9 +74,10 @@ export default function Header() {
 						)}
 
 						{/* Change le texte du bouton en fonction de l'authentification */}
+						{/*	onClick={isAuthenticated ? logout : () => navigate("/auth/login")}*/}
 						<button
-							type="button"
-							onClick={isAuthenticated ? logout : () => navigate("/auth/login")}
+							type="button"					
+							onClick={isAuthenticated? () => handleLogout() : () => navigate("/auth/login")}
 							className={`${linkBaseClasses} ${inactiveClass} cursor-pointer`}
 						>
 							{isAuthenticated ? "Se déconnecter" : "Se connecter"}

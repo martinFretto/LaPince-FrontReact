@@ -1,8 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface RegisterData {
-	lastname: string;
-	firstname: string;
+	last_name: string;
+	first_name: string;
 	email: string;
 	password: string;
 }
@@ -10,25 +10,19 @@ interface RegisterData {
 export async function registerUser(userData: RegisterData) {
 	const res = await fetch(`${API_URL}/auth/register`, {
 		method: "POST",
+		credentials: "include",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(userData),
 		mode: "cors",
 	});
+
 	if (!res.ok) {
-		// Récupereration de l'erreur
 		const errorData = await res.json();
-		const error = new Error("Erreur lors de l'inscription");
-		// Ajouter la réponse d'erreur à l'erreur lancée
-		(error as any).response = errorData;
-		// Envoi de l'erreur avec les données
+		const error = new Error(errorData.message);
 		throw error;
 	}
-
-	const data = await res.json();
-	console.log("Réponse API:", data);
-	return data;
 }
 
 interface LoginData {
@@ -39,35 +33,56 @@ interface LoginData {
 export async function loginUser(userData: LoginData) {
 	const res = await fetch(`${API_URL}/auth/login`, {
 		method: "POST",
+		credentials: "include",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(userData),
 	});
 
-	if (!res.ok) throw new Error("Erreur de connexion");
-	const data = await res.json();
-	sessionStorage.setItem("token", data.token);
-	console.log("Réponse API:", data);
-	console.log("token recu au login", data.token);
+	if (!res.ok) {
+		const errorData = await res.json();
+		const error = new Error(errorData.message);
+		throw error;
+	} 
 
-	return data;
+//	const data = await res.json();
+//	sessionStorage.setItem("token", data.token);
+	
 }
 
-export async function ResetPass(userData: LoginData) {
-	const res = await fetch(
-		`${API_URL}/auth/reset-password-request
-`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(userData),
-		}
-	);
+export async function resetPasswordRequest(email: string) {
+	console.log("fetch api reset")
+	const res = await fetch(`${API_URL}/auth/reset_password_request`, {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ email }),
+	});
 
-	if (!res.ok) throw new Error("Erreur de connexion");
-	const data = await res.json();
-	return data;
+	if (!res.ok) {
+		const errorData = await res.json();
+		const error = new Error(errorData.message);
+		throw error;
+	} 
+}
+
+export async function setNewPassword(password: string, token: string | null) {
+	console.log("PATCH NEW PASSWORD: password and token ", password, token);
+	const res = await fetch(`${API_URL}/auth/set_new_password`, {
+		method: "PATCH",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ password, token }),
+	});
+
+	if (!res.ok) {
+		const errorData = await res.json();
+		const error = new Error(errorData.message);
+		throw error;
+	} 
 }

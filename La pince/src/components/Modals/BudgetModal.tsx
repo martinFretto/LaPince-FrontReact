@@ -7,14 +7,14 @@ interface BudgetModalProps {
 	onClose: () => void;
 	selectedBudget: Budget | null;
 	setSelectedBudget: (budget: Budget | null) => void;
-	fetchBudget: () => void | Promise<void>;
+	fetchBudgets: () => void | Promise<void>;
 }
 
 export default function BudgetModal({
 	isModalOpen,
 	onClose,
 	selectedBudget,
-	fetchBudget,
+	fetchBudgets,
 }: BudgetModalProps) {
 	const [name, setName] = useState("");
 	const [allocated_amount, setAllocated_amount] = useState("");
@@ -74,7 +74,7 @@ export default function BudgetModal({
 		try {
 			await AddBudget(newBudget);
 			console.log(`Budget ${name} ajouté avec succès !`);
-			await fetchBudget();
+			await fetchBudgets();
 			onClose();
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
@@ -94,7 +94,7 @@ export default function BudgetModal({
 		try {
 			await updateBudget(budgetToSend, budgetId);
 			console.log("Budget modifié avec succès !");
-			await fetchBudget();
+			await fetchBudgets();
 			onClose();
 		} catch (error) {
 			console.error("Erreur lors de la mise à jour du budget :", error);
@@ -104,7 +104,7 @@ export default function BudgetModal({
 	// Suppression d'un budget
 	const handleDelete = async (selectedBudget: { id: number; name: string }) => {
 		await DeleteBudget(selectedBudget.id);
-		await fetchBudget();
+		await fetchBudgets();
 		onClose();
 	};
 

@@ -1,7 +1,7 @@
 import type { ApexOptions } from "apexcharts";
 import type { Budget } from "../../types/budget";
 import { useEffect, useState } from "react";
-import type { Expense } from "../../types/Expense";
+import type { Expense } from "../../types/expense";
 import ReactApexChart from "react-apexcharts";
 
 interface DonutDetailProps {

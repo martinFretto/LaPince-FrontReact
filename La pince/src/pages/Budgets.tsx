@@ -3,12 +3,12 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import DonutDetail from "../components/DonughtDetails/index";
 // import { budgets } from "../data/budget";
-import { fetchBudget } from "../api/budget";
+import { fetchBudgets } from "../api/budget";
 import { useEffect } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
 import Flag from "../components/flag";
-import type { Expense } from "../types/Expense";
+import type { Expense } from "../types/expense";
 import { fetchExpenses } from "../api/expenses";
 
 export default function Budgets() {
@@ -20,7 +20,7 @@ export default function Budgets() {
 
 	const getBudgets = async () => {
 		try {
-			const data = await fetchBudget();
+			const data = await fetchBudgets();
 			if (Array.isArray(data.data)) {
 				setBudgets(data.data);
 			} else {
@@ -34,7 +34,7 @@ export default function Budgets() {
 	useEffect(() => {
 		const getData = async () => {
 			try {
-				const budgetsData = await fetchBudget();
+				const budgetsData = await fetchBudgets();
 				if (Array.isArray(budgetsData.data)) {
 					setBudgets(budgetsData.data);
 				}

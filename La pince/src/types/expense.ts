@@ -7,6 +7,12 @@ export type Expense = {
 	budgetColor?: string;
 	budgetIcon?: string;
 };
+export type ExpenseWithDetails = {
+	expenditure: Expense;
+	budgetColor?: string;
+	budgetIcon?: string;
+};
+
 
 export interface NewExpense {
 	description: string;

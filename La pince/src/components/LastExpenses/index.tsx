@@ -1,20 +1,22 @@
 // import { expenditure } from "../../data/expenditure";
 // import { budgets } from "../../data/budget";
-import type { Expense } from "../../types/Expense";
+import type { Expense, ExpenseWithDetails } from "../../types/expense";
 import { useEffect, useState } from "react";
 import { fetchExpenses } from "../../api/expenses";
 
 type DetailsExpensesProps = {
 	budget?: number;
-
-	onExpenseClick?: (expense: any) => void;
+	onExpenseClick?: (expense: Expense) => void;
 };
 
 export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
+	console.log("LAST EXPENSES COMPONENT");
+//	const [expenses, setExpenses] = useState<Partial<Expense>[]>([]);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
 
-	// useEffect qui va chercher les budgets
-	useEffect(() => {
+	// useEffect qui va chercher les dépenses
+/*	useEffect(() => {
+		console.log("lastExpenses first useEffect")
 		const getExpenses = async () => {
 			try {
 				const data = await fetchExpenses();
@@ -28,8 +30,34 @@ export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
 			}
 		};
 		getExpenses();
+	}, []);*/
+	
+
+	useEffect(() => {
+		console.log("lastExpenses first useEffect")
+		const getExpenses = async () => {
+			try {
+				const data = await fetchExpenses();
+				if (Array.isArray(data.data)) {
+					const expenses: Expense[] = data.data.map((item: ExpenseWithDetails) => ({
+						...item.expenditure,
+						budgetColor: item.budgetColor,
+						budgetIcon: item.budgetIcon,
+					}));
+					setExpenses(expenses);
+				} else {
+					console.log("Données reçues non valides:", data);
+				}
+			} catch (err: unknown) {
+				if (err instanceof Error) {
+					console.log(err.message);
+				} else {
+					console.log("Une erreur est survenue lors de la récupération des budgets");
+				}
+			}
+		};
+		getExpenses();
 	}, []);
-	console.log(expenses);
 
 	// Trier les dépenses par date décroissante
 	const sortedExpenses = [...expenses].sort(
