@@ -2,6 +2,8 @@ import { useState,useEffect } from "react";
 import { loginUser } from "../api/auth";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Spinner } from "../components/Spinner";
 
 export default function LoginPage() {
 	const navigate = useNavigate();
@@ -9,11 +11,11 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const { isAuthenticated, login } = useAuthStore();
+	const [showPassword, setShowPassword] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			console.log("useEffect: Utilisateur authentifié");
-
 			navigate("/dashboard");
 		//	window.location.reload();
 		}
@@ -41,7 +43,7 @@ export default function LoginPage() {
 		};
 
 		try {
-			// Récupération des données et du token
+			setIsLoading(true);
 
 			await loginUser(userData);
 
@@ -49,10 +51,9 @@ export default function LoginPage() {
 
 			// fonction du store pour fixer authenticated à true
 			login();
-
+			setIsLoading(false);
 			// Stockage du token
 			//	sessionStorage.setItem("authToken", data.token);
-
 			//	navigate("/dashboard"); // La redirection vers le dashboard
 			//window.location.reload();
 		} catch (err: unknown) {
@@ -61,6 +62,7 @@ export default function LoginPage() {
 			} else {
 					setErrorMessage("Une erreur est survenue");
 			}
+			setIsLoading(false);
 		}
 	};
 	return (
@@ -91,12 +93,12 @@ export default function LoginPage() {
 
 						{/* Champ Mot de passe d'utilisateur */}
 						<div>
-							<div className="flex items-center">
+							<div className="flex items-center relative">
 								<label htmlFor="password" className="w-32 text-right pr-4">
 									Mot de passe
 								</label>
 								<input
-									type="password"
+									type={showPassword ? "text" : "password"}
 									id="password"
 									placeholder="********"
 									value={password}
@@ -105,6 +107,17 @@ export default function LoginPage() {
 									className="w-72 input input-neutral"
 									autoComplete="current-password" // permet au navigateur de suggerer le mot de passe deja enregistrer sur ce site
 								/>
+								<button
+									type="button"
+									onClick={() => setShowPassword(!showPassword)}
+									className="absolute right-3 text-gray-600 hover:text-black z-20"
+								>
+									{showPassword ? (
+									<EyeSlashIcon className="h-5 w-5" />
+									) : (
+									<EyeIcon className="h-5 w-5" />
+									)}
+								</button>
 							</div>
 							{/* Liste des conditions */}
 							<div className="flex justify-center">
@@ -122,12 +135,14 @@ export default function LoginPage() {
 							</div>
 						</div>
 
-						<button
+						<div className="flex justify-center">
+							<button
 							type="submit"
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-20 mb-4 justify-center"
-						>
-							Se connecter
-						</button>
+							className="btn px-6 py-2 bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex items-center justify-center"
+							>
+							{isLoading ? <Spinner /> : "Se connecter"}
+							</button>
+						</div>
 
 						{errorMessage && (
 							<span className="text-red-500 text-md self-center">

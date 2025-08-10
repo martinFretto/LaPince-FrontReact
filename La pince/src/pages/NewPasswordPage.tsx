@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { setNewPassword } from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export default function NewPasswordPage() {
     const navigate = useNavigate();
@@ -9,6 +10,8 @@ export default function NewPasswordPage() {
 	const [isSamePass, setIsSamePass] = useState(true);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState(""); 
+	const [showPassword, setShowPassword] = useState(false);
+	const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     
     	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -69,12 +72,12 @@ export default function NewPasswordPage() {
 
                         {/* Champ Mot de passe d'utilisateur */}
 						<div className="flex flex-col">
-							<div className="flex items-center">
+							<div className="flex items-center relative">
 								<label htmlFor="password" className="w-32 text-right pr-4">
 									Nouveau mot de passe
 								</label>
 								<input
-									type="password"
+									type={showPassword ? "text" : "password"}
 									id="password"
 									placeholder="********"
 									value={password}
@@ -82,6 +85,17 @@ export default function NewPasswordPage() {
 									required
 									className="w-72 input input-neutral"
 								/>
+								<button
+									type="button"
+									onClick={() => setShowPassword(!showPassword)}
+									className="absolute right-3 text-gray-600 hover:text-black z-20"
+								>
+									{showPassword ? (
+									<EyeSlashIcon className="h-5 w-5" />
+									) : (
+									<EyeIcon className="h-5 w-5" />
+									)}
+								</button>
 							</div>
 							{/* Liste des conditions */}
 							<div className="flex justify-center -mt-2">
@@ -99,7 +113,7 @@ export default function NewPasswordPage() {
 							</div>
 
 							{/* Champ confirmation du Mot de passe d'utilisateur */}
-							<div className="flex items-center mt-8">
+							<div className="flex items-center mt-8 relative">
 								<label
 									htmlFor="passwordConfirm"
 									className="w-32 text-right pr-4"
@@ -107,7 +121,7 @@ export default function NewPasswordPage() {
 									Confirmation
 								</label>
 								<input
-									type="password"
+									type={showPasswordConfirm ? "text" : "password"}
 									id="passwordConfirm"
 									placeholder="********"
 									value={passwordConfirm}
@@ -115,24 +129,21 @@ export default function NewPasswordPage() {
 									required
 									className="w-72 input input-neutral"
 								/>
+								<button
+									type="button"
+									onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+									className="absolute right-3 text-gray-600 hover:text-black z-20"
+								>
+									{showPasswordConfirm ? (
+									<EyeSlashIcon className="h-5 w-5" />
+									) : (
+									<EyeIcon className="h-5 w-5" />
+									)}
+								</button>
 							</div>
 							{!isSamePass && (
 								<span className="text-red-500 text-md self-center">
 									Les mots de passe ne sont pas identiques.
-								</span>
-							)}
-
-
-							{/* Affichage du message d'erreur généré par l'API */}
-							{errorMessage && (
-								<span className="text-red-500 text-md self-center">
-									{errorMessage}
-								</span>
-							)}
-
-							{successMessage && (
-								<span className="text-green-500 text-md self-center">
-									{successMessage}
 								</span>
 							)}
 						</div>

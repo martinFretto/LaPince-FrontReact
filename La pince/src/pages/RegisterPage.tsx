@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { registerUser } from "../api/auth";
- import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Spinner } from "../components/Spinner";
 
 export default function RegisterPage() {
 	const navigate = useNavigate();
@@ -12,6 +14,9 @@ export default function RegisterPage() {
 	const [isSamePass, setIsSamePass] = useState(true);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");  
+	const [showPassword, setShowPassword] = useState(false);
+	const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -45,22 +50,26 @@ export default function RegisterPage() {
 
 		
 		try {
+			setIsLoading(true);
 			// Appeler la méthode pour enregistrer l'utilisateur
+			console.log("ptite requête api")
 			await registerUser(userData);
 
 			setErrorMessage("");
 			setSuccessMessage("Compte créé avec succès vous allez être redirigé vers la page de connexion !");
-
+			setIsLoading(false);
 			// Délai de 2 secondes avant la redirection
 			setTimeout(() => {
 				navigate("/auth/login");
 			}, 2000);
 		} catch (err: unknown) {
 			if (err instanceof Error) {
+					console.log("bam erreur")
 					setErrorMessage(err.message);
 			} else {
 					setErrorMessage("Une erreur est survenue");
 			}
+			setIsLoading(false);
 		}
 	};
 
@@ -124,12 +133,12 @@ export default function RegisterPage() {
 
 						{/* Champ Mot de passe d'utilisateur */}
 						<div className="flex flex-col">
-							<div className="flex items-center">
+							<div className="flex items-center relative">
 								<label htmlFor="password" className="w-32 text-right pr-4">
 									Mot de passe
 								</label>
 								<input
-									type="password"
+									type={showPassword ? "text" : "password"}
 									id="password"
 									placeholder="********"
 									value={password}
@@ -137,6 +146,17 @@ export default function RegisterPage() {
 									required
 									className="w-72 input input-neutral"
 								/>
+								<button
+									type="button"
+									onClick={() => setShowPassword(!showPassword)}
+									className="absolute right-3 text-gray-600 hover:text-black z-20"
+								>
+									{showPassword ? (
+									<EyeSlashIcon className="h-5 w-5" />
+									) : (
+									<EyeIcon className="h-5 w-5" />
+									)}
+								</button>
 							</div>
 							{/* Liste des conditions */}
 							<div className="flex justify-center -mt-2">
@@ -154,7 +174,7 @@ export default function RegisterPage() {
 							</div>
 
 							{/* Champ confirmation du Mot de passe d'utilisateur */}
-							<div className="flex items-center mt-8">
+							<div className="flex items-center mt-8 relative">
 								<label
 									htmlFor="passwordConfirm"
 									className="w-32 text-right pr-4"
@@ -162,7 +182,7 @@ export default function RegisterPage() {
 									Confirmation
 								</label>
 								<input
-									type="password"
+									type={showPasswordConfirm ? "text" : "password"}
 									id="passwordConfirm"
 									placeholder="********"
 									value={passwordConfirm}
@@ -170,34 +190,48 @@ export default function RegisterPage() {
 									required
 									className="w-72 input input-neutral"
 								/>
+								<button
+									type="button"
+									onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+									className="absolute right-3 text-gray-600 hover:text-black z-20"
+								>
+									{showPasswordConfirm ? (
+									<EyeSlashIcon className="h-5 w-5" />
+									) : (
+									<EyeIcon className="h-5 w-5" />
+									)}
+								</button>
 							</div>
-							{!isSamePass && (
+						</div>
+
+						<div className="flex justify-center">
+							<button
+							type="submit"
+							className="btn px-6 py-2 bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex items-center justify-center"
+							>
+							{isLoading ? <Spinner /> : "S'enregistrer"}
+							</button>
+						</div>
+
+						{!isSamePass && (
 								<span className="text-red-500 text-md self-center">
 									Les mots de passe ne sont pas identiques.
 								</span>
-							)}
+						)}
 
 
-							{/* Affichage du message d'erreur généré par l'API */}
-							{errorMessage && (
-								<span className="text-red-500 text-md self-center">
-									{errorMessage}
-								</span>
-							)}
+						{/* Affichage du message d'erreur généré par l'API */}
+						{errorMessage && (
+							<span className="text-red-500 text-md self-center">
+								{errorMessage}
+							</span>
+						)}
 
-							{successMessage && (
-								<span className="text-green-500 text-md self-center">
-									{successMessage}
-								</span>
-							)}
-						</div>
-
-						<button
-							type="submit"
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-12 mb-4"
-						>
-							S'enregistrer
-						</button>
+						{successMessage && (
+							<span className="text-green-500 text-md self-center">
+								{successMessage}
+							</span>
+						)}
 					</form>
 				</div>
 			</div>

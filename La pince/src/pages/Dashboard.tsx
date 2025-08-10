@@ -10,7 +10,6 @@ import type { Budget } from "../types/budget";
 export default function Dashboard() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
-//	const [budgets, setBudgets] = useState<{ data: Budget[] } | null>(null);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
