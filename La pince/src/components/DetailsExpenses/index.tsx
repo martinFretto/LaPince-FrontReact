@@ -10,10 +10,7 @@ type DetailsExpensesProps = {
 	onExpenseClick?: (expense: Expense) => void;
 };
 
-export default function DetailsExpenses({
-	expenses,
-	onExpenseClick,
-}: DetailsExpensesProps) {
+export default function DetailsExpenses({expenses, onExpenseClick}: DetailsExpensesProps) {
 //	const [budgets] = useState<Budget[]>([]);
 
 	// on va trier par date décroissante les dépenses d'un budget

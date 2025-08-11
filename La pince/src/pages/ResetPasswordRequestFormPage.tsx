@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { resetPasswordRequest } from "../api/auth";
-//import { useNavigate } from "react-router-dom";
+import { ButtonSpinner} from "../components/Spinner";
 
 export default function ResetPasswordRequestFormPage() {
 	const [email, setEmail] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-	const [isOpen, setIsOpen] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
 		try {
 			setSuccessMessage("");
+			setIsLoading(true);
 			await resetPasswordRequest(email);
+			setIsLoading(false);
 			setSuccessMessage("Un lien de réinitialisation a été envoyé !");
 			setErrorMessage("");
 		} catch (err: unknown) {
@@ -21,14 +23,15 @@ export default function ResetPasswordRequestFormPage() {
 			} else {
 					setErrorMessage("Une erreur est survenue");
 			}
+			setIsLoading(false);
 		}
 	};
 
 	return (
-		<div className="place-self-center">
+		<div className="flex flex-col items-center justify-center">
 			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-90 max-w-90 flex flex-col justify-center">
 				<div className="flex flex-col items-center text-2xl font-semibold mb-16">
-					<h1 className="justify-center">Formulaire de reinitialisation</h1>
+					<h1 className="justify-center">Formulaire de réinitialisation</h1>
 					<h1 className="justify-center">du mot de passe</h1>
 				</div>
 				<div className="px-10">
@@ -50,47 +53,25 @@ export default function ResetPasswordRequestFormPage() {
 							/>
 						</div>
 
-						<button
+						<div className="flex justify-center">
+							<button
 							type="submit"
-							className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-10 mb-4 justify-center"
-						>
-							Envoyer
-						</button>
+							className="btn px-6 py-2 bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex items-center justify-center"
+							>
+							{isLoading ? <ButtonSpinner /> : "Envoyer"}
+							</button>
+						</div>
 						{successMessage && (
-							<span className="text-green-500 text-md self-center">
+							<span className="text-green-500 text-md font-bold self-center">
 								{successMessage}
 							</span>
 						)}
 						{errorMessage && (
-							<span className="text-red-500 text-md self-center">
+							<span className="text-red-500 text-md font-bold self-center">
 								{errorMessage}
 							</span>
 						)}
 					</form>
-
-					{isOpen && (
-						<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-							<div className="modal modal-open">
-								<div className="modal-box">
-									<h2 className="text-xl font-bold text-center">
-										Un email vous a été envoyé
-									</h2>
-									<h2 className="text-xl font-bold text-center">
-										(ou pas, le systeme n'est pas encore mis en place)
-									</h2>
-									<div className="flex justify-center mt-4">
-										<button
-											type="button"
-											className="btn btn-info"
-											onClick={() => setIsOpen(false)}
-										>
-											Confirmer
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
 				</div>
 			</div>
 		</div>

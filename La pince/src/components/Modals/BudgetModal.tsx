@@ -3,18 +3,20 @@ import { AddBudget, DeleteBudget, updateBudget } from "../../api/budget";
 import type { Budget, ModifBudget, NewBudget } from "../../types/budget";
 
 interface BudgetModalProps {
-	isModalOpen: boolean;
-	onClose: () => void;
+	isOpen: boolean;
+	setIsOpen: (open: boolean) => void,
 	selectedBudget: Budget | null;
 	setSelectedBudget: (budget: Budget | null) => void;
-	fetchBudgets: () => void | Promise<void>;
+	refreshData: () => void | Promise<void>;
+	setIsLoading:(boolean: boolean) => void;
 }
 
 export default function BudgetModal({
-	isModalOpen,
-	onClose,
+	isOpen,
+	setIsOpen,
 	selectedBudget,
-	fetchBudgets,
+	refreshData,
+	setIsLoading
 }: BudgetModalProps) {
 	const [name, setName] = useState("");
 	const [allocated_amount, setAllocated_amount] = useState("");
@@ -37,17 +39,17 @@ export default function BudgetModal({
 	}, []);
 
 	useEffect(() => {
-		if (isModalOpen && selectedBudget) {
+		if (isOpen && selectedBudget) {
 			setName(selectedBudget.name?.toString());
 			setAllocated_amount(selectedBudget.allocated_amount?.toString());
 			setIcon(selectedBudget.icon);
 			setWarning_amount(selectedBudget.warning_amount?.toString());
 			setColor(selectedBudget.color ?? "#A5D8FF");
 		}
-	}, [isModalOpen, selectedBudget]);
+	}, [isOpen, selectedBudget]);
 
 	useEffect(() => {
-		if (isModalOpen && !selectedBudget) {
+		if (isOpen && !selectedBudget) {
 			// Forcer le vidage dans ce cas précis
 			setName("");
 			setAllocated_amount("");
@@ -55,10 +57,22 @@ export default function BudgetModal({
 			setWarning_amount("");
 			setColor("#A5D8FF");
 		}
-	}, [isModalOpen]);
+	}, [isOpen]);
+
+
+	const handleSubmit = async (budgetId?: number) => {
+		setIsLoading(true);
+		console.log("Budget ou pas: ", budgetId);
+		if(budgetId){
+			handleUpdate(budgetId)
+		} else {
+			handleAdd()
+		}
+	}
 
 	// Ajout d'un nouveau budget
 	const handleAdd = async () => {
+		setIsLoading(true);
 		const newBudget: NewBudget = {
 			name,
 			allocated_amount: Number.isNaN(Number(allocated_amount))
@@ -73,9 +87,7 @@ export default function BudgetModal({
 
 		try {
 			await AddBudget(newBudget);
-			console.log(`Budget ${name} ajouté avec succès !`);
-			await fetchBudgets();
-			onClose();
+			await refreshData();
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
 		}
@@ -90,12 +102,9 @@ export default function BudgetModal({
 			warning_amount: Number(warning_amount) || 0,
 			color,
 		};
-
 		try {
 			await updateBudget(budgetToSend, budgetId);
-			console.log("Budget modifié avec succès !");
-			await fetchBudgets();
-			onClose();
+			await refreshData();
 		} catch (error) {
 			console.error("Erreur lors de la mise à jour du budget :", error);
 		}
@@ -103,12 +112,13 @@ export default function BudgetModal({
 
 	// Suppression d'un budget
 	const handleDelete = async (selectedBudget: { id: number; name: string }) => {
+		setIsLoading(true)
 		await DeleteBudget(selectedBudget.id);
-		await fetchBudgets();
-		onClose();
+		await refreshData();
+		setIsOpenDelete(false);
 	};
 
-	if (!isModalOpen) return null;
+	if (!isOpen) return null;
 
 	return (
 		<div className="fixed inset-0 flex items-center justify-center z-50">
@@ -122,7 +132,7 @@ export default function BudgetModal({
 					<div className="relative mb-6">
 						<button
 							type="button"
-							onClick={onClose}
+							onClick={() => {setIsOpen(false)}}
 							className="absolute top-0 right-0 text-gray-500 hover:text-gray-700 hover:cursor-pointer"
 						>
 							✕
@@ -138,8 +148,8 @@ export default function BudgetModal({
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();
-							selectedBudget ? handleUpdate(selectedBudget.id) : handleAdd();
-							onClose();
+							handleSubmit(selectedBudget?.id);
+							setIsOpen(false);
 						}}
 						className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4"
 					>
@@ -297,7 +307,10 @@ export default function BudgetModal({
 											<button
 												type="button"
 												className="btn btn-success"
-												onClick={() => handleDelete(selectedBudget)}
+												onClick={() => {
+													handleDelete(selectedBudget);
+													setIsOpen(false);
+												}}
 											>
 												Confirmer
 											</button>

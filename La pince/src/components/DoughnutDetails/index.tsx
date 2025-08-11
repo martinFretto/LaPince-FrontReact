@@ -20,15 +20,11 @@ export const DoughnutDetails: React.FC<DoughnutDetailsProps> = ({
 
 	const getDoughnutData = useCallback(async() => {				
 		// Calculer les montants à afficher dans le graphique
-		console.log("on filtre avec le budget id", budget.id)
 		const { allocated_amount } = budget;
-		console.log("allocatedamount: ", allocated_amount);
 
-		console.log("DOUGHNUTS EXPENSES: ", expenses);
 		const spent_amount = expenses
-			.filter((expense) => expense.budget_id === budget.id)                  //nécessaire?????????
+			.filter((expense) => expense.budget_id === budget.id)                
 			.reduce((total, expense) => total + Number(expense.amount), 0);
-		console.log("spent_amount: ", spent_amount);
 
 		const remainingBudget = allocated_amount - spent_amount;
 		const overBudget = remainingBudget < 0;
@@ -98,7 +94,6 @@ export const DoughnutDetails: React.FC<DoughnutDetailsProps> = ({
 	}, [budget, expenses]);
 
 	useEffect(() => {
-		console.log("useEffect du doughnuts!!!!!!")
 		getDoughnutData();
 	},  [budget, expenses, getDoughnutData]);
 

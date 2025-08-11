@@ -3,7 +3,7 @@ import { loginUser } from "../api/auth";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { Spinner } from "../components/Spinner";
+import { ButtonSpinner } from "../components/Spinner";
 
 export default function LoginPage() {
 	const navigate = useNavigate();
@@ -44,10 +44,9 @@ export default function LoginPage() {
 
 		try {
 			setIsLoading(true);
-
-			await loginUser(userData);
-
 			setErrorMessage("");
+
+			await loginUser(userData);			
 
 			// fonction du store pour fixer authenticated à true
 			login();
@@ -60,13 +59,13 @@ export default function LoginPage() {
 			if (err instanceof Error) {
 					setErrorMessage(err.message);
 			} else {
-					setErrorMessage("Une erreur est survenue");
+					setErrorMessage("Une erreur est survenue.");
 			}
 			setIsLoading(false);
 		}
 	};
 	return (
-		<div className="place-self-center">
+		<div className="flex flex-col items-center justify-center">
 			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-90 max-w-90 flex flex-col justify-center">
 				<div className="flex flex-col items-center text-2xl font-semibold mb-16">
 					<h1 className="justify-center">Formulaire</h1>
@@ -140,12 +139,12 @@ export default function LoginPage() {
 							type="submit"
 							className="btn px-6 py-2 bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex items-center justify-center"
 							>
-							{isLoading ? <Spinner /> : "Se connecter"}
+							{isLoading ? <ButtonSpinner /> : "Se connecter"}
 							</button>
 						</div>
 
 						{errorMessage && (
-							<span className="text-red-500 text-md self-center">
+							<span className="text-red-500 text-md font-bold block text-center">
 								{errorMessage}
 							</span>
 						)}

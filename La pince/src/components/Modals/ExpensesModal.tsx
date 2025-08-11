@@ -8,17 +8,16 @@ export default function ExpensesModal({
 	selectedExpense,
 	setSelectedExpense,
 	selectedBudget,
-	fetchExpenses,
-//	triggerReload,
+	refreshData,
+	setIsLoading,
 }: {
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
-
 	selectedExpense: Expense | null;
 	setSelectedExpense: (expense: Expense | null) => void;
 	selectedBudget: number;
-	fetchExpenses: () => void | Promise<void>;
-//	triggerReload: () => void | Promise<void>;
+	refreshData: () => void | Promise<void>;
+	setIsLoading:(boolean: boolean) => void;
 }) {
 	const [amount, setAmount] = useState("");
 	const [description, setDescription] = useState("");
@@ -33,7 +32,6 @@ export default function ExpensesModal({
 			setDescription(selectedExpense.description);
 			setDate(new Date(selectedExpense.date).toISOString().split("T")[0]);
 		} else if (isOpen && !selectedExpense) {
-			console.log("on veut ajouter une dépense");
 			setAmount("");
 			setDescription("");
 			setDate("");
@@ -41,6 +39,7 @@ export default function ExpensesModal({
 	}, [isOpen, selectedExpense]);
 
 	const handleSubmit = async () => {
+		setIsLoading(true);
 		if(selectedExpense){
 			handleUpdate()
 		} else {
@@ -60,8 +59,7 @@ export default function ExpensesModal({
 		};
 		try {
 			await addExpense(newExpense);
-			await fetchExpenses();
-	//		triggerReload();
+			await refreshData();
 			setIsOpen(false);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
@@ -79,8 +77,8 @@ export default function ExpensesModal({
 		};
 		try {
 			await updateExpense(expenseId, expenseToSend);
-			await fetchExpenses();
-	//		triggerReload();
+			await refreshData();
+			setIsOpen(false);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du budget :", error);
 		}
@@ -89,9 +87,10 @@ export default function ExpensesModal({
 	// Suppression d'une dépense avec confirmation
 	const handleDelete = async () => {
 		try {
+			setIsLoading(true)
 			const expenseId = selectedExpense!.id;
 			await DeleteExpense(expenseId);
-			await fetchExpenses();
+			await refreshData();
 			setIsOpen(false);
 			setIsOpenDelete(false);
 			setSelectedExpense(null);
@@ -225,7 +224,10 @@ export default function ExpensesModal({
 											<button
 												type="button"
 												className="btn btn-success"
-												onClick={handleDelete}
+												onClick={() => {
+													handleDelete();
+													setIsOpen(false);
+												}}
 											>
 												Confirmer
 											</button>

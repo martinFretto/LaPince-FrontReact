@@ -2,6 +2,7 @@ import { useState } from "react";
 import { setNewPassword } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { ButtonSpinner } from "../components/Spinner";
 
 export default function NewPasswordPage() {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function NewPasswordPage() {
 	const [successMessage, setSuccessMessage] = useState(""); 
 	const [showPassword, setShowPassword] = useState(false);
 	const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
     
     	// Conditions de validation du mot de passe
 	const hasUpperCase = /[A-Z]/.test(password);
@@ -25,9 +27,17 @@ export default function NewPasswordPage() {
 		</span>
 	);
 
+	const token = new URLSearchParams(location.search).get("token");
+	console.log("token: ", token);
+	
+	if(!token){
+		navigate("/auth/resetPassword");
+	}
+
     // Appel de ResetPassword pour faire l'appel fetch a l'API
     const handleSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
+		setErrorMessage("");
 
         if (password !== passwordConfirm) {
 			setIsSamePass(false);
@@ -36,35 +46,38 @@ export default function NewPasswordPage() {
         setIsSamePass(true);        
                 
         try {
-            const token = new URLSearchParams(location.search).get("token");
+        //    const token = new URLSearchParams(location.search).get("token");
+			
+
+			setIsLoading(true);
 
             // Appeler la méthode pour enregistrer l'utilisateur
             await setNewPassword(password, token);
-        
+
+			setIsLoading(false);        
             setErrorMessage("");
-            setIsSamePass(true);
             setSuccessMessage("Mot de passe créé avec succès vous allez être redirigé vers la page de connexion !");
         
             // Délai de 3 secondes avant la redirection
             setTimeout(() => {
                 navigate("/auth/login");
              }, 3000);
-            } catch (err: unknown) {
-                    if (err instanceof Error) {
-                            setErrorMessage(err.message);
-                    } else {
-                            setErrorMessage("Une erreur est survenue");
-                    }
-                }
-
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setErrorMessage(err.message);
+            } else {
+                setErrorMessage("Une erreur est survenue");
+            }
+			setIsLoading(false); 
+        }
     };
 
     return (
-        <div className="place-self-center">
+        <div className="flex flex-col items-center justify-center">
             <div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-90 max-w-90 flex flex-col justify-center">
                 <div className="flex flex-col items-center text-2xl font-semibold mb-16">
                     <h1 className="justify-center">Configuration</h1>
-                    <h1 className="justify-center">du nouveu mot de passe</h1>
+                    <h1 className="justify-center">du nouveau mot de passe</h1>
                 </div>
                 <div className="px-10">
                     {/* Fomulaire d'enregistrement */}
@@ -141,26 +154,29 @@ export default function NewPasswordPage() {
 									)}
 								</button>
 							</div>
-							{!isSamePass && (
-								<span className="text-red-500 text-md self-center">
-									Les mots de passe ne sont pas identiques.
-								</span>
-							)}
+							
 						</div>
 
-                        <button
-                            type="submit"
-                            className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex place-self-center mt-10 mb-4 justify-center"
-                        >
-                            Envoyer
-                        </button>
+                        <div className="flex justify-center">
+							<button
+								type="submit"
+								className="btn px-6 py-2 bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex items-center justify-center"
+							>
+							{isLoading ? <ButtonSpinner /> : "Valider le mot de passe"}
+							</button>
+						</div>
+						{!isSamePass && (
+								<span className="text-red-500 text-md font-bold block text-center">
+									Les mots de passe ne sont pas identiques.
+								</span>
+						)}
                         {successMessage && (
-                            <span className="text-green-500 text-md self-center">
+                            <span className="text-green-500 text-md font-bold block text-center">
                                 {successMessage}
                             </span>
                         )}
                         {errorMessage && (
-                            <span className="text-red-500 text-md self-center">
+                            <span className="text-red-500 text-md font-bold block text-center">
                                 {errorMessage}
                             </span>
                         )}

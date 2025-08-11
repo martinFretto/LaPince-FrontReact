@@ -1,62 +1,22 @@
 // import { expenditure } from "../../data/expenditure";
 // import { budgets } from "../../data/budget";
-import type { Expense, ExpenseWithDetails } from "../../types/expense";
-import { useEffect, useState } from "react";
-import { fetchExpenses } from "../../api/expenses";
+//import type { Expense, ExpenseWithDetails } from "../../types/expense";
+//import { useCallback, useEffect, useState } from "react";
+//import { fetchExpenses } from "../../api/expenses";
 
-type DetailsExpensesProps = {
+import { Expense } from "../../types/expense";
+
+/*type DetailsExpensesProps = {
 	budget?: number;
+	onExpenseClick?: (expense: Expense) => void;
+};*/
+type LastExpensesProps = {
+	expenses: Expense[];
 	onExpenseClick?: (expense: Expense) => void;
 };
 
-export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
-//	const [expenses, setExpenses] = useState<Partial<Expense>[]>([]);
-	const [expenses, setExpenses] = useState<Expense[]>([]);
-
-	// useEffect qui va chercher les dépenses
-/*	useEffect(() => {
-		console.log("lastExpenses first useEffect")
-		const getExpenses = async () => {
-			try {
-				const data = await fetchExpenses();
-				if (Array.isArray(data)) {
-					setExpenses(data);
-				} else {
-					console.warn("Données reçues non valides:", data);
-				}
-			} catch (error) {
-				console.error("Erreur de chargement des budgets:", error);
-			}
-		};
-		getExpenses();
-	}, []);*/
-	
-
-	useEffect(() => {
-		const getExpenses = async () => {
-			try {
-				const data = await fetchExpenses();
-				if (Array.isArray(data.data)) {
-					const expenses: Expense[] = data.data.map((item: ExpenseWithDetails) => ({
-						...item.expenditure,
-						budgetColor: item.budgetColor,
-						budgetIcon: item.budgetIcon,
-					}));
-					setExpenses(expenses);
-				} else {
-					console.log("Données reçues non valides:", data);
-				}
-			} catch (err: unknown) {
-				if (err instanceof Error) {
-					console.log(err.message);
-				} else {
-					console.log("Une erreur est survenue lors de la récupération des budgets");
-				}
-			}
-		};
-		getExpenses();
-	}, []);
-
+//export default function LastExpenses({ onExpenseClick }: DetailsExpensesProps) {
+export default function LastExpenses({expenses, onExpenseClick} : LastExpensesProps) {
 	// Trier les dépenses par date décroissante
 	const sortedExpenses = [...expenses].sort(
 		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()

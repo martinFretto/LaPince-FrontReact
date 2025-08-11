@@ -2,7 +2,7 @@ import { useState } from "react";
 import { registerUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { Spinner } from "../components/Spinner";
+import { ButtonSpinner } from "../components/Spinner";
 
 export default function RegisterPage() {
 	const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function RegisterPage() {
 	// Methode Fetch pour l'envoi des données à la bdd
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-
+		setErrorMessage("");
 		
 		if (password !== passwordConfirm) {
 			setIsSamePass(false);
@@ -50,7 +50,9 @@ export default function RegisterPage() {
 
 		
 		try {
+			
 			setIsLoading(true);
+			
 			// Appeler la méthode pour enregistrer l'utilisateur
 			await registerUser(userData);
 
@@ -72,7 +74,7 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className="place-self-center">
+		<div className="flex flex-col items-center justify-center">
 			<div className="border-[#1971c2] border-2 rounded-3xl mx-4 my-8 py-2 bg-[#a5d8ff] min-w-100 max-w-100 flex flex-col justify-center">
 				<div className="flex flex-col items-center text-2xl font-semibold mb-16">
 					<h1 className="justify-center">Formulaire</h1>
@@ -207,12 +209,12 @@ export default function RegisterPage() {
 							type="submit"
 							className="btn px-6 py-2 bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor flex items-center justify-center"
 							>
-							{isLoading ? <Spinner /> : "S'enregistrer"}
+							{isLoading ? <ButtonSpinner /> : "S'enregistrer"}
 							</button>
 						</div>
 
 						{!isSamePass && (
-								<span className="text-red-500 text-md self-center">
+								<span className="text-red-500 text-md font-bold block text-center">
 									Les mots de passe ne sont pas identiques.
 								</span>
 						)}
@@ -220,13 +222,13 @@ export default function RegisterPage() {
 
 						{/* Affichage du message d'erreur généré par l'API */}
 						{errorMessage && (
-							<span className="text-red-500 text-md self-center">
+							<span className="text-red-500 text-md font-bold block text-center">
 								{errorMessage}
 							</span>
 						)}
 
 						{successMessage && (
-							<span className="text-green-500 text-md self-center">
+							<span className="text-green-500 text-md font-bold block text-center">
 								{successMessage}
 							</span>
 						)}

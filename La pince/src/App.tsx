@@ -40,12 +40,13 @@ function App() {
 							<Route path={"/"} element={<LandingPage />} />
 							<Route path={"/auth/register"} element={<RegisterPage />} />
 							<Route path={"/auth/login"} element={<Login />} />
+							<Route path={"/auth/resetPassword"} element={<ResetPasswordRequestFormPage/>}/>	
 							<Route element={<PrivateRoute />}>
 								<Route path={"/dashboard"} element={<Dashboard />} />
 								<Route path={"/budgets"} element={<Budgets />} />
 								<Route path={"/budgets/:budgetId"} element={<BudgetDetails />} />
             				</Route>															
-							<Route path={"/auth/resetPassword"} element={<ResetPasswordRequestFormPage/>}/>	
+							
 							<Route path={"/auth/newPassword"} element={<NewPasswordPage/>}/>																					
 							<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 							<Route path={"/security-data"} element={<SecurityData />} />
