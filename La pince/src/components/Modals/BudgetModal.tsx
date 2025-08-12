@@ -9,7 +9,6 @@ interface BudgetModalProps {
 	selectedBudget: Budget | null;
 	setSelectedBudget: (budget: Budget | null) => void;
 	refreshData: () => void | Promise<void>;
-//	setIsLoading:(boolean: boolean) => void;
 }
 
 export default function BudgetModal({
@@ -17,7 +16,6 @@ export default function BudgetModal({
 	setIsOpen,
 	selectedBudget,
 	refreshData,
-//	setIsLoading
 }: BudgetModalProps) {
 	const [name, setName] = useState("");
 	const [allocated_amount, setAllocated_amount] = useState("");
@@ -205,7 +203,7 @@ export default function BudgetModal({
 								className="block mb-1 text-black"
 								htmlFor="allocated_amount"
 							>
-								Montant alloué
+								Montant alloué (€)
 							</label>
 							<div className="relative">
 								<input
@@ -217,9 +215,6 @@ export default function BudgetModal({
 									className="validator border border-gray-300 rounded p-2 w-full bg-white"
 									required
 								/>
-								<span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-									€
-								</span>
 							</div>
 						</div>
 
@@ -264,7 +259,7 @@ export default function BudgetModal({
 						{/* Seuil d'alerte */}
 						<div className="w-full md:w-[48%]">
 							<label className="block mb-1 text-black" htmlFor="warning_amount">
-								Seuil d'alerte
+								Seuil d'alerte (€)
 							</label>
 							<div className="relative">
 								<input
@@ -275,9 +270,6 @@ export default function BudgetModal({
 									className="validator border border-gray-300 rounded p-2 w-full bg-white"
 									required
 								/>
-								<span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-									€
-								</span>
 							</div>
 						</div>
 

@@ -111,9 +111,11 @@ export default function BudgetDetails() {
 				/>
 				<DoughnutDetails expenses={expenses} budget={budget} />
 			</div>
+
+			{expenses.length > 0 ? (
 			<div className="flex justify-center font-semibold text-2xl mt-4">
-				<h2>Mes dépenses {budget.name}</h2>
-			</div>
+				<h2>Mes dépenses {budget.name}: </h2>
+			</div>) : (<div className="font-bold block text-center">Aucune dépense effectuée</div>)}
 			</div>
 
 			{/* Modale dépenses */}

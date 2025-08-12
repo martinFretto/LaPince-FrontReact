@@ -133,7 +133,7 @@ export default function ExpensesModal({
 					{/* Montant */}
 					<div className="text-center">
 						<label className="block mb-1 text-black" htmlFor="number">
-							Montant
+							Montant (€)
 						</label>
 						<div className="relative flex justify-center">
 							<input
@@ -146,9 +146,6 @@ export default function ExpensesModal({
 								placeholder="0.00"
 								required
 							/>
-							<span className="absolute right-17 top-1/2 transform -translate-y-1/2 text-gray-500 sm:right-28">
-								€
-							</span>
 						</div>
 					</div>
 

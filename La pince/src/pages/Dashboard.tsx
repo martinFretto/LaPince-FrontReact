@@ -72,7 +72,10 @@ export default function Dashboard() {
 		) : (
 			<>
 			<DoughnutChart budgets={budgets} />
-			<LastExpenses expenses={expenses} onExpenseClick={handleExpenseClick} />
+			{expenses.length > 0 ? 
+			(<LastExpenses expenses={expenses} onExpenseClick={handleExpenseClick} />) :
+			(<div className="font-bold block text-center">Aucune dépense effectuée</div>)}
+			
 			<ExpensesModal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}

@@ -25,13 +25,23 @@ export default function Budgets() {
 			try {
 				const budgetsData = await fetchBudgets();
 				if (Array.isArray(budgetsData.data)) {
+					/***NEW*** */
+				/*	console.log("boucle1, budgetslength: ",budgetsData.data.length)
+					for (const budg of budgetsData.data){
+						console.log("color: ", budg.color);
+					}*/
 					setBudgets(budgetsData.data);
 				} else {
 					throw Error;
 				}
+				
 
 				const expensesData = await fetchExpenses(); 
 				if (Array.isArray(expensesData.data)) {
+				/*	console.log("boucle2, expenses.length ", expensesData.data.length)
+					for (const exp of expensesData.data){
+						console.log("color: ", exp.budgetColor);
+					}*/
 					const expenses: Expense[] = expensesData.data.map((item: ExpenseWithDetails) => ({
 										...item.expenditure,
 										budgetColor: item.budgetColor,
@@ -43,8 +53,10 @@ export default function Budgets() {
 				} else {
 					throw(Error);
 				}
+				
 
 			} catch (err: unknown) {
+				console.log("catch")
 				if (err instanceof Error) {
 						console.log(err.message);
 				} else {
@@ -204,9 +216,7 @@ export default function Budgets() {
 							className="w-10 mb-4 absolute mt-24"
 						/>
 
-						{expenses.length > 0 && (
-							<DoughnutDetails expenses={expenses} budget={budget} />
-						)}
+						<DoughnutDetails expenses={expenses} budget={budget} />
 						</NavLink>
 
 						<div
@@ -238,7 +248,6 @@ export default function Budgets() {
 				selectedBudget={selectedBudget}
 				setSelectedBudget={setSelectedBudget}
 				refreshData={getBudgets}
-			//	setIsLoading={setIsLoading}
 			/>
 			</div>
 
