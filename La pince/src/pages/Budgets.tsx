@@ -2,7 +2,7 @@ import "../App.css";
 import { useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import DoughnutDetails from "../components/DoughnutDetails/index";
-import { fetchBudgets } from "../api/budget";
+import { fetchBudgets } from "../api/budgets";
 import { useEffect } from "react";
 import BudgetModal from "../components/Modals/BudgetModal";
 import type { Budget } from "../types/budget";
@@ -10,9 +10,11 @@ import Flag from "../components/flag";
 import type { Expense, ExpenseWithDetails } from "../types/expense";
 import { fetchExpenses } from "../api/expenses";
 import { PageSpinner } from "../components/Spinner";
+import { useAuthStore } from "../store/authStore";
 
 export default function Budgets() {
 	const [budgets, setBudgets] = useState<Budget[]>([]);
+	const { getUserBudget } = useAuthStore();
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -53,11 +55,12 @@ export default function Budgets() {
 		},[]);
 
 	useEffect(() => {
-		console.log("all budget pages, useEffect");
 		getBudgets();
 	}, [getBudgets]);
 
 
+	const totalUserBudget = getUserBudget();
+	
 	const totalBudget = budgets.reduce(
 		(acc, budget) => acc + Number(budget.allocated_amount),
 		0
@@ -74,6 +77,7 @@ export default function Budgets() {
 	// calcul du montant restant par budget
 	const remaining = Math.round((totalBudget - totalSpent) * 100) / 100;
 	const remainingPercent = Math.round((remaining / totalBudget) * 100);
+
 
 	// Methode pour modifier un budget
 	const handleEditBudget = (budget: Budget) => {
@@ -102,10 +106,45 @@ export default function Budgets() {
 				className="flex justify-around align-middle gap-5 mx-auto w-full"
 				style={{ maxWidth: "1200px" }}
 			>
+			
 				<div className="justify-items-center">
-				<p className="font-semibold text-xl">{remaining} €</p>
-				<p className="font-semibold text-xl">restant</p>
+				<p className="font-semibold text-xl">Reste à allouer:</p>
+
+				{(!totalUserBudget || Number(totalUserBudget) === 0) ? (
+					<p className="bg-[#99E9F2] text-blue-700 text-sm p-2 rounded w-72">
+					Vous n’avez pas renseigné votre budget total.<br />
+					Rendez-vous dans votre profil.
+					</p>
+				) : (totalUserBudget - totalBudget < 0) ? (
+					<p className="font-semibold text-sm text-red-600">
+					Vous avez alloué {Math.abs(totalUserBudget - totalBudget)} € de plus que votre budget total déclaré.
+					</p>
+				) : (
+					<p className="font-semibold text-xl">
+					{(totalUserBudget - totalBudget)} €
+					</p>
+				)}
 				</div>
+
+				<div className="justify-items-center">
+				<p className="font-semibold text-xl">Budget restant:</p>
+				{(!remaining || Number(remaining) === 0 || Number.isNaN(remaining)) ? (
+					<p className="text-sm p-2 rounded w-72">
+					Aucun budget
+					</p>
+				) : (remaining < 0) ? (
+					<p className="font-semibold text-sm text-red-600">
+					Vous avez dépensé {Math.abs(remaining)} € de plus que prévu dans vos budgets.
+					</p>
+				) : (
+					<p className="font-semibold text-xl">
+					{(remaining)}€
+					</p>
+				)}
+				</div>
+
+				{remaining && !Number.isNaN(remaining) && remaining > 0 ? (
+				<>
 				<div className="flex flex-col">
 				<div className="justify-items-center">
 					<p className="font-semibold text-xl">{remainingPercent} %</p>
@@ -117,6 +156,9 @@ export default function Budgets() {
 					max="100"
 				/>
 				</div>
+				</>
+				) : null}
+				
 			</div>
 			</div>
 
@@ -196,7 +238,7 @@ export default function Budgets() {
 				selectedBudget={selectedBudget}
 				setSelectedBudget={setSelectedBudget}
 				refreshData={getBudgets}
-				setIsLoading={setIsLoading}
+			//	setIsLoading={setIsLoading}
 			/>
 			</div>
 

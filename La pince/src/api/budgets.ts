@@ -31,7 +31,7 @@ export async function fetchBudgets() {
 
 //
 // Methode fetch qui ajoute un nouveau budget
-export async function AddBudget(newBudget: NewBudget) {
+export async function addBudget(newBudget: NewBudget) {
 
 	const res = await fetch(`${API_URL}/budgets/`, {
 		method: "POST",
@@ -42,10 +42,15 @@ export async function AddBudget(newBudget: NewBudget) {
 		},
 		body: JSON.stringify(newBudget),
 	});
-	if (!res.ok) throw new Error("Erreur lors de l'ajout du budget");
+
+	if (!res.ok) {
+		const errorData = await res.json();
+		const error = new Error(errorData.message);
+		throw error;
+	} 
+
 	return res.json();
 }
-
 
 // Methode fetch qui modifie un budget
 export async function updateBudget(budget: ModifBudget, id: number) {
@@ -60,17 +65,17 @@ export async function updateBudget(budget: ModifBudget, id: number) {
 	});
 
 	if (!res.ok) {
-		const err = await res.json().catch(() => ({}));
-	//	console.error("Erreur API :", err);
-		throw new Error("Erreur lors de la mise à jour du budget");
-	}
+		const errorData = await res.json();
+		const error = new Error(errorData.message);
+		throw error;
+	} 
 
 	return res.json();
 }
 
 //
 // Methode fetch qui supprime un budget par son id
-export async function DeleteBudget(id: number) {
+export async function deleteBudget(id: number) {
 	const res = await fetch(`${API_URL}/budgets/${id}/`, {
 		method: "DELETE",
 		credentials: 'include',

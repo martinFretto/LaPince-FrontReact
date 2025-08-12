@@ -22,6 +22,7 @@ import RegisterPage from "./pages/RegisterPage";
 import { useAuthStore } from "./store/authStore";
 import ResetPasswordRequestFormPage from "./pages/ResetPasswordRequestFormPage";
 import NewPasswordPage from "./pages/NewPasswordPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
 	const { isAuthenticated } = useAuthStore();
@@ -43,10 +44,10 @@ function App() {
 							<Route path={"/auth/resetPassword"} element={<ResetPasswordRequestFormPage/>}/>	
 							<Route element={<PrivateRoute />}>
 								<Route path={"/dashboard"} element={<Dashboard />} />
+								<Route path={"/profile"} element={<ProfilePage />} />
 								<Route path={"/budgets"} element={<Budgets />} />
 								<Route path={"/budgets/:budgetId"} element={<BudgetDetails />} />
-            				</Route>															
-							
+            				</Route>																						
 							<Route path={"/auth/newPassword"} element={<NewPasswordPage/>}/>																					
 							<Route path={"/privacy-policy"} element={<PrivacyPolicy />} />
 							<Route path={"/security-data"} element={<SecurityData />} />

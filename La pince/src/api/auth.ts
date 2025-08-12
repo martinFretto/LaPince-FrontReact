@@ -46,6 +46,8 @@ export async function loginUser(userData: LoginData) {
 		throw error;
 	} 
 
+	return res.json();
+
 //	const data = await res.json();
 //	sessionStorage.setItem("token", data.token);
 	

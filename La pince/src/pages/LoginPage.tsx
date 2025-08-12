@@ -10,7 +10,7 @@ export default function LoginPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-	const { isAuthenticated, login } = useAuthStore();
+	const { isAuthenticated, login, setUserBudget } = useAuthStore();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -46,7 +46,15 @@ export default function LoginPage() {
 			setIsLoading(true);
 			setErrorMessage("");
 
-			await loginUser(userData);			
+			const res = await loginUser(userData);
+
+			 if (res.data) {
+				setUserBudget(res.data.total_budget);
+        	} else {
+            	throw Error;
+        	}
+
+			
 
 			// fonction du store pour fixer authenticated à true
 			login();

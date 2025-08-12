@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { AddBudget, DeleteBudget, updateBudget } from "../../api/budget";
+import { addBudget, deleteBudget, updateBudget } from "../../api/budgets";
 import type { Budget, ModifBudget, NewBudget } from "../../types/budget";
+import { ButtonSpinner, PageSpinner } from "../Spinner";
 
 interface BudgetModalProps {
 	isOpen: boolean;
@@ -8,7 +9,7 @@ interface BudgetModalProps {
 	selectedBudget: Budget | null;
 	setSelectedBudget: (budget: Budget | null) => void;
 	refreshData: () => void | Promise<void>;
-	setIsLoading:(boolean: boolean) => void;
+//	setIsLoading:(boolean: boolean) => void;
 }
 
 export default function BudgetModal({
@@ -16,7 +17,7 @@ export default function BudgetModal({
 	setIsOpen,
 	selectedBudget,
 	refreshData,
-	setIsLoading
+//	setIsLoading
 }: BudgetModalProps) {
 	const [name, setName] = useState("");
 	const [allocated_amount, setAllocated_amount] = useState("");
@@ -25,6 +26,8 @@ export default function BudgetModal({
 	const [color, setColor] = useState("#A5D8FF");
 	const [icons, setIcons] = useState<{ name: string; src: string }[]>([]);
 	const [isOpenDelete, setIsOpenDelete] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
 	// Importation dynamique de tous les .svg
 	useEffect(() => {
@@ -57,16 +60,15 @@ export default function BudgetModal({
 			setWarning_amount("");
 			setColor("#A5D8FF");
 		}
-	}, [isOpen]);
+	}, [isOpen, selectedBudget]);
 
 
 	const handleSubmit = async (budgetId?: number) => {
 		setIsLoading(true);
-		console.log("Budget ou pas: ", budgetId);
 		if(budgetId){
-			handleUpdate(budgetId)
+			handleUpdate(budgetId);
 		} else {
-			handleAdd()
+			handleAdd();
 		}
 	}
 
@@ -86,10 +88,19 @@ export default function BudgetModal({
 		};
 
 		try {
-			await AddBudget(newBudget);
+			await addBudget(newBudget);
 			await refreshData();
-		} catch (error) {
-			console.error("Erreur lors de l'ajout du budget :", error);
+		
+			setIsOpen(false);
+			setErrorMessage("");
+		} catch (error:unknown) {
+			if(error instanceof Error){
+				setErrorMessage(error.message)
+			} else {
+				setErrorMessage("La création du budget a échoué.")
+			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -105,17 +116,35 @@ export default function BudgetModal({
 		try {
 			await updateBudget(budgetToSend, budgetId);
 			await refreshData();
-		} catch (error) {
-			console.error("Erreur lors de la mise à jour du budget :", error);
+			setIsOpen(false);
+			setErrorMessage("");
+		} catch (error:unknown) {
+			if(error instanceof Error){
+				setErrorMessage(error.message)
+			} else {
+				setErrorMessage("La modification du budget a échoué.")
+			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	// Suppression d'un budget
 	const handleDelete = async (selectedBudget: { id: number; name: string }) => {
-		setIsLoading(true)
-		await DeleteBudget(selectedBudget.id);
-		await refreshData();
-		setIsOpenDelete(false);
+		setIsLoading(true);
+		try{
+			await deleteBudget(selectedBudget.id);
+			await refreshData();		
+		} catch{
+			setErrorMessage("La suppression a échoué.")
+		} finally{
+			setIsOpenDelete(false);
+			setIsLoading(false);
+			setIsOpen(false);
+		}
+		
+		
+		
 	};
 
 	if (!isOpen) return null;
@@ -132,7 +161,9 @@ export default function BudgetModal({
 					<div className="relative mb-6">
 						<button
 							type="button"
-							onClick={() => {setIsOpen(false)}}
+							onClick={() => {
+								setErrorMessage("");
+								setIsOpen(false);}}
 							className="absolute top-0 right-0 text-gray-500 hover:text-gray-700 hover:cursor-pointer"
 						>
 							✕
@@ -149,7 +180,7 @@ export default function BudgetModal({
 						onSubmit={(e) => {
 							e.preventDefault();
 							handleSubmit(selectedBudget?.id);
-							setIsOpen(false);
+						//	setIsOpen(false);
 						}}
 						className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4"
 					>
@@ -180,6 +211,7 @@ export default function BudgetModal({
 								<input
 									id="allocated_amount"
 									type="number"
+									min="1"
 									value={allocated_amount}
 									onChange={(e) => setAllocated_amount(e.target.value)}
 									className="validator border border-gray-300 rounded p-2 w-full bg-white"
@@ -271,14 +303,14 @@ export default function BudgetModal({
 									type="submit"
 									className="bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 								>
-									Modifier
+									{isLoading ? <ButtonSpinner /> : "Modifier"}
 								</button>
 							) : (
 								<button
 									type="submit"
 									className="bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
 								>
-									Ajouter
+									{isLoading ? <ButtonSpinner /> : "Ajouter"}
 								</button>
 							)}
 						</div>
@@ -309,10 +341,10 @@ export default function BudgetModal({
 												className="btn btn-success"
 												onClick={() => {
 													handleDelete(selectedBudget);
-													setIsOpen(false);
+													
 												}}
 											>
-												Confirmer
+												{isLoading ? <ButtonSpinner /> : "Confirmer"}
 											</button>
 											<button
 												type="button"
@@ -329,8 +361,18 @@ export default function BudgetModal({
 					) : (
 						""
 					)}
+					{errorMessage && (
+						<span className="text-red-500 text-md font-bold block text-center">
+							{errorMessage}
+						</span>
+					)}
 				</div>
 			</div>
+		{isLoading && (
+        <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+          <PageSpinner />
+        </div>
+      )}
 		</div>
 	);
 }

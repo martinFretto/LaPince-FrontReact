@@ -138,6 +138,7 @@ export default function ExpensesModal({
 						<div className="relative flex justify-center">
 							<input
 								id="number"
+								min="1"
 								type="number"
 								value={amount}
 								onChange={(e) => setAmount(e.target.value)}

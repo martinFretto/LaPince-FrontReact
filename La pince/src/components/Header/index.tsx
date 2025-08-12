@@ -13,7 +13,6 @@ export default function Header() {
 
 	// Permet la suppression du token et de revenir à la page login
 	const handleLogout = () => {
-		console.log("logout!!!")
 		logout();
 	//	sessionStorage.removeItem("authToken");
 		navigate("/auth/login");

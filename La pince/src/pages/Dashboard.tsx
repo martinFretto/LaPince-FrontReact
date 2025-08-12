@@ -4,7 +4,7 @@ import DoughnutChart from "../components/DoughnutChart";
 import LastExpenses from "../components/LastExpenses";
 import { Expense, ExpenseWithDetails } from "../types/expense";
 import ExpensesModal from "../components/Modals/ExpensesModal";
-import { fetchBudgets } from "../api/budget";
+import { fetchBudgets } from "../api/budgets";
 import type { Budget } from "../types/budget";
 import { fetchExpenses } from "../api/expenses";
 import { PageSpinner } from "../components/Spinner";
@@ -22,13 +22,10 @@ export default function Dashboard() {
 		setSelectedExpense(expense);
 		setIsOpen(true);
 	};
-
-	/****NEW*** */
+	
 	const getData = useCallback(async() => {
 		try {
 			setIsLoading(true);
-			 // Simuler un délai de 2 secondes pour voir le spinner
-    	//	await new Promise(res => setTimeout(res, 3000));
 			const eData = await fetchExpenses();
 			if (Array.isArray(eData.data)) {
 				const expenses: Expense[] = eData.data.map((item: ExpenseWithDetails) => ({
@@ -43,7 +40,7 @@ export default function Dashboard() {
 			const bData = await fetchBudgets();
 			if (Array.isArray(bData.data)) {
 				setBudgets(bData.data);
-				if(bData.length===0){
+				if(bData.data.length===0){
 					navigate("/budgets");
 				}
 			} else {
@@ -63,7 +60,6 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		console.log("DASHBOARD premier use effect ")
 		getData();
 	}, [getData]);
 

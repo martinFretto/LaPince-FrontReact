@@ -3,8 +3,6 @@ import DoughnutDetails from "../components/DoughnutDetails/index";
 import DetailsExpenses from "../components/DetailsExpenses";
 import { useCallback, useEffect, useState } from "react";
 import ExpensesModal from "../components/Modals/ExpensesModal";
-//import BudgetModal from "../components/Modals/BudgetModal";
-//import type { Budget } from "../types/budget";
 import { fetchExpensesByBudget } from "../api/expenses";
 import type { Expense, ExpenseWithDetails } from "../types/expense";
 import { PageSpinner } from "../components/Spinner";
