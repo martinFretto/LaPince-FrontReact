@@ -63,7 +63,6 @@ export async function updateBudget(budget: ModifBudget, id: number) {
 		},
 		body: JSON.stringify(budget),
 	});
-
 	if (!res.ok) {
 		const errorData = await res.json();
 		const error = new Error(errorData.message);

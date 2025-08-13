@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Expense, NewExpense, UpdateExpense } from "../../types/expense";
-import { addExpense, DeleteExpense, updateExpense } from "../../api/expenses";
+import { addExpense, deleteExpense, updateExpense } from "../../api/expenses";
+import { ButtonSpinner, PageSpinner } from "../Spinner";
 
 export default function ExpensesModal({
 	isOpen,
@@ -9,7 +10,7 @@ export default function ExpensesModal({
 	setSelectedExpense,
 	selectedBudget,
 	refreshData,
-	setIsLoading,
+//	setIsLoading,
 }: {
 	isOpen: boolean;
 	setIsOpen: (open: boolean) => void;
@@ -17,7 +18,7 @@ export default function ExpensesModal({
 	setSelectedExpense: (expense: Expense | null) => void;
 	selectedBudget: number;
 	refreshData: () => void | Promise<void>;
-	setIsLoading:(boolean: boolean) => void;
+//	setIsLoading:(boolean: boolean) => void;
 }) {
 	const [amount, setAmount] = useState("");
 	const [description, setDescription] = useState("");
@@ -25,6 +26,8 @@ export default function ExpensesModal({
 	const [date, setDate] = useState("");
 	const [isOpenDelete, setIsOpenDelete] = useState(false);
 	const remainingLength = Math.max(0, 60 - description?.length);
+	const [isLoading, setIsLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
 	useEffect(() => {
 		if (isOpen && selectedExpense) {
@@ -61,8 +64,15 @@ export default function ExpensesModal({
 			await addExpense(newExpense);
 			await refreshData();
 			setIsOpen(false);
+			setErrorMessage("");
 		} catch (error) {
-			console.error("Erreur lors de l'ajout du budget :", error);
+			if(error instanceof Error){
+				setErrorMessage(error.message)
+			} else {
+				setErrorMessage("L'ajout de la dépense a échoué.")
+			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -79,23 +89,35 @@ export default function ExpensesModal({
 			await updateExpense(expenseId, expenseToSend);
 			await refreshData();
 			setIsOpen(false);
+			setErrorMessage("");
 		} catch (error) {
-			console.error("Erreur lors de l'ajout du budget :", error);
+			if(error instanceof Error){
+				setErrorMessage(error.message)
+			} else {
+				setErrorMessage("La modification de la dépense a échoué.")
+			}
+		}  finally {
+			setIsLoading(false);
 		}
 	};
 
 	// Suppression d'une dépense avec confirmation
 	const handleDelete = async () => {
+		setIsLoading(true)
 		try {
-			setIsLoading(true)
+			
 			const expenseId = selectedExpense!.id;
-			await DeleteExpense(expenseId);
+			await deleteExpense(expenseId);
 			await refreshData();
 			setIsOpen(false);
 			setIsOpenDelete(false);
 			setSelectedExpense(null);
-		} catch (error) {
-			console.error("Erreur lors de la suppression :", error);
+		} catch {
+			setErrorMessage("La suppression a échoué.")
+		} finally {
+			setIsOpenDelete(false);
+			setIsLoading(false);
+			setIsOpen(false);
 		}
 	};
 
@@ -126,7 +148,6 @@ export default function ExpensesModal({
 					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit();
-						setIsOpen(false);
 					}}
 					className="space-y-4"
 				>
@@ -138,7 +159,8 @@ export default function ExpensesModal({
 						<div className="relative flex justify-center">
 							<input
 								id="number"
-								min="1"
+								min="0.01"
+    							step="0.01"
 								type="number"
 								value={amount}
 								onChange={(e) => setAmount(e.target.value)}
@@ -189,12 +211,21 @@ export default function ExpensesModal({
 					{/* Bouton Valider */}
 					<div className="flex justify-center my-6">
 						<div className="flex justify-center mt-6">
-							<button
-								type="submit"
-								className="btn bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer flex place-self-center px-8 py-1 rounded -mb-5"
-							>
-								{selectedExpense ? "Modifier" : "Ajouter"}
-							</button>
+							{selectedExpense ? (
+								<button
+									type="submit"
+									className="bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
+								>
+									{isLoading ? <ButtonSpinner /> : "Modifier"}
+								</button>
+							) : (
+								<button
+									type="submit"
+									className="bg-[#4dabf7] border-2 border-[#1971c2] text-white text-md font-normal hover:cursor-pointer px-8 py-2 rounded"
+								>
+									{isLoading ? <ButtonSpinner /> : "Ajouter"}
+								</button>
+							)}
 						</div>
 					</div>
 
@@ -224,10 +255,9 @@ export default function ExpensesModal({
 												className="btn btn-success"
 												onClick={() => {
 													handleDelete();
-													setIsOpen(false);
 												}}
 											>
-												Confirmer
+												{isLoading ? <ButtonSpinner /> : "Confirmer"}
 											</button>
 											<button
 												type="button"
@@ -244,8 +274,18 @@ export default function ExpensesModal({
 					) : (
 						""
 					)}
+					{errorMessage && (
+						<span className="text-red-500 text-md font-bold block text-center">
+							{errorMessage}
+						</span>
+					)}
 				</form>
 			</div>
+			{isLoading && (
+					<div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+					  <PageSpinner />
+					</div>
+			)}
 		</div>
 	);
 }

@@ -106,7 +106,7 @@ export default function BudgetDetails() {
 			<div className="relative p-4 flex flex-col items-center w-full max-w-sm mx-auto min-h-60">
 				<img
 				src={budget.icon}
-				alt="icone du budget"
+				alt={budget.name.slice(0, 4)+'...'}
 				className="w-10 absolute mt-24"
 				/>
 				<DoughnutDetails expenses={expenses} budget={budget} />
@@ -126,7 +126,7 @@ export default function BudgetDetails() {
 			setSelectedExpense={setSelectedExpense}
 			selectedBudget={budget.id}
 			refreshData={getExpenses}
-			setIsLoading={setIsLoading}
+		//	setIsLoading={setIsLoading}
 			/>
 
 			{expenses.length > 0 && (

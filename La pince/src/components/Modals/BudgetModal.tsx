@@ -107,7 +107,7 @@ export default function BudgetModal({
 		const budgetToSend: ModifBudget = {
 			name,
 			allocated_amount: Number(allocated_amount) || 0,
-			icon,
+			icon: icon ?? "",
 			warning_amount: Number(warning_amount) || 0,
 			color,
 		};
@@ -140,9 +140,7 @@ export default function BudgetModal({
 			setIsLoading(false);
 			setIsOpen(false);
 		}
-		
-		
-		
+				
 	};
 
 	if (!isOpen) return null;
@@ -178,7 +176,6 @@ export default function BudgetModal({
 						onSubmit={(e) => {
 							e.preventDefault();
 							handleSubmit(selectedBudget?.id);
-						//	setIsOpen(false);
 						}}
 						className="flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4"
 					>
@@ -209,7 +206,8 @@ export default function BudgetModal({
 								<input
 									id="allocated_amount"
 									type="number"
-									min="1"
+									min="0.01"
+    								step="0.01"
 									value={allocated_amount}
 									onChange={(e) => setAllocated_amount(e.target.value)}
 									className="validator border border-gray-300 rounded p-2 w-full bg-white"
@@ -265,6 +263,8 @@ export default function BudgetModal({
 								<input
 									id="warning_amount"
 									type="number"
+									min="0.01"
+    								step="0.01"
 									value={warning_amount}
 									onChange={(e) => setWarning_amount(e.target.value)}
 									className="validator border border-gray-300 rounded p-2 w-full bg-white"
@@ -332,8 +332,7 @@ export default function BudgetModal({
 												type="button"
 												className="btn btn-success"
 												onClick={() => {
-													handleDelete(selectedBudget);
-													
+													handleDelete(selectedBudget);			
 												}}
 											>
 												{isLoading ? <ButtonSpinner /> : "Confirmer"}

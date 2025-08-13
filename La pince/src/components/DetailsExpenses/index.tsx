@@ -45,7 +45,7 @@ export default function DetailsExpenses({expenses, onExpenseClick}: DetailsExpen
 													>
 														<img
 															src={exp.budgetIcon}
-															alt={exp.description}
+															alt=""
 															className="w-full h-full object-contain"
 														/>
 													</div>

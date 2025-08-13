@@ -52,7 +52,7 @@ export default function LastExpenses({expenses, onExpenseClick} : LastExpensesPr
 													>
 														<img
 															src={exp.budgetIcon}
-															alt={exp.description}
+															alt=""
 															className="w-full h-full object-contain"
 														/>
 													</div>

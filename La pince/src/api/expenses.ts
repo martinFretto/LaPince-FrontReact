@@ -84,7 +84,7 @@ export async function updateExpense(expenseId: number, expenseToSend: UpdateExpe
 }
 
 // Methode fetch qui supprime une dépense par son id
-export async function DeleteExpense(expenseId: number) {
+export async function deleteExpense(expenseId: number) {
 	const res = await fetch(`${API_URL}/expenses/${expenseId}/`, {
 		method: "DELETE",
 		credentials: 'include',

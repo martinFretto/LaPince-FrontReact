@@ -186,6 +186,9 @@ export default function Budgets() {
 				.map((budget) => {
 					const remainingAmount =
 					budget.allocated_amount - budget.spent_amount;
+					console.log("budget?" , budget.name);
+					console.log("wremaining_amount?" , remainingAmount);
+					console.log("warning_amount?" , budget.warning_amount);
 
 					let flagColor = null;
 					let flagText = null;
@@ -212,7 +215,7 @@ export default function Budgets() {
 
 						<img
 							src={budget.icon}
-							alt="icone du budget"
+							alt={budget.name.slice(0, 4) +'...'} // Les 2 premières lettres
 							className="w-10 mb-4 absolute mt-24"
 						/>
 
