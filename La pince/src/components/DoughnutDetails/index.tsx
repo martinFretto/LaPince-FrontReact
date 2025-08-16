@@ -28,16 +28,36 @@ export const DoughnutDetails: React.FC<DoughnutDetailsProps> = ({
   }, [expenses, budget.id]);
 
   useEffect(() => {
+    console.log("use effet yooo!")
     const allocated_amount = Number(budget.allocated_amount) || 0;
     const spent_amount = Number(spentAmountForBudget) || 0;
     const remainingBudget = allocated_amount - spent_amount;
-    const overBudget = remainingBudget < 0;
 
-    const safeSpent = Math.min(spent_amount, allocated_amount);
+    /*
+    const overBudget = remainingBudget < 0;  //boolean qui nous dit si le budget est dépassé
+// nous donne le montant alloué si on a dépassé, le montant dépense si on n'a pas dépassé
+    const safeSpent = Math.min(spent_amount, allocated_amount); //Utilité
+//nous donne 0 si on n'a pas dépassé, et le dépassement si on a dépassé 
     const overAmount = Math.max(spent_amount - allocated_amount, 0);
+//nous onne 0 si on a dépassé, et le reste si on a pas dépassé
     const safeRemaining = Math.max(allocated_amount - spent_amount, 0);
 
-    const newSeries = overBudget ? [overAmount, allocated_amount] : [safeSpent, safeRemaining];
+    const newSeries = overBudget ? [overAmount, allocated_amount] : [safeSpent, safeRemaining];*/
+
+    let startAngle =  0;
+    let endAngle =  360;
+
+    let newSeries: number[] = [];
+    if (remainingBudget < 0){
+        newSeries = [Math.abs(remainingBudget), allocated_amount]
+        newSeries=[allocated_amount-Math.abs(remainingBudget), Math.abs(remainingBudget)]  
+        
+        startAngle =  (Math.abs(remainingBudget) * 360)/ allocated_amount;
+        endAngle = startAngle + 360;
+    } else {
+      newSeries = [spent_amount, remainingBudget]     //  60   180
+    }
+
 
     // Normalize color (assure qu'il y ait un '#...' au besoin)
     const normalize = (c?: string) => {
@@ -45,14 +65,14 @@ export const DoughnutDetails: React.FC<DoughnutDetailsProps> = ({
       return c.startsWith("#") ? c : c;
     };
 
-    const newColors = overBudget ? ["#fff", "#FF4560"] : ["#fff", normalize(budget.color)];
+    const newColors = (remainingBudget < 0) ? ["#fff", "#FF4560"] : ["#fff", normalize(budget.color)];
 
     const newOptions: ApexOptions = {
       chart: {
         id: chartId,
         type: "donut",
       },
-      labels: overBudget ? ["", "Dépassement"] : ["", "Restant"],
+      labels: (remainingBudget < 0) ? ["", "Dépassement"] : ["", "Restant"],
       colors: newColors,
       stroke: {
         show: true,
@@ -66,6 +86,9 @@ export const DoughnutDetails: React.FC<DoughnutDetailsProps> = ({
       dataLabels: { enabled: false },
       plotOptions: {
         pie: {
+          startAngle: startAngle,
+          endAngle: endAngle,
+
           donut: {
             labels: {
               show: true,
