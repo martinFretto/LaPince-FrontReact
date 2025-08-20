@@ -64,29 +64,41 @@ export default function Dashboard() {
 	}, [getData]);
 
 	return (
-		<div className="sm:mx-10 3xl:mx-90 4xl:mx-120">
+	<div className="sm:mx-10 3xl:mx-90 4xl:mx-120">
 		{isLoading ? (
-			<div className="min-h-screen flex items-center justify-center">
-        		<PageSpinner />
-      		</div>
-		) : (
-			<>
-			<DoughnutChart budgets={budgets} />
-			{expenses.length > 0 ? 
-			(<LastExpenses expenses={expenses} onExpenseClick={handleExpenseClick} />) :
-			(<div className="font-bold block text-center">Aucune dépense effectuée</div>)}
-			
-			<ExpensesModal
-				isOpen={isOpen}
-				setIsOpen={setIsOpen}
-				selectedExpense={selectedExpense}
-				setSelectedExpense={setSelectedExpense}
-				selectedBudget={0}
-				refreshData={getData}
-				setIsLoading={setIsLoading}
-			/>
-			</>
-		)}
+		<div className="min-h-screen flex items-center justify-center">
+			<PageSpinner />
 		</div>
+		) : (
+		<>
+			<div className="flex flex-col lg:flex-row items-start gap-8">
+			
+			{/* DoughnutChart – largeur fixe + léger centrage vertical */}
+			<div className="w-full lg:w-[550px] flex justify-center lg:self-center lg:mt-6">
+				<DoughnutChart budgets={budgets} />
+			</div>
+
+			{/* LastExpenses – prend l’espace restant */}
+			<div className="flex-1">
+				{expenses.length > 0 ? (
+				<LastExpenses expenses={expenses} onExpenseClick={handleExpenseClick} />
+				) : (
+				<div className="font-bold block text-center">Aucune dépense effectuée</div>
+				)}
+			</div>
+			</div>
+
+			{/* Modal */}
+			<ExpensesModal
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			selectedExpense={selectedExpense}
+			setSelectedExpense={setSelectedExpense}
+			selectedBudget={0}
+			refreshData={getData}
+			/>
+		</>
+		)}
+	</div>
 	);
 }

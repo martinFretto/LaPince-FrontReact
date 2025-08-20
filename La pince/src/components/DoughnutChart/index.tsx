@@ -129,20 +129,20 @@ const DoughnutChart = ({ budgets }: { budgets: Budget[] }) => {
 	};
 
 	return (
-		<>
-			<div className="flex justify-center mt-8 ml-13 sm:mr-15">   
-				{budgets.length > 0 && (
-					<div className="w-full max-w-[600px]">
-						<ReactApexChart
-						options={options}
-						series={remainingByBudget}
-						type="donut"
-						height={300}
-						/>
-					</div>
-				)}
+	<>
+		<div className="flex justify-center mt-8 ml-13 sm:mr-15">
+		{budgets.length > 0 && (
+			<div className="min-w-[300px] w-[300px] sm:w-[400px] lg:w-[500px] xl:w-[600px]">
+			<ReactApexChart
+				options={options}
+				series={remainingByBudget}
+				type="donut"
+				height={300}
+			/>
 			</div>
-		</>
+		)}
+		</div>
+	</>
 	);
 };
 
